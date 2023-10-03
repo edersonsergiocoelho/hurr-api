@@ -1,0 +1,15 @@
+application:
+  title: "Hurr - API"
+  version: "1.0.0"
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/hurr?currentSchema=hurr
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+
+api:
+  security:
+    token:
+      secret: ${JWT_SECRET:my-secret-key}
