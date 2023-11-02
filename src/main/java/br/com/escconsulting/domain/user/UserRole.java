@@ -1,8 +1,8 @@
 package br.com.escconsulting.domain.user;
 
 public enum UserRole {
-    ADMIN("admin"),
-    USER("user");
+    ADMIN("ADMIN"),
+    USER("USER");
 
     private String role;
 

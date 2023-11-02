@@ -1,4 +1,4 @@
-package br.com.escconsulting.repositories;
+package br.com.escconsulting.repository;
 
 import br.com.escconsulting.domain.user.User;
 import org.springframework.data.repository.CrudRepository;

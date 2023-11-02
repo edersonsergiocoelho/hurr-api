@@ -1,4 +1,4 @@
-package br.com.escconsulting.repositories;
+package br.com.escconsulting.repository;
 
 import br.com.escconsulting.domain.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +13,7 @@ public class JdbcUserRepository implements User2Repository {
 
     @Override
     public int save(User user) {
-        return jdbcTemplate.update("INSERT INTO hurr.user (id, login, password, role) VALUES(?,?,?,?)",
-                new Object[] { user.getId(), user.getLogin(), user.getPassword(), user.getRole().getRole() });
+        return jdbcTemplate.update("INSERT INTO \"user\" (login, password, role) VALUES(?,?,?)",
+                new Object[] { user.getLogin(), user.getPassword(), user.getRole().getRole() });
     }
 }

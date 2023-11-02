@@ -1,6 +1,6 @@
-package br.com.escconsulting.controllers;
+package br.com.escconsulting.controller;
 
-import br.com.escconsulting.repositories.ProductRepository;
+import br.com.escconsulting.repository.ProductRepository;
 import br.com.escconsulting.domain.product.Product;
 import br.com.escconsulting.domain.product.ProductRequestDTO;
 import br.com.escconsulting.domain.product.ProductResponseDTO;

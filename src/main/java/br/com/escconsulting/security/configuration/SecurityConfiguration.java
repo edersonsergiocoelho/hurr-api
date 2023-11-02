@@ -1,5 +1,6 @@
-package br.com.escconsulting.security;
+package br.com.escconsulting.security.configuration;
 
+import br.com.escconsulting.security.filter.SecurityFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,7 +17,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableWebSecurity
-public class SecurityConfigurations {
+public class SecurityConfiguration {
+
     @Autowired
     SecurityFilter securityFilter;
 

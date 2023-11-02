@@ -1,6 +1,6 @@
-package br.com.escconsulting.services;
+package br.com.escconsulting.service;
 
-import br.com.escconsulting.repositories.UserRepository;
+import br.com.escconsulting.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -11,9 +11,10 @@ import org.springframework.stereotype.Service;
 public class AuthorizationService implements UserDetailsService {
 
     @Autowired
-    UserRepository repository;
+    UserRepository userRepository;
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return repository.findByLogin(username);
+        return userRepository.findByLogin(username);
     }
 }

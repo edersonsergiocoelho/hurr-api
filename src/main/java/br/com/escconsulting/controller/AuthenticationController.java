@@ -1,12 +1,12 @@
-package br.com.escconsulting.controllers;
+package br.com.escconsulting.controller;
 
 import br.com.escconsulting.domain.user.AuthenticationDTO;
 import br.com.escconsulting.domain.user.LoginResponseDTO;
 import br.com.escconsulting.domain.user.RegisterDTO;
 import br.com.escconsulting.domain.user.User;
-import br.com.escconsulting.repositories.User2Repository;
-import br.com.escconsulting.repositories.UserRepository;
-import br.com.escconsulting.security.TokenService;
+import br.com.escconsulting.repository.User2Repository;
+import br.com.escconsulting.repository.UserRepository;
+import br.com.escconsulting.security.service.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;

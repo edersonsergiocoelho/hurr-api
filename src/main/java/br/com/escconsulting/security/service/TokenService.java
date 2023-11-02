@@ -1,4 +1,4 @@
-package br.com.escconsulting.security;
+package br.com.escconsulting.security.service;
 
 import br.com.escconsulting.domain.user.User;
 import com.auth0.jwt.JWT;

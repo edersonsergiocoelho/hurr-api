@@ -1,6 +1,7 @@
-package br.com.escconsulting.security;
+package br.com.escconsulting.security.filter;
 
-import br.com.escconsulting.repositories.UserRepository;
+import br.com.escconsulting.security.service.TokenService;
+import br.com.escconsulting.repository.UserRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -16,8 +17,10 @@ import java.io.IOException;
 
 @Component
 public class SecurityFilter extends OncePerRequestFilter {
+
     @Autowired
     TokenService tokenService;
+
     @Autowired
     UserRepository userRepository;
 

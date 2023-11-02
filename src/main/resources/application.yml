@@ -9,6 +9,14 @@ spring:
     password: postgres
     driver-class-name: org.postgresql.Driver
 
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            clientId: 58495673570-raok2adfrlt76dfjivrb53rc3j9l4928.apps.googleusercontent.com
+            clientSecret: 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
+
 api:
   security:
     token:
