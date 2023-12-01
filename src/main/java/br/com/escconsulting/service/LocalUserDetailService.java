@@ -10,6 +10,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.UUID;
+
 /**
  * 
  * @author Chinna
@@ -32,7 +34,7 @@ public class LocalUserDetailService implements UserDetailsService {
 	}
 
 	@Transactional
-	public LocalUser loadUserById(Long id) {
+	public LocalUser loadUserById(UUID id) {
 		User user = userService.findUserById(id).orElseThrow(() -> new ResourceNotFoundException("User", "id", id));
 		return createLocalUser(user);
 	}

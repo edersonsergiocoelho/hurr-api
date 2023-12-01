@@ -30,7 +30,7 @@ spring:
             clientSecret: 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
 
   flyway:
-    enabled: false
+    enabled: true
 
 app:
   auth:

@@ -1,12 +1,15 @@
 package br.com.escconsulting.model;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Set;
+import java.util.UUID;
 
 /**
  * The persistent class for the role database table.
@@ -16,8 +19,12 @@ import java.util.Set;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 public class Role implements Serializable {
-	private static final long serialVersionUID = 1L;
+
+	@Serial
+	private static final long serialVersionUID = -1176779758851731966L;
+
 	public static final String USER = "USER";
 	public static final String ROLE_USER = "ROLE_USER";
 	public static final String ROLE_ADMIN = "ROLE_ADMIN";
@@ -26,17 +33,15 @@ public class Role implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "role_id")
-	private Long roleId;
+	private UUID roleId;
 
 	private String name;
+
+	private Boolean enabled;
 
 	// bi-directional many-to-many association to User
 	@ManyToMany(mappedBy = "roles")
 	private Set<User> users;
-
-	public Role(String name) {
-		this.name = name;
-	}
 
 	@Override
 	public int hashCode() {

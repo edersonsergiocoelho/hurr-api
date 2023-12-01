@@ -12,6 +12,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.UUID;
 
 @Service
 public class TokenProvider {
@@ -44,7 +45,7 @@ public class TokenProvider {
 
 		Algorithm algorithm = Algorithm.HMAC256(appProperties.getAuth().getTokenSecret());
 		return JWT.create()
-				.withSubject(Long.toString(userPrincipal.getUser().getId()))
+				.withSubject(userPrincipal.getUser().getId().toString())
 				.withIssuedAt(new Date())
 				.withExpiresAt(expiryDate)
 				.sign(algorithm);
@@ -58,9 +59,9 @@ public class TokenProvider {
 	}
 	*/
 
-	public Long getUserIdFromToken(String token) {
+	public UUID getUserIdFromToken(String token) throws JWTVerificationException {
 		DecodedJWT decodedJWT = JWT.require(Algorithm.HMAC256(appProperties.getAuth().getTokenSecret())).build().verify(token);
-		return Long.parseLong(decodedJWT.getSubject());
+		return UUID.fromString(decodedJWT.getSubject());
 	}
 
 	/*

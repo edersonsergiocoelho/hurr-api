@@ -5,6 +5,8 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 
+import java.util.UUID;
+
 /**
  * @author Chinna
  * @since 26/3/18
@@ -13,7 +15,7 @@ import lombok.Data;
 @PasswordMatches
 public class SignUpRequest {
 
-	private Long userID;
+	private UUID userID;
 
 	private String providerUserId;
 

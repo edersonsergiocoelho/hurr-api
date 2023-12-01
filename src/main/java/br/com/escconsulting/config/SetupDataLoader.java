@@ -33,7 +33,7 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
 	@Override
 	@Transactional
 	public void onApplicationEvent(final ContextRefreshedEvent event) {
-		/*
+
 		if (alreadySetup) {
 			return;
 		}
@@ -41,6 +41,7 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
 		Role userRole = createRoleIfNotFound(Role.ROLE_USER);
 		Role adminRole = createRoleIfNotFound(Role.ROLE_ADMIN);
 		Role modRole = createRoleIfNotFound(Role.ROLE_MODERATOR);
+		/*
 		createUserIfNotFound("admin@javachinna.com", Set.of(userRole, adminRole, modRole));
 		alreadySetup = true;
 		*/
@@ -69,7 +70,7 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
 	private final Role createRoleIfNotFound(final String name) {
 		Role role = roleRepository.findByName(name);
 		if (role == null) {
-			role = roleRepository.save(new Role(name));
+			role = roleRepository.save(new Role(null, name, true, null));
 		}
 		return role;
 	}
