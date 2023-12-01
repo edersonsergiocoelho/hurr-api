@@ -3,11 +3,23 @@ application:
   version: "1.0.0"
 
 spring:
+
+  main:
+    allow-circular-references: true
+
   datasource:
     url: jdbc:postgresql://localhost:5432/hurr?currentSchema=hurr
     username: postgres
     password: postgres
     driver-class-name: org.postgresql.Driver
+
+  jpa:
+    show-sql: true
+    hibernate:
+      #ddl-auto: create
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
 
   security:
     oauth2:
@@ -17,7 +29,17 @@ spring:
             clientId: 58495673570-raok2adfrlt76dfjivrb53rc3j9l4928.apps.googleusercontent.com
             clientSecret: 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
 
-api:
-  security:
-    token:
-      secret: ${JWT_SECRET:my-secret-key}
+  flyway:
+    enabled: true
+
+app:
+  auth:
+    tokenSecret: 926D96C90030DD58429D2751AC1BDBBC
+    tokenExpirationMsec: 864000000
+
+  oauth2:
+    authorizedRedirectUris:
+      - http://localhost:8081/oauth2/redirect
+      - http://localhost:4200/
+      - myandroidapp://oauth2/redirect
+      - myiosapp://oauth2/redirect
