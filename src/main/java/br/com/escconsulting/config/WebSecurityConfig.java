@@ -68,7 +68,7 @@ public class WebSecurityConfig {
 				.exceptionHandling(exceptionHandling -> exceptionHandling.authenticationEntryPoint(new RestAuthenticationEntryPoint()))
 				.authorizeRequests(authorizeRequests ->
 						authorizeRequests
-								.requestMatchers("/", "/error", "/api/all", "/api/auth/**", "/oauth2/**").permitAll()
+								.requestMatchers("/", "/error", "/api/all", "/api/auth/**", "/oauth2/**", "/vehicle-brand", "/vehicle/vehicle-brand/{vehicleBrandId}", "/vehicle-model/vehicle/{vehicleId}").permitAll()
 								.anyRequest().authenticated()
 				)
 				.oauth2Login(oauth2Login ->

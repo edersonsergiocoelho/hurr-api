@@ -1,4 +1,4 @@
-package br.com.escconsulting.repo;
+package br.com.escconsulting.repository;
 
 import br.com.escconsulting.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;

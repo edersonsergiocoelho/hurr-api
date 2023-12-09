@@ -7,8 +7,8 @@ import br.com.escconsulting.exception.OAuth2AuthenticationProcessingException;
 import br.com.escconsulting.exception.UserAlreadyExistAuthenticationException;
 import br.com.escconsulting.model.Role;
 import br.com.escconsulting.model.User;
-import br.com.escconsulting.repo.RoleRepository;
-import br.com.escconsulting.repo.UserRepository;
+import br.com.escconsulting.repository.RoleRepository;
+import br.com.escconsulting.repository.UserRepository;
 import br.com.escconsulting.security.oauth2.user.OAuth2UserInfo;
 import br.com.escconsulting.security.oauth2.user.OAuth2UserInfoFactory;
 import br.com.escconsulting.util.GeneralUtils;
@@ -60,9 +60,11 @@ public class UserServiceImpl implements UserService {
 		user.setDisplayName(formDTO.getDisplayName());
 		user.setEmail(formDTO.getEmail());
 		user.setPassword(passwordEncoder.encode(formDTO.getPassword()));
+
 		final HashSet<Role> roles = new HashSet<Role>();
-		roles.add(roleRepository.findByName(Role.ROLE_USER));
+		roles.add(roleRepository.findByName(Role.ROLE_USER).get());
 		user.setRoles(roles);
+
 		user.setProvider(formDTO.getSocialProvider().getProviderType());
 		user.setEnabled(true);
 		user.setProviderUserId(formDTO.getProviderUserId());

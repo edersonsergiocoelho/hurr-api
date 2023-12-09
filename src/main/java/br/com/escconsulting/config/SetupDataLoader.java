@@ -3,8 +3,8 @@ package br.com.escconsulting.config;
 import br.com.escconsulting.dto.SocialProvider;
 import br.com.escconsulting.model.Role;
 import br.com.escconsulting.model.User;
-import br.com.escconsulting.repo.RoleRepository;
-import br.com.escconsulting.repo.UserRepository;
+import br.com.escconsulting.repository.RoleRepository;
+import br.com.escconsulting.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
@@ -12,6 +12,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Instant;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Set;
@@ -67,11 +68,14 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
 	}
 
 	@Transactional
-	private final Role createRoleIfNotFound(final String name) {
-		Role role = roleRepository.findByName(name);
-		if (role == null) {
-			role = roleRepository.save(new Role(null, name, true, null));
-		}
-		return role;
+	private Role createRoleIfNotFound(final String name) {
+		return roleRepository.findByName(name)
+				.orElseGet(() -> {
+					Role role = new Role();
+					role.setName(name);
+					role.setCreatedDate(Instant.now());
+					role.setEnabled(Boolean.TRUE);
+					return role;
+				});
 	}
 }

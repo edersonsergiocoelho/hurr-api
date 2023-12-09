@@ -2,6 +2,7 @@ package br.com.escconsulting.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -17,17 +18,18 @@ import java.util.UUID;
  * 
  */
 @Entity
-@Table(name = "user", schema = "hurr")
-@NoArgsConstructor
+@Table(name = "\"user\"")
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class User implements Serializable {
 
 	/**
 	 * 
 	 */
 	@Serial
-	private static final long serialVersionUID = 65981149772133526L;
+	private static final long serialVersionUID = -7136861032484571472L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
