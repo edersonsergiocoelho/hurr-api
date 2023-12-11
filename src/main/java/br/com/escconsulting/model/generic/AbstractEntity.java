@@ -1,6 +1,7 @@
 package br.com.escconsulting.model.generic;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.MappedSuperclass;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -8,14 +9,14 @@ import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
-import java.io.Serializable;
 import java.time.Instant;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public abstract class AbstractEntity implements Serializable {
+@MappedSuperclass
+public abstract class AbstractEntity {
 
     @CreatedDate
     @Column(name = "created_date", nullable = false)
