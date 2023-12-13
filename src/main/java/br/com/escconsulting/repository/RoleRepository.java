@@ -1,6 +1,6 @@
 package br.com.escconsulting.repository;
 
-import br.com.escconsulting.model.Role;
+import br.com.escconsulting.entity.Role;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

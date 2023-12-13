@@ -13,4 +13,9 @@ public class SearchCustomerVehicle {
     private UUID vehicleCategoryId;
     private UUID vehicleColorId;
     private UUID vehicleFuelTypeId;
+    private UUID vehicleTransmissionId;
+
+    private String countryName;
+    private String stateName;
+    private String cityName;
 }

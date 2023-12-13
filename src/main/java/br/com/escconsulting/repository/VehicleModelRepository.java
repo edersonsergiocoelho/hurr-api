@@ -1,6 +1,6 @@
 package br.com.escconsulting.repository;
 
-import br.com.escconsulting.model.VehicleModel;
+import br.com.escconsulting.entity.VehicleModel;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;

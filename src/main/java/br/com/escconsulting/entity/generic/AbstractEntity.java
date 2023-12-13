@@ -1,4 +1,4 @@
-package br.com.escconsulting.model.generic;
+package br.com.escconsulting.entity.generic;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.MappedSuperclass;

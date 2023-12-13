@@ -1,6 +1,6 @@
 package br.com.escconsulting.controller;
 
-import br.com.escconsulting.model.Vehicle;
+import br.com.escconsulting.entity.Vehicle;
 import br.com.escconsulting.service.VehicleService;
 import jakarta.annotation.security.PermitAll;
 import org.springframework.http.HttpStatus;

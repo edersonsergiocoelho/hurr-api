@@ -1,6 +1,6 @@
 package br.com.escconsulting.repository;
 
-import br.com.escconsulting.model.CustomerVehicle;
+import br.com.escconsulting.entity.CustomerVehicle;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.UUID;

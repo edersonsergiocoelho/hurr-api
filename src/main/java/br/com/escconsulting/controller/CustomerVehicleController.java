@@ -1,7 +1,7 @@
 package br.com.escconsulting.controller;
 
 import br.com.escconsulting.dto.customer.vehicle.SearchCustomerVehicle;
-import br.com.escconsulting.model.CustomerVehicle;
+import br.com.escconsulting.entity.CustomerVehicle;
 import br.com.escconsulting.service.CustomerVehicleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

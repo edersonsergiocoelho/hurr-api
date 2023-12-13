@@ -1,6 +1,6 @@
 package br.com.escconsulting.controller;
 
-import br.com.escconsulting.model.VehicleBrand;
+import br.com.escconsulting.entity.VehicleBrand;
 import br.com.escconsulting.service.VehicleBrandService;
 import jakarta.annotation.security.PermitAll;
 import jakarta.validation.Valid;

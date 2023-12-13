@@ -1,6 +1,6 @@
-package br.com.escconsulting.model;
+package br.com.escconsulting.entity;
 
-import br.com.escconsulting.model.generic.AbstractEntity;
+import br.com.escconsulting.entity.generic.AbstractEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -23,8 +23,11 @@ import java.util.UUID;
 @Table(name = "role")
 public class Role extends AbstractEntity implements Serializable {
 
+	/**
+	 *
+	 */
 	@Serial
-	private static final long serialVersionUID = -1176779758851731966L;
+	private static final long serialVersionUID = -3583817374146038210L;
 
 	public static final String USER = "USER";
 	public static final String ROLE_USER = "ROLE_USER";

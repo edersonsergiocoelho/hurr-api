@@ -1,4 +1,4 @@
-package br.com.escconsulting.model;
+package br.com.escconsulting.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;

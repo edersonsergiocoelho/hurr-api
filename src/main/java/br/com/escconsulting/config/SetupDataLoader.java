@@ -1,8 +1,8 @@
 package br.com.escconsulting.config;
 
 import br.com.escconsulting.dto.SocialProvider;
-import br.com.escconsulting.model.Role;
-import br.com.escconsulting.model.User;
+import br.com.escconsulting.entity.Role;
+import br.com.escconsulting.entity.User;
 import br.com.escconsulting.repository.RoleRepository;
 import br.com.escconsulting.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;

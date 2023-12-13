@@ -3,8 +3,8 @@ package br.com.escconsulting.util;
 import br.com.escconsulting.dto.LocalUser;
 import br.com.escconsulting.dto.SocialProvider;
 import br.com.escconsulting.dto.UserInfo;
-import br.com.escconsulting.model.Role;
-import br.com.escconsulting.model.User;
+import br.com.escconsulting.entity.Role;
+import br.com.escconsulting.entity.User;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import java.util.ArrayList;

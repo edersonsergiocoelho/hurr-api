@@ -1,6 +1,6 @@
 package br.com.escconsulting.controller;
 
-import br.com.escconsulting.model.VehicleModel;
+import br.com.escconsulting.entity.VehicleModel;
 import br.com.escconsulting.service.VehicleModelService;
 import jakarta.annotation.security.PermitAll;
 import org.springframework.beans.factory.annotation.Autowired;

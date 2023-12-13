@@ -1,7 +1,7 @@
 package br.com.escconsulting.service;
 
 import br.com.escconsulting.dto.customer.vehicle.SearchCustomerVehicle;
-import br.com.escconsulting.model.*;
+import br.com.escconsulting.entity.*;
 import br.com.escconsulting.repository.CustomerVehicleRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.criteria.*;
@@ -41,6 +41,14 @@ public class CustomerVehicleService {
 
         root.fetch("vehicleColor");
         root.fetch("vehicleFuelType");
+        root.fetch("vehicleTransmission");
+
+        Fetch<CustomerVehicle, CustomerVehicleAddress> customerVehicleAddressFetch = root.fetch("addresses", JoinType.LEFT);
+        Fetch<CustomerVehicleAddress, Address> addressFetch = customerVehicleAddressFetch.fetch("address", JoinType.LEFT);
+
+        addressFetch.fetch("country");
+        addressFetch.fetch("city");
+        addressFetch.fetch("state");
 
         Predicate spec = cb.conjunction();
 
@@ -66,6 +74,22 @@ public class CustomerVehicleService {
 
         if (searchCustomerVehicle.getVehicleFuelTypeId() != null) {
             spec = cb.and(spec, cb.equal(root.get("vehicleFuelType").get("vehicleFuelTypeId"), searchCustomerVehicle.getVehicleFuelTypeId()));
+        }
+
+        if (searchCustomerVehicle.getVehicleTransmissionId() != null) {
+            spec = cb.and(spec, cb.equal(root.get("vehicleTransmission").get("vehicleTransmissionId"), searchCustomerVehicle.getVehicleTransmissionId()));
+        }
+
+        if (searchCustomerVehicle.getCountryName() != null && ! searchCustomerVehicle.getCountryName().isEmpty()) {
+            spec = cb.and(spec, cb.equal(root.get("addresses").get("address").get("country").get("countryName"), searchCustomerVehicle.getCountryName()));
+        }
+
+        if (searchCustomerVehicle.getStateName() != null && ! searchCustomerVehicle.getStateName().isEmpty()) {
+            spec = cb.and(spec, cb.equal(root.get("addresses").get("address").get("state").get("stateName"), searchCustomerVehicle.getStateName()));
+        }
+
+        if (searchCustomerVehicle.getStateName() != null && ! searchCustomerVehicle.getStateName().isEmpty()) {
+            spec = cb.and(spec, cb.equal(root.get("addresses").get("address").get("city").get("cityName"), searchCustomerVehicle.getCityName()));
         }
 
         cq.where(spec);

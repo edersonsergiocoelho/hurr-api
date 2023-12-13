@@ -1,6 +1,6 @@
 package br.com.escconsulting.service;
 
-import br.com.escconsulting.model.VehicleBrand;
+import br.com.escconsulting.entity.VehicleBrand;
 import br.com.escconsulting.repository.VehicleBrandRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

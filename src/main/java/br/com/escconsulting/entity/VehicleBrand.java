@@ -1,6 +1,6 @@
-package br.com.escconsulting.model;
+package br.com.escconsulting.entity;
 
-import br.com.escconsulting.model.generic.AbstractEntity;
+import br.com.escconsulting.entity.generic.AbstractEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
