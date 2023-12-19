@@ -10,5 +10,5 @@ VALUES
 ('Perua/SW'),
 ('Picape'),
 ('Sedã'),
-('Utilitário esportivo'),
+('Utilitário Esportivo'),
 ('Van/Utilitário');
