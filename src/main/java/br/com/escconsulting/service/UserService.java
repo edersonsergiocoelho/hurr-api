@@ -3,7 +3,7 @@ package br.com.escconsulting.service;
 import br.com.escconsulting.dto.LocalUser;
 import br.com.escconsulting.dto.SignUpRequest;
 import br.com.escconsulting.exception.UserAlreadyExistAuthenticationException;
-import br.com.escconsulting.model.User;
+import br.com.escconsulting.entity.User;
 import org.springframework.security.oauth2.core.oidc.OidcIdToken;
 import org.springframework.security.oauth2.core.oidc.OidcUserInfo;
 

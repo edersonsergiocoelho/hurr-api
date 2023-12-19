@@ -25,23 +25,23 @@ public class LocalUser extends User implements OAuth2User, OidcUser {
 	private final OidcIdToken idToken;
 	private final OidcUserInfo userInfo;
 	private Map<String, Object> attributes;
-	private br.com.escconsulting.model.User user;
+	private br.com.escconsulting.entity.User user;
 
 	public LocalUser(final String userID, final String password, final boolean enabled, final boolean accountNonExpired, final boolean credentialsNonExpired,
-			final boolean accountNonLocked, final Collection<? extends GrantedAuthority> authorities, final br.com.escconsulting.model.User user) {
+			final boolean accountNonLocked, final Collection<? extends GrantedAuthority> authorities, final br.com.escconsulting.entity.User user) {
 		this(userID, password, enabled, accountNonExpired, credentialsNonExpired, accountNonLocked, authorities, user, null, null);
 	}
 
 	public LocalUser(final String userID, final String password, final boolean enabled, final boolean accountNonExpired, final boolean credentialsNonExpired,
-			final boolean accountNonLocked, final Collection<? extends GrantedAuthority> authorities, final br.com.escconsulting.model.User user, OidcIdToken idToken,
-			OidcUserInfo userInfo) {
+                     final boolean accountNonLocked, final Collection<? extends GrantedAuthority> authorities, final br.com.escconsulting.entity.User user, OidcIdToken idToken,
+                     OidcUserInfo userInfo) {
 		super(userID, password, enabled, accountNonExpired, credentialsNonExpired, accountNonLocked, authorities);
 		this.user = user;
 		this.idToken = idToken;
 		this.userInfo = userInfo;
 	}
 
-	public static LocalUser create(br.com.escconsulting.model.User user, Map<String, Object> attributes, OidcIdToken idToken, OidcUserInfo userInfo) {
+	public static LocalUser create(br.com.escconsulting.entity.User user, Map<String, Object> attributes, OidcIdToken idToken, OidcUserInfo userInfo) {
 		LocalUser localUser = new LocalUser(user.getEmail(), user.getPassword(), user.isEnabled(), true, true, true, GeneralUtils.buildSimpleGrantedAuthorities(user.getRoles()),
 				user, idToken, userInfo);
 		localUser.setAttributes(attributes);
@@ -77,7 +77,7 @@ public class LocalUser extends User implements OAuth2User, OidcUser {
 		return this.idToken;
 	}
 
-	public br.com.escconsulting.model.User getUser() {
+	public br.com.escconsulting.entity.User getUser() {
 		return user;
 	}
 }

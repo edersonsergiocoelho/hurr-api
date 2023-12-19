@@ -2,7 +2,7 @@ package br.com.escconsulting.service;
 
 import br.com.escconsulting.dto.LocalUser;
 import br.com.escconsulting.exception.ResourceNotFoundException;
-import br.com.escconsulting.model.User;
+import br.com.escconsulting.entity.User;
 import br.com.escconsulting.util.GeneralUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetailsService;

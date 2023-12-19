@@ -1,16 +1,17 @@
-package br.com.escconsulting.service;
+package br.com.escconsulting.service.impl;
 
 import br.com.escconsulting.dto.LocalUser;
 import br.com.escconsulting.dto.SignUpRequest;
 import br.com.escconsulting.dto.SocialProvider;
 import br.com.escconsulting.exception.OAuth2AuthenticationProcessingException;
 import br.com.escconsulting.exception.UserAlreadyExistAuthenticationException;
-import br.com.escconsulting.model.Role;
-import br.com.escconsulting.model.User;
-import br.com.escconsulting.repo.RoleRepository;
-import br.com.escconsulting.repo.UserRepository;
+import br.com.escconsulting.entity.Role;
+import br.com.escconsulting.entity.User;
+import br.com.escconsulting.repository.RoleRepository;
+import br.com.escconsulting.repository.UserRepository;
 import br.com.escconsulting.security.oauth2.user.OAuth2UserInfo;
 import br.com.escconsulting.security.oauth2.user.OAuth2UserInfoFactory;
+import br.com.escconsulting.service.UserService;
 import br.com.escconsulting.util.GeneralUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -60,9 +61,11 @@ public class UserServiceImpl implements UserService {
 		user.setDisplayName(formDTO.getDisplayName());
 		user.setEmail(formDTO.getEmail());
 		user.setPassword(passwordEncoder.encode(formDTO.getPassword()));
+
 		final HashSet<Role> roles = new HashSet<Role>();
-		roles.add(roleRepository.findByName(Role.ROLE_USER));
+		roles.add(roleRepository.findByName(Role.ROLE_USER).get());
 		user.setRoles(roles);
+
 		user.setProvider(formDTO.getSocialProvider().getProviderType());
 		user.setEnabled(true);
 		user.setProviderUserId(formDTO.getProviderUserId());
