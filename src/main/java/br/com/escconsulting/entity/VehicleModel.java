@@ -37,7 +37,7 @@ public class VehicleModel extends AbstractEntity implements Serializable {
     private Vehicle vehicle;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "vehicle_categories_id", nullable = false)
+    @JoinColumn(name = "vehicle_category_id", nullable = false)
     private VehicleCategory vehicleCategory;
 
 }

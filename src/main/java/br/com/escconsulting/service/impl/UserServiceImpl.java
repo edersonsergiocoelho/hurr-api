@@ -1,4 +1,4 @@
-package br.com.escconsulting.service;
+package br.com.escconsulting.service.impl;
 
 import br.com.escconsulting.dto.LocalUser;
 import br.com.escconsulting.dto.SignUpRequest;
@@ -11,6 +11,7 @@ import br.com.escconsulting.repository.RoleRepository;
 import br.com.escconsulting.repository.UserRepository;
 import br.com.escconsulting.security.oauth2.user.OAuth2UserInfo;
 import br.com.escconsulting.security.oauth2.user.OAuth2UserInfoFactory;
+import br.com.escconsulting.service.UserService;
 import br.com.escconsulting.util.GeneralUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;

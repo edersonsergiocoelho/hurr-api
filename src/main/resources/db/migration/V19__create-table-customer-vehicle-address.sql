@@ -1,4 +1,15 @@
-CREATE TYPE address_type AS ENUM ('CUSTOMER', 'VEHICLE', 'DELIVERY', 'PICKUP');
+DO
+$$
+BEGIN
+    IF NOT EXISTS (
+        SELECT 1
+        FROM pg_type
+        WHERE typname = 'address_type' AND typtype = 'e'
+    ) THEN
+        CREATE TYPE address_type AS ENUM ('CUSTOMER', 'VEHICLE', 'DELIVERY', 'PICKUP');
+    END IF;
+END
+$$;
 
 CREATE TABLE IF NOT EXISTS customer_vehicle_address
 (

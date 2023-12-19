@@ -15,7 +15,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 @ToString
-@Table(name = "vehicle_categories")
+@Table(name = "vehicleCategory")
 public class VehicleCategory extends AbstractEntity implements Serializable {
 
     /**
@@ -26,10 +26,10 @@ public class VehicleCategory extends AbstractEntity implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "vehicle_categories_id", nullable = false)
+    @Column(name = "vehicleCategory_id", nullable = false)
     private UUID vehicleCategoryId;
 
-    @Column(name = "vehicle_categories_name", nullable = false, length = 100, unique = true)
+    @Column(name = "vehicleCategory_name", nullable = false, length = 100, unique = true)
     private String vehicleCategoryName;
 
 }
