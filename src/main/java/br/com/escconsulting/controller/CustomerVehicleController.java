@@ -24,9 +24,9 @@ public class CustomerVehicleController {
         return ResponseEntity.ok(customerVehicles);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<CustomerVehicle> getCustomerVehicleById(@PathVariable UUID id) {
-        CustomerVehicle customerVehicle = customerVehicleService.findById(id);
+    @GetMapping("/{customerVehicleId}")
+    public ResponseEntity<CustomerVehicle> getCustomerVehicleById(@PathVariable UUID customerVehicleId) {
+        CustomerVehicle customerVehicle = customerVehicleService.findById(customerVehicleId);
         return ResponseEntity.ok(customerVehicle);
     }
 

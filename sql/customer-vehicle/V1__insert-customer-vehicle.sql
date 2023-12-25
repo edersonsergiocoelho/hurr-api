@@ -1,10 +1,33 @@
 SET search_path TO hurr;
 
 INSERT INTO customer_vehicle (customer_id, vehicle_id, vehicle_model_id, vehicle_color_id, vehicle_fuel_type_id, vehicle_transmission_id, description, license_plate, renavam, chassis, year_of_manufacture, year_of_the_car, daily_rate, cleaning_fee, unlimited_mileage, limited_mileage, deliver_to_address, pick_up_at_address, created_date, modified_date, enabled)
-VALUES ('903a5897-aa4f-41c1-9828-82b6f4ecceac', '7413bc4e-ac69-4b35-9871-8dc133b33c8a', 'e6b52ccd-a09c-4862-a1e4-874aa1977754', 'ae5da768-a09c-4cef-8ea6-129a94fd9bd1', '99f8c11d-21f6-4766-a2d7-960af38156f1', 'f4dc26eb-7798-4b5c-b18c-e6fb35c35d91', 'Description 1', 'ABC-1234', '12345678901', '12345678901234567', 2023, 2022, 100.00, 50.00, TRUE, FALSE, TRUE, FALSE, current_timestamp, NULL, TRUE);
+VALUES ((SELECT customer_id FROM customer WHERE email = 'johndoe@example.com'),
+		(SELECT vehicle_id FROM vehicle WHERE vehicle_name = 'ACCORD'),
+		(SELECT vehicle_model_id FROM vehicle_model WHERE vehicle_model_name = 'ACCORD 2.0 e:HEV ADVANCED E-CVT'),
+		(SELECT vehicle_color_id FROM vehicle_color WHERE vehicle_color_name = 'Prata'),
+		(SELECT vehicle_fuel_type_id FROM vehicle_fuel_type WHERE vehicle_fuel_type_name = 'Híbrido (Gasolina/Elétrico)'),
+		(SELECT vehicle_transmission_id FROM vehicle_transmission WHERE vehicle_transmission_name = 'CVT'), 'Description 1', 'ABC-1234', '12345678901', '12345678901234567', 2023, 2022, 100.00, 50.00, TRUE, FALSE, TRUE, FALSE, current_timestamp, NULL, TRUE);
 
 INSERT INTO customer_vehicle (customer_id, vehicle_id, vehicle_model_id, vehicle_color_id, vehicle_fuel_type_id, vehicle_transmission_id, description, license_plate, renavam, chassis, year_of_manufacture, year_of_the_car, daily_rate, cleaning_fee, unlimited_mileage, limited_mileage, deliver_to_address, pick_up_at_address, created_date, modified_date, enabled)
-VALUES ('2d3d3d2a-bc3d-4961-bd74-f237ed10f5b5', '7413bc4e-ac69-4b35-9871-8dc133b33c8a', 'e6b52ccd-a09c-4862-a1e4-874aa1977754', 'e4d9ed47-3d5a-41f0-820b-05b2a122ecd2', '99f8c11d-21f6-4766-a2d7-960af38156f1', '7e79902e-98e7-4c40-81d9-01a0baa27769','Description 2', 'DEF-5678', '98765432109', '98765432109876543', 2020, 2019, 120.00, 60.00, FALSE, TRUE, FALSE, TRUE, current_timestamp, NULL, TRUE);
+VALUES ((SELECT customer_id FROM customer WHERE email = 'janedoe@example.com'),
+		(SELECT vehicle_id FROM vehicle WHERE vehicle_name = 'COROLLA CROSS'),
+		(SELECT vehicle_model_id FROM vehicle_model WHERE vehicle_model_name = 'COROLLA CROSS 1.8 VVT-I HYBRID FLEX SPECIAL EDITION CVT'),
+		(SELECT vehicle_color_id FROM vehicle_color WHERE vehicle_color_name = 'Branco'),
+		(SELECT vehicle_fuel_type_id FROM vehicle_fuel_type WHERE vehicle_fuel_type_name = 'Gasolina'),
+		(SELECT vehicle_transmission_id FROM vehicle_transmission WHERE vehicle_transmission_name = 'Automática'),'Description 2', 'DEF-5678', '98765432109', '98765432109876543', 2020, 2019, 120.00, 60.00, FALSE, TRUE, FALSE, TRUE, current_timestamp, NULL, TRUE);
 
 INSERT INTO customer_vehicle (customer_id, vehicle_id, vehicle_model_id, vehicle_color_id, vehicle_fuel_type_id, vehicle_transmission_id, description, license_plate, renavam, chassis, year_of_manufacture, year_of_the_car, daily_rate, cleaning_fee, unlimited_mileage, limited_mileage, deliver_to_address, pick_up_at_address, created_date, modified_date, enabled)
-VALUES ('f8d4785e-b263-4e67-af1d-cb6e75d540d3', '7413bc4e-ac69-4b35-9871-8dc133b33c8a', 'e6b52ccd-a09c-4862-a1e4-874aa1977754', '31ccd37f-425b-4545-9fff-bca048fbae52', '99f8c11d-21f6-4766-a2d7-960af38156f1', '7e79902e-98e7-4c40-81d9-01a0baa27769', 'Description 3', 'GHI-9012', '09876543210', '09876543210987654', 2018, 2017, 150.00, 70.00, TRUE, FALSE, TRUE, FALSE, current_timestamp, NULL, TRUE);
+VALUES ((SELECT customer_id FROM customer WHERE email = 'michaelsmith@example.com'),
+		(SELECT vehicle_id FROM vehicle WHERE vehicle_name = 'COROLLA'),
+		(SELECT vehicle_model_id FROM vehicle_model WHERE vehicle_model_name = 'Toyota Corolla 1.6 Dx 16v Gasolina 4p'),
+		(SELECT vehicle_color_id FROM vehicle_color WHERE vehicle_color_name = 'Cinza'),
+		(SELECT vehicle_fuel_type_id FROM vehicle_fuel_type WHERE vehicle_fuel_type_name = 'Gasolina'),
+		(SELECT vehicle_transmission_id FROM vehicle_transmission WHERE vehicle_transmission_name = 'Automática'), 'Description 3', 'GHI-9012', '09876543210', '09876543210987654', 2018, 2017, 150.00, 70.00, TRUE, FALSE, TRUE, FALSE, current_timestamp, NULL, TRUE);
+
+INSERT INTO customer_vehicle (customer_id, vehicle_id, vehicle_model_id, vehicle_color_id, vehicle_fuel_type_id, vehicle_transmission_id, description, license_plate, renavam, chassis, year_of_manufacture, year_of_the_car, daily_rate, cleaning_fee, unlimited_mileage, limited_mileage, deliver_to_address, pick_up_at_address, created_date, modified_date, enabled)
+VALUES ((SELECT customer_id FROM customer WHERE email = 'mariagarcia@example.com'),
+		(SELECT vehicle_id FROM vehicle WHERE vehicle_name = 'CIVIC'),
+		(SELECT vehicle_model_id FROM vehicle_model WHERE vehicle_model_name = '1.5 16V TURBO GASOLINA SI COUPÉ 2P MANUAL'),
+		(SELECT vehicle_color_id FROM vehicle_color WHERE vehicle_color_name = 'Cinza'),
+		(SELECT vehicle_fuel_type_id FROM vehicle_fuel_type WHERE vehicle_fuel_type_name = 'Gasolina'),
+		(SELECT vehicle_transmission_id FROM vehicle_transmission WHERE vehicle_transmission_name = 'Manual'), 'Description 3', 'GHI-9013', '09876543222', '09876543210987660', 2018, 2017, 150.00, 70.00, TRUE, FALSE, TRUE, FALSE, current_timestamp, NULL, TRUE);
