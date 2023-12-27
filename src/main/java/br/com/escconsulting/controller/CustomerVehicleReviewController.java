@@ -33,9 +33,9 @@ public class CustomerVehicleReviewController {
         return ResponseEntity.ok(reviews);
     }
 
-    @GetMapping("/by/customer-vehicle/{vehicleCustomerId}")
-    public ResponseEntity<List<CustomerVehicleReview>> findAllByCustomerVehicleId(@PathVariable("vehicleCustomerId") UUID vehicleCustomerId) {
-        List<CustomerVehicleReview> reviews = customerVehicleReviewService.findAllByCustomerVehicleId(vehicleCustomerId);
+    @GetMapping("/by/customer-vehicle/{customerVehicleId}")
+    public ResponseEntity<List<CustomerVehicleReview>> findAllByCustomerVehicleId(@PathVariable("customerVehicleId") UUID customerVehicleId) {
+        List<CustomerVehicleReview> reviews = customerVehicleReviewService.findAllByCustomerVehicleId(customerVehicleId);
         return ResponseEntity.ok(reviews);
     }
 

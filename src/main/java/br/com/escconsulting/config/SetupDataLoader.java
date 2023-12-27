@@ -13,8 +13,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.Set;
 
 @Component
@@ -59,9 +57,8 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
 			user.setRoles(roles);
 			user.setProvider(SocialProvider.LOCAL.getProviderType());
 			user.setEnabled(true);
-			Date now = Calendar.getInstance().getTime();
-			user.setCreatedDate(now);
-			user.setModifiedDate(now);
+			user.setCreatedDate(Instant.now());
+			user.setModifiedDate(Instant.now());
 			user = userRepository.save(user);
 		}
 		return user;
@@ -75,7 +72,7 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
 					role.setName(name);
 					role.setCreatedDate(Instant.now());
 					role.setEnabled(Boolean.TRUE);
-					return role;
+					return roleRepository.save(role);
 				});
 	}
 }

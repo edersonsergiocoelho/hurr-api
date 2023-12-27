@@ -6,7 +6,7 @@ VALUES ((SELECT customer_id FROM customer WHERE email = 'johndoe@example.com'),
 		(SELECT vehicle_model_id FROM vehicle_model WHERE vehicle_model_name = 'ACCORD 2.0 e:HEV ADVANCED E-CVT'),
 		(SELECT vehicle_color_id FROM vehicle_color WHERE vehicle_color_name = 'Prata'),
 		(SELECT vehicle_fuel_type_id FROM vehicle_fuel_type WHERE vehicle_fuel_type_name = 'Híbrido (Gasolina/Elétrico)'),
-		(SELECT vehicle_transmission_id FROM vehicle_transmission WHERE vehicle_transmission_name = 'CVT'), 'Description 1', 'ABC-1234', '12345678901', '12345678901234567', 2023, 2022, 100.00, 50.00, TRUE, FALSE, TRUE, FALSE, current_timestamp, NULL, TRUE);
+		(SELECT vehicle_transmission_id FROM vehicle_transmission WHERE vehicle_transmission_name = 'CVT'), 'O Honda Accord 2022 é um sedã sofisticado e moderno que oferece uma combinação elegante de design, desempenho avançado e tecnologia inovadora. Combinando estilo arrojado e um interior refinado, o Accord é uma escolha ideal para quem busca conforto, eficiência e tecnologia.', 'ABC-1234', '12345678901', '12345678901234567', 2023, 2022, 100.00, 50.00, TRUE, FALSE, TRUE, FALSE, current_timestamp, NULL, TRUE);
 
 INSERT INTO customer_vehicle (customer_id, vehicle_id, vehicle_model_id, vehicle_color_id, vehicle_fuel_type_id, vehicle_transmission_id, description, license_plate, renavam, chassis, year_of_manufacture, year_of_the_car, daily_rate, cleaning_fee, unlimited_mileage, limited_mileage, deliver_to_address, pick_up_at_address, created_date, modified_date, enabled)
 VALUES ((SELECT customer_id FROM customer WHERE email = 'janedoe@example.com'),

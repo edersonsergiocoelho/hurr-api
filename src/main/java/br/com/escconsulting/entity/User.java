@@ -1,15 +1,12 @@
 package br.com.escconsulting.entity;
 
+import br.com.escconsulting.entity.generic.AbstractEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.util.Date;
 import java.util.Set;
 import java.util.UUID;
 
@@ -18,12 +15,14 @@ import java.util.UUID;
  * 
  */
 @Entity
-@Table(name = "\"user\"")
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
-public class User implements Serializable {
+@NoArgsConstructor
+@EqualsAndHashCode(callSuper = false)
+@ToString
+@Table(name = "\"user\"")
+public class User extends AbstractEntity implements Serializable {
 
 	/**
 	 * 
@@ -41,18 +40,8 @@ public class User implements Serializable {
 
 	private String email;
 
-	@Column(name = "enabled", columnDefinition = "BIT", length = 1)
-	private boolean enabled;
-
 	@Column(name = "display_name")
 	private String displayName;
-
-	@Column(name = "created_date", nullable = false, updatable = false)
-	@Temporal(TemporalType.TIMESTAMP)
-	protected Date createdDate;
-
-	@Temporal(TemporalType.TIMESTAMP)
-	protected Date modifiedDate;
 
 	private String password;
 

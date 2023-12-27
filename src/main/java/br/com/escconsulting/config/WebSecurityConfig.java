@@ -28,6 +28,9 @@ import org.springframework.security.oauth2.client.http.OAuth2ErrorResponseErrorH
 import org.springframework.security.oauth2.core.http.converter.OAuth2AccessTokenResponseHttpMessageConverter;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.security.web.util.matcher.OrRequestMatcher;
+import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
@@ -68,7 +71,7 @@ public class WebSecurityConfig {
 				.exceptionHandling(exceptionHandling -> exceptionHandling.authenticationEntryPoint(new RestAuthenticationEntryPoint()))
 				.authorizeRequests(authorizeRequests ->
 						authorizeRequests
-								.requestMatchers("/", "/error", "/api/all", "/api/auth/**", "/oauth2/**", "/vehicle-brand", "/vehicle-category", "/vehicle/vehicle-brand/{vehicleBrandId}", "/vehicle-model/vehicle/{vehicleId}", "/customer-vehicle/{customerVehicleId}", "/customer-vehicle/search", "/customer-vehicle-review/by/customer-vehicle/{vehicleCustomerId}").permitAll()
+								.requestMatchers(getPublicRequestMatchers()).permitAll()
 								.anyRequest().authenticated()
 				)
 				.oauth2Login(oauth2Login ->
@@ -88,6 +91,25 @@ public class WebSecurityConfig {
 		http.addFilterBefore(tokenAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
 
 		return http.build();
+	}
+
+	private RequestMatcher getPublicRequestMatchers() {
+		return new OrRequestMatcher(
+				new AntPathRequestMatcher("/"),
+				new AntPathRequestMatcher("/error"),
+				new AntPathRequestMatcher("/api/all"),
+				new AntPathRequestMatcher("/api/auth/**"),
+				new AntPathRequestMatcher("/oauth2/**"),
+				new AntPathRequestMatcher("/vehicle-brand"),
+				new AntPathRequestMatcher("/vehicle-category"),
+				new AntPathRequestMatcher("/vehicle/vehicle-brand/{vehicleBrandId}"),
+				new AntPathRequestMatcher("/vehicle-model/vehicle/{vehicleId}"),
+				new AntPathRequestMatcher("/customer-vehicle/{customerVehicleId}"),
+				new AntPathRequestMatcher("/customer-vehicle/search"),
+				new AntPathRequestMatcher("/customer-vehicle-review/by/customer-vehicle/{customerVehicleId}"),
+				new AntPathRequestMatcher("/customer-vehicle-address/by/customer-vehicle/{customerVehicleId}"),
+				new AntPathRequestMatcher("/customer-vehicle-address/by/customer-vehicle/{customerVehicleId}/address-type/{addressType}")
+		);
 	}
 
 	@Bean
