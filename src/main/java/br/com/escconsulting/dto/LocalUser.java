@@ -8,19 +8,17 @@ import org.springframework.security.oauth2.core.oidc.OidcUserInfo;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
+import java.io.Serial;
 import java.util.Collection;
 import java.util.Map;
 
-/**
- * 
- * @author Chinna
- *
- */
+
 public class LocalUser extends User implements OAuth2User, OidcUser {
 
 	/**
 	 * 
 	 */
+	@Serial
 	private static final long serialVersionUID = -2845160792248762779L;
 	private final OidcIdToken idToken;
 	private final OidcUserInfo userInfo;
@@ -42,7 +40,7 @@ public class LocalUser extends User implements OAuth2User, OidcUser {
 	}
 
 	public static LocalUser create(br.com.escconsulting.entity.User user, Map<String, Object> attributes, OidcIdToken idToken, OidcUserInfo userInfo) {
-		LocalUser localUser = new LocalUser(user.getEmail(), user.getPassword(), user.isEnabled(), true, true, true, GeneralUtils.buildSimpleGrantedAuthorities(user.getRoles()),
+		LocalUser localUser = new LocalUser(user.getEmail(), user.getPassword(), user.getEnabled(), true, true, true, GeneralUtils.buildSimpleGrantedAuthorities(user.getRoles()),
 				user, idToken, userInfo);
 		localUser.setAttributes(attributes);
 		return localUser;

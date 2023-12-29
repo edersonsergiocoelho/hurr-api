@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS address (
     address_id UUID DEFAULT uuid_generate_v4(),
-    street_address CHARACTER VARYING(300) NOT NULL,
+    street_address CHARACTER VARYING(100) NOT NULL,
     number INT NOT NULL,
     complement CHARACTER VARYING(100),
     country_id UUID NOT NULL,

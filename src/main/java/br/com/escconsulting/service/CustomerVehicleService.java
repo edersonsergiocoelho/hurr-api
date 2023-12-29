@@ -20,12 +20,12 @@ public class CustomerVehicleService {
     @Autowired
     private EntityManager entityManager;
 
-    public List<CustomerVehicle> findAll() {
-        return customerVehicleRepository.findAll();
+    public CustomerVehicle findById(UUID customerVehicleId) {
+        return customerVehicleRepository.findById(customerVehicleId).orElseThrow();
     }
 
-    public CustomerVehicle findById(UUID id) {
-        return customerVehicleRepository.findById(id).orElseThrow();
+    public List<CustomerVehicle> findAll() {
+        return customerVehicleRepository.findAll();
     }
 
     public List<CustomerVehicle> search(SearchCustomerVehicle searchCustomerVehicle) {

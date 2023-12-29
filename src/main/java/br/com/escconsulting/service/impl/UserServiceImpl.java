@@ -3,10 +3,10 @@ package br.com.escconsulting.service.impl;
 import br.com.escconsulting.dto.LocalUser;
 import br.com.escconsulting.dto.SignUpRequest;
 import br.com.escconsulting.dto.SocialProvider;
-import br.com.escconsulting.exception.OAuth2AuthenticationProcessingException;
-import br.com.escconsulting.exception.UserAlreadyExistAuthenticationException;
 import br.com.escconsulting.entity.Role;
 import br.com.escconsulting.entity.User;
+import br.com.escconsulting.exception.OAuth2AuthenticationProcessingException;
+import br.com.escconsulting.exception.UserAlreadyExistAuthenticationException;
 import br.com.escconsulting.repository.RoleRepository;
 import br.com.escconsulting.repository.UserRepository;
 import br.com.escconsulting.security.oauth2.user.OAuth2UserInfo;
@@ -21,7 +21,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
-import java.util.*;
+import java.time.Instant;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
 
 /**
  * @author Chinna
@@ -48,9 +52,6 @@ public class UserServiceImpl implements UserService {
 			throw new UserAlreadyExistAuthenticationException("User with email id " + signUpRequest.getEmail() + " already exist");
 		}
 		User user = buildUser(signUpRequest);
-		Date now = Calendar.getInstance().getTime();
-		user.setCreatedDate(now);
-		user.setModifiedDate(now);
 		user = userRepository.save(user);
 		userRepository.flush();
 		return user;
@@ -61,13 +62,14 @@ public class UserServiceImpl implements UserService {
 		user.setDisplayName(formDTO.getDisplayName());
 		user.setEmail(formDTO.getEmail());
 		user.setPassword(passwordEncoder.encode(formDTO.getPassword()));
+		user.setCreatedDate(Instant.now());
 
 		final HashSet<Role> roles = new HashSet<Role>();
 		roles.add(roleRepository.findByName(Role.ROLE_USER).get());
 		user.setRoles(roles);
 
 		user.setProvider(formDTO.getSocialProvider().getProviderType());
-		user.setEnabled(true);
+		user.setEnabled(Boolean.TRUE);
 		user.setProviderUserId(formDTO.getProviderUserId());
 		return user;
 	}
