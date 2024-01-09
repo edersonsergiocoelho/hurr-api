@@ -11,7 +11,7 @@ VALUES
 ('ACCORD 2.2 LX 16V GASOLINA 4P AUTOMÁTICO', (SELECT vehicle_id FROM vehicle WHERE vehicle_name = 'ACCORD'), (SELECT vehicle_category_id FROM vehicle_category WHERE vehicle_category_name = 'Sedã')),
 ('ACCORD 2.2 LX 16V GASOLINA 4P MANUAL', (SELECT vehicle_id FROM vehicle WHERE vehicle_name = 'ACCORD'), (SELECT vehicle_category_id FROM vehicle_category WHERE vehicle_category_name = 'Sedã')),
 ('ACCORD 2.3 EX 16V GASOLINA 4P AUTOMÁTICO', (SELECT vehicle_id FROM vehicle WHERE vehicle_name = 'ACCORD'), (SELECT vehicle_category_id FROM vehicle_category WHERE vehicle_category_name = 'Sedã')),
-('ACCORD 2.3 EX COUPÉ 16V GASOLINA 2P AUTOMÁTICO', (SELECT vehicle_id FROM vehicle WHERE vehicle_name = 'ACCORD'), (SELECT vehicle_category_id FROM vehicle_category WHERE vehicle_category_name = 'Coupe')),
+('ACCORD 2.3 EX COUPÉ 16V GASOLINA 2P AUTOMÁTICO', (SELECT vehicle_id FROM vehicle WHERE vehicle_name = 'ACCORD'), (SELECT vehicle_category_id FROM vehicle_category WHERE vehicle_category_name = 'Sedã')),
 ('ACCORD 2.3 EX-R 16V GASOLINA 4P AUTOMÁTICO', (SELECT vehicle_id FROM vehicle WHERE vehicle_name = 'ACCORD'), (SELECT vehicle_category_id FROM vehicle_category WHERE vehicle_category_name = 'Sedã')),
 ('ACCORD 2.4 EX 16V GASOLINA 4P AUTOMÁTICO', (SELECT vehicle_id FROM vehicle WHERE vehicle_name = 'ACCORD'), (SELECT vehicle_category_id FROM vehicle_category WHERE vehicle_category_name = 'Sedã')),
 ('ACCORD 3.0 EX Sedã V6 24V GASOLINA 4P AUTOMÁTICO', (SELECT vehicle_id FROM vehicle WHERE vehicle_name = 'ACCORD'), (SELECT vehicle_category_id FROM vehicle_category WHERE vehicle_category_name = 'Sedã')),

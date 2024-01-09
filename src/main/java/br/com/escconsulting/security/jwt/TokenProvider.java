@@ -9,6 +9,7 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -37,6 +38,7 @@ public class TokenProvider {
 	}
 	*/
 
+	/*
 	public String createToken(Authentication authentication) {
 		LocalUser userPrincipal = (LocalUser) authentication.getPrincipal();
 
@@ -48,6 +50,28 @@ public class TokenProvider {
 				.withSubject(userPrincipal.getUser().getId().toString())
 				.withIssuedAt(new Date())
 				.withExpiresAt(expiryDate)
+				.sign(algorithm);
+	}
+	*/
+
+	public String createToken(Authentication authentication) {
+		LocalUser userPrincipal = (LocalUser) authentication.getPrincipal();
+
+		Date now = new Date();
+		Date expiryDate = new Date(now.getTime() + appProperties.getAuth().getTokenExpirationMsec());
+
+		Algorithm algorithm = Algorithm.HMAC256(appProperties.getAuth().getTokenSecret());
+
+		// Adicionando informações de autorização ao JWT
+		String[] authorities = userPrincipal.getAuthorities().stream()
+				.map(GrantedAuthority::getAuthority)
+				.toArray(String[]::new);
+
+		return JWT.create()
+				.withSubject(userPrincipal.getUser().getId().toString())
+				.withIssuedAt(new Date())
+				.withExpiresAt(expiryDate)
+				.withArrayClaim("roles", authorities) // Adicionando as permissões como um array de strings
 				.sign(algorithm);
 	}
 

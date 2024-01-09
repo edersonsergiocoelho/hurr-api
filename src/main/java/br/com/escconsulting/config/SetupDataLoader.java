@@ -3,6 +3,7 @@ package br.com.escconsulting.config;
 import br.com.escconsulting.dto.SocialProvider;
 import br.com.escconsulting.entity.Role;
 import br.com.escconsulting.entity.User;
+import br.com.escconsulting.entity.UserRole;
 import br.com.escconsulting.repository.RoleRepository;
 import br.com.escconsulting.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
+import java.util.HashSet;
 import java.util.Set;
 
 @Component
@@ -47,18 +49,25 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
 	}
 
 	@Transactional
-	private final User createUserIfNotFound(final String email, Set<Role> roles) {
+	private final User createUserIfNotFound(final String email, Set<UserRole> userRoles) {
 		User user = userRepository.findByEmail(email);
 		if (user == null) {
 			user = new User();
 			user.setDisplayName("Admin");
 			user.setEmail(email);
 			user.setPassword(passwordEncoder.encode("admin@"));
-			user.setRoles(roles);
+
+			// Crie um HashSet para armazenar as associações UserRole
+			Set<UserRole> roles = new HashSet<>();
+			roles.addAll(userRoles);
+
+			user.setUserRoles(roles); // Defina os UserRoles associados ao usuário
+
 			user.setProvider(SocialProvider.LOCAL.getProviderType());
 			user.setEnabled(true);
 			user.setCreatedDate(Instant.now());
 			user.setModifiedDate(Instant.now());
+
 			user = userRepository.save(user);
 		}
 		return user;

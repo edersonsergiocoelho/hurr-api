@@ -7,6 +7,8 @@ CREATE TABLE IF NOT EXISTS "user"
     password CHARACTER VARYING(200),
     provider CHARACTER VARYING(50),
     file_id UUID,
+    photo_validated boolean NOT NULL DEFAULT false,
+    image_url TEXT,
     created_date TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT current_timestamp,
     modified_date TIMESTAMP WITHOUT TIME ZONE,
     enabled boolean NOT NULL DEFAULT true,

@@ -2,9 +2,9 @@ CREATE TABLE IF NOT EXISTS customer_vehicle_file
 (
     customer_vehicle_file_id UUID DEFAULT uuid_generate_v4(),
     customer_vehicle_id UUID NOT NULL,
-    contentType VARCHAR(50) NOT NULL,
-    originalFileName VARCHAR(1000) NOT NULL,
-    dataAsByteArray BYTEA NOT NULL,
+    content_type VARCHAR(50) NOT NULL,
+    original_file_name VARCHAR(1000) NOT NULL,
+    data_as_byte_array BYTEA NOT NULL,
     created_date TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT current_timestamp,
     modified_date TIMESTAMP WITHOUT TIME ZONE,
     enabled boolean NOT NULL DEFAULT true,

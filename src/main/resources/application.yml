@@ -19,6 +19,7 @@ spring:
       #ddl-auto: create
     properties:
       hibernate:
+        format_sql: true
         dialect: org.hibernate.dialect.PostgreSQLDialect
 
   security:
@@ -28,6 +29,19 @@ spring:
           google:
             clientId: 58495673570-raok2adfrlt76dfjivrb53rc3j9l4928.apps.googleusercontent.com
             clientSecret: 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
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: edersonsergiocoelho@gmail.com
+    password: jyfbeilm hwvv snmr
+    #password: xfdjrdsrpfgucbms
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
 
   flyway:
     enabled: true

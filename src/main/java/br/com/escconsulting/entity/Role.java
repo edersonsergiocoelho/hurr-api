@@ -1,11 +1,13 @@
 package br.com.escconsulting.entity;
 
 import br.com.escconsulting.entity.generic.AbstractEntity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
@@ -18,7 +20,7 @@ import java.util.UUID;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode(callSuper = false)
+@EqualsAndHashCode(callSuper = false, of = "id")
 @ToString
 @Table(name = "role")
 public class Role extends AbstractEntity implements Serializable {
@@ -37,11 +39,11 @@ public class Role extends AbstractEntity implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "role_id")
-	private UUID roleId;
+	private UUID id;
 
 	private String name;
 
-	// bi-directional many-to-many association to User
-	@ManyToMany(mappedBy = "roles")
-	private Set<User> users;
+	@JsonIgnore
+	@OneToMany(mappedBy = "role")
+	private Set<UserRole> userRoles = new HashSet<>();
 }

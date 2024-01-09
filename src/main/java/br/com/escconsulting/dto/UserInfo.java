@@ -1,11 +1,11 @@
 package br.com.escconsulting.dto;
 
-import java.util.List;
-
 import lombok.Value;
+
+import java.util.List;
 
 @Value
 public class UserInfo {
-	private String id, displayName, email;
+	private String id, displayName, email, urlImage;
 	private List<String> roles;
 }
