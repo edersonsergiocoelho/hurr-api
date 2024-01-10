@@ -5,12 +5,15 @@ import br.com.escconsulting.dto.SignUpRequest;
 import br.com.escconsulting.dto.SocialProvider;
 import br.com.escconsulting.entity.Role;
 import br.com.escconsulting.entity.User;
+import br.com.escconsulting.entity.UserRole;
+import br.com.escconsulting.entity.UserRoleId;
 import br.com.escconsulting.exception.OAuth2AuthenticationProcessingException;
 import br.com.escconsulting.exception.UserAlreadyExistAuthenticationException;
 import br.com.escconsulting.repository.RoleRepository;
 import br.com.escconsulting.repository.UserRepository;
 import br.com.escconsulting.security.oauth2.user.OAuth2UserInfo;
 import br.com.escconsulting.security.oauth2.user.OAuth2UserInfoFactory;
+import br.com.escconsulting.service.UserRoleService;
 import br.com.escconsulting.service.UserService;
 import br.com.escconsulting.util.GeneralUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,10 +25,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.time.Instant;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author Chinna
@@ -39,6 +40,9 @@ public class UserServiceImpl implements UserService {
 
 	@Autowired
 	private RoleRepository roleRepository;
+
+	@Autowired
+	private UserRoleService userRoleService;
 
 	@Autowired
 	private PasswordEncoder passwordEncoder;
@@ -64,13 +68,23 @@ public class UserServiceImpl implements UserService {
 		user.setPassword(passwordEncoder.encode(formDTO.getPassword()));
 		user.setCreatedDate(Instant.now());
 
-		final HashSet<Role> roles = new HashSet<Role>();
-		roles.add(roleRepository.findByName(Role.ROLE_USER).get());
-		user.setRoles(roles);
+		Role userRole = roleRepository.findByName(Role.ROLE_USER).get();
+		UserRole userUserRole = new UserRole();
+		userUserRole.setUser(user);
+		userUserRole.setRole(userRole);
+		userUserRole.setCreatedDate(Instant.now());
+		userUserRole.setEnabled(true);
+
+		Set<UserRole> userRoles = new HashSet<>();
+		userRoles.add(userUserRole);
+
+		user.setRoles(Set.of(userRole));
+		user.setUserRoles(userRoles);
 
 		user.setProvider(formDTO.getSocialProvider().getProviderType());
 		user.setEnabled(Boolean.TRUE);
 		user.setProviderUserId(formDTO.getProviderUserId());
+		user.setImageURL(formDTO.getUrlImage());
 		return user;
 	}
 
@@ -90,14 +104,34 @@ public class UserServiceImpl implements UserService {
 		}
 		SignUpRequest userDetails = toUserRegistrationObject(registrationId, oAuth2UserInfo);
 		User user = findUserByEmail(oAuth2UserInfo.getEmail());
+
 		if (user != null) {
 			if (!user.getProvider().equals(registrationId) && !user.getProvider().equals(SocialProvider.LOCAL.getProviderType())) {
 				throw new OAuth2AuthenticationProcessingException(
 						"Looks like you're signed up with " + user.getProvider() + " account. Please use your " + user.getProvider() + " account to login.");
 			}
+
+			List<UserRole> all = userRoleService.findAll();
+
+			Set<Role> roleSet = all.stream()
+					.map(UserRole::getRole)
+					.collect(Collectors.toSet());
+
+			user.setRoles(roleSet);
+
 			user = updateExistingUser(user, oAuth2UserInfo);
 		} else {
 			user = registerNewUser(userDetails);
+
+			for (UserRole userRole: user.getUserRoles().stream().toList()) {
+				UserRoleId id = new UserRoleId();
+				id.setRoleId(userRole.getRole().getId());
+				id.setUserId(userRole.getUser().getId());
+
+				userRole.setId(id);
+			}
+
+			userRoleService.saveAll(user.getUserRoles().stream().toList());
 		}
 
 		return LocalUser.create(user, attributes, idToken, userInfo);
@@ -109,8 +143,8 @@ public class UserServiceImpl implements UserService {
 	}
 
 	private SignUpRequest toUserRegistrationObject(String registrationId, OAuth2UserInfo oAuth2UserInfo) {
-		return SignUpRequest.getBuilder().addProviderUserID(oAuth2UserInfo.getId()).addDisplayName(oAuth2UserInfo.getName()).addEmail(oAuth2UserInfo.getEmail())
-				.addSocialProvider(GeneralUtils.toSocialProvider(registrationId)).addPassword("changeit").build();
+		return SignUpRequest.builder().providerUserId(oAuth2UserInfo.getId()).displayName(oAuth2UserInfo.getName()).email(oAuth2UserInfo.getEmail())
+				.socialProvider(GeneralUtils.toSocialProvider(registrationId)).password("changeit").urlImage(oAuth2UserInfo.getImageUrl()).build();
 	}
 
 	@Override

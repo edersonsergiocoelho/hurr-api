@@ -3,7 +3,10 @@ package br.com.escconsulting.dto;
 import br.com.escconsulting.validator.PasswordMatches;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.UUID;
 
@@ -13,6 +16,9 @@ import java.util.UUID;
  */
 @Data
 @PasswordMatches
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class SignUpRequest {
 
 	private UUID userID;
@@ -33,6 +39,9 @@ public class SignUpRequest {
 	@NotEmpty
 	private String matchingPassword;
 
+	private String urlImage;
+
+	/*
 	public SignUpRequest(String providerUserId, String displayName, String email, String password, SocialProvider socialProvider) {
 		this.providerUserId = providerUserId;
 		this.displayName = displayName;
@@ -81,4 +90,5 @@ public class SignUpRequest {
 			return new SignUpRequest(providerUserID, displayName, email, password, socialProvider);
 		}
 	}
+	 */
 }

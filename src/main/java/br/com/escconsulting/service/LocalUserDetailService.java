@@ -1,6 +1,8 @@
 package br.com.escconsulting.service;
 
 import br.com.escconsulting.dto.LocalUser;
+import br.com.escconsulting.entity.Role;
+import br.com.escconsulting.entity.UserRole;
 import br.com.escconsulting.exception.ResourceNotFoundException;
 import br.com.escconsulting.entity.User;
 import br.com.escconsulting.util.GeneralUtils;
@@ -10,7 +12,10 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 /**
  * 
@@ -23,6 +28,9 @@ public class LocalUserDetailService implements UserDetailsService {
 	@Autowired
 	private UserService userService;
 
+	@Autowired
+	private UserRoleService userRoleService;
+
 	@Override
 	@Transactional
 	public LocalUser loadUserByUsername(final String email) throws UsernameNotFoundException {
@@ -30,12 +38,30 @@ public class LocalUserDetailService implements UserDetailsService {
 		if (user == null) {
 			throw new UsernameNotFoundException("User " + email + " was not found in the database");
 		}
+
+		List<UserRole> all = userRoleService.findAll();
+
+		Set<Role> roleSet = all.stream()
+				.map(UserRole::getRole)
+				.collect(Collectors.toSet());
+
+		user.setRoles(roleSet);
+
 		return createLocalUser(user);
 	}
 
 	@Transactional
 	public LocalUser loadUserById(UUID id) {
 		User user = userService.findUserById(id).orElseThrow(() -> new ResourceNotFoundException("User", "id", id));
+
+		List<UserRole> all = userRoleService.findAll();
+
+		Set<Role> roleSet = all.stream()
+				.map(UserRole::getRole)
+				.collect(Collectors.toSet());
+
+		user.setRoles(roleSet);
+
 		return createLocalUser(user);
 	}
 

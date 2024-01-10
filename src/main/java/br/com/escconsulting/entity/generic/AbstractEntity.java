@@ -28,5 +28,4 @@ public abstract class AbstractEntity {
 
     @Column(name = "enabled", nullable = false)
     private Boolean enabled;
-
 }
