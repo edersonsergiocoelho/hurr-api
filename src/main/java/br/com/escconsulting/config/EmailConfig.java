@@ -25,16 +25,16 @@ public class EmailConfig {
 
     @Bean
     public JavaMailSender javaMailSender() {
-        JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
-        mailSender.setHost(host);
-        mailSender.setPort(port);
-        mailSender.setUsername(username);
-        mailSender.setPassword(password);
+        JavaMailSenderImpl javaMailSenderImpl = new JavaMailSenderImpl();
+        javaMailSenderImpl.setHost(host);
+        javaMailSenderImpl.setPort(port);
+        javaMailSenderImpl.setUsername(username);
+        javaMailSenderImpl.setPassword(password);
 
-        Properties javaMailProperties = mailSender.getJavaMailProperties();
-        javaMailProperties.setProperty("mail.smtp.auth", "true");
-        javaMailProperties.setProperty("mail.smtp.starttls.enable", "true");
+        Properties properties = javaMailSenderImpl.getJavaMailProperties();
+        properties.setProperty("mail.smtp.auth", "true");
+        properties.setProperty("mail.smtp.starttls.enable", "true");
 
-        return mailSender;
+        return javaMailSenderImpl;
     }
 }

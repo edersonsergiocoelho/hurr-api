@@ -4,10 +4,12 @@ import br.com.escconsulting.entity.Customer;
 import br.com.escconsulting.entity.enumeration.CustomerType;
 import br.com.escconsulting.repository.CustomerRepository;
 import br.com.escconsulting.service.CustomerService;
+import br.com.escconsulting.service.TwilioService;
+import br.com.escconsulting.util.RandomCodeGenerator;
+import com.twilio.rest.api.v2010.account.Message;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.security.SecureRandom;
 import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
@@ -18,9 +20,12 @@ public class CustomerServiceImpl implements CustomerService {
 
     private final CustomerRepository customerRepository;
 
+    private final TwilioService twilioService;
+
     @Autowired
-    public CustomerServiceImpl(CustomerRepository customerRepository) {
+    public CustomerServiceImpl(CustomerRepository customerRepository, TwilioService twilioService) {
         this.customerRepository = customerRepository;
+        this.twilioService = twilioService;
     }
 
     @Override
@@ -40,7 +45,7 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public Customer sendCode(Customer customer) {
+    public Customer emailVerificationCode(Customer customer) {
 
         Optional<Customer> optionalCustomer = customerRepository.findByEmail(customer.getEmail());
 
@@ -63,6 +68,75 @@ public class CustomerServiceImpl implements CustomerService {
         }
     }
 
+    public Customer emailValidateCode(Customer customer) {
+
+        Optional<Customer> optionalCustomer = customerRepository.findByEmail(customer.getEmail());
+
+        if (optionalCustomer.isPresent()) {
+
+            Customer customerUpdate = optionalCustomer.get();
+
+            if (customer.getEmailVerificationCode().equals(customerUpdate.getEmailVerificationCode())) {
+                customerUpdate.setEmailValidated(Boolean.TRUE);
+                customerUpdate.setEmailVerificationCode("");
+
+                return customerRepository.save(customerUpdate);
+            }
+
+            return null;
+        }
+
+        return null;
+    }
+
+    @Override
+    public Message phoneVerificationCodeSMS(Customer customer) {
+
+        String message = "O seu código de verificação para Hurr é: " + RandomCodeGenerator.generateCode(6).toUpperCase();
+
+        Optional<Customer> optionalCustomer = customerRepository.findByEmail(customer.getEmail());
+
+        if (optionalCustomer.isPresent()) {
+
+            Customer customerUpdate = optionalCustomer.get();
+
+            customerUpdate.setPhoneVerificationCode(RandomCodeGenerator.generateCode(6).toUpperCase());
+
+            customerRepository.save(customerUpdate);
+        }
+
+        return twilioService.sendSMS(customer.getDdiPhone() + customer.getPhone(), message);
+    }
+
+    @Override
+    public Message phoneVerificationCodeWhatsApp(Customer customer) {
+
+        String message = "O seu código de verificação para Hurr é: " + RandomCodeGenerator.generateCode(6).toUpperCase();
+
+        return twilioService.sendWhatsApp(customer.getDdiPhone() + customer.getPhone(), message);
+    }
+
+    public Customer phoneValidateCode(Customer customer) {
+
+        Optional<Customer> optionalCustomer = customerRepository.findByEmail(customer.getEmail());
+
+        if (optionalCustomer.isPresent()) {
+
+            Customer customerUpdate = optionalCustomer.get();
+
+            if (customer.getPhoneVerificationCode().equals(customerUpdate.getPhoneVerificationCode())) {
+                customerUpdate.setPhoneValidated(Boolean.TRUE);
+                customerUpdate.setPhoneVerificationCode("");
+
+                return customerRepository.save(customerUpdate);
+            }
+
+            return null;
+        }
+
+        return null;
+    }
+
     @Override
     public Customer save(Customer customer) {
         return customerRepository.save(customer);
@@ -79,25 +153,5 @@ public class CustomerServiceImpl implements CustomerService {
     public void delete(UUID id) {
         Customer review = findById(id);
         customerRepository.delete(review);
-    }
-
-    public class RandomCodeGenerator {
-
-        private static final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-        private static SecureRandom random = new SecureRandom();
-
-        public static String generateCode(int length) {
-            StringBuilder code = new StringBuilder();
-            for (int i = 0; i < length; i++) {
-                int randomIndex = random.nextInt(CHARACTERS.length());
-                code.append(CHARACTERS.charAt(randomIndex));
-            }
-            return code.toString();
-        }
-
-        public static void main(String[] args) {
-            String generatedCode = generateCode(6);
-            System.out.println("Generated Code: " + generatedCode);
-        }
     }
 }

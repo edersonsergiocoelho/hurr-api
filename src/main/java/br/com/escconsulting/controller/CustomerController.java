@@ -1,29 +1,34 @@
 package br.com.escconsulting.controller;
 
 import br.com.escconsulting.entity.Customer;
-import br.com.escconsulting.service.CustomerService;
-import br.com.escconsulting.service.EmailService;
+import br.com.escconsulting.service.*;
+import com.twilio.rest.api.v2010.account.Message;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 @RestController
 @RequestMapping("/customer")
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class CustomerController {
 
     private final CustomerService customerService;
+
     private final EmailService emailService;
 
-    @Autowired
-    public CustomerController(CustomerService customerService, EmailService emailService) {
-        this.customerService = customerService;
-        this.emailService = emailService;
-    }
+    private TelegramBot telegramBot;
+
+    private final TwilioService twilioService;
+
+    private final WhatsAppService whatsAppService;
 
     @GetMapping("/{id}")
     public ResponseEntity<Customer> findById(@PathVariable("id") UUID id) {
@@ -49,15 +54,65 @@ public class CustomerController {
         return ResponseEntity.ok(listCustomer);
     }
 
-    @PostMapping("sendCode")
-    public ResponseEntity<Customer> sendCode(@RequestBody Customer customer) {
-        Customer savedCustomer = customerService.sendCode(customer);
+    @PostMapping("emailVerificationCode")
+    public ResponseEntity<Customer> emailVerificationCode(@RequestBody Customer customer) {
+        Customer savedCustomer = customerService.emailVerificationCode(customer);
 
         if (savedCustomer != null && savedCustomer.getEmailVerificationCode() != null) {
             emailService.sendEmailVerification(savedCustomer);
         }
 
         return new ResponseEntity<>(savedCustomer, HttpStatus.CREATED);
+    }
+
+    @PostMapping("emailValidateCode")
+    public ResponseEntity<Customer> emailValidateCode(@RequestBody Customer customer) {
+        Customer savedCustomer = customerService.emailValidateCode(customer);
+
+        return new ResponseEntity<>(savedCustomer, HttpStatus.OK);
+    }
+
+    @PostMapping("phoneVerificationCodeSMS")
+    public ResponseEntity<Customer> phoneVerificationCodeSMS(@RequestBody Customer customer) {
+        Message message = customerService.phoneVerificationCodeSMS(customer);
+
+        if (message != null) {
+            return new ResponseEntity<>(HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PostMapping("phoneVerificationCodeTelegram")
+    public ResponseEntity<Customer> phoneVerificationCodeTelegram(@RequestBody Customer customer) throws URISyntaxException, IOException, InterruptedException {
+
+        // Envia o código de verificação
+        //telegramBot.sendCode("+5511989745259", "seu_código_de_verificação");
+        whatsAppService.sendMessage("5511989745259", "Teste de Mensagem");
+        whatsAppService.sendTemplateMessage("5511989745259", "A1B2C3");
+
+        // Retorna o cliente
+        return ResponseEntity.ok(customer);
+
+    }
+
+    @PostMapping("phoneVerificationCodeWhatsApp")
+    public ResponseEntity<Customer> phoneVerificationCodeWhatsApp(@RequestBody Customer customer) {
+        Message message = customerService.phoneVerificationCodeWhatsApp(customer);
+
+        if (message != null) {
+            return new ResponseEntity<>(HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+
+    @PostMapping("phoneValidateCode")
+    public ResponseEntity<Customer> phoneValidateCode(@RequestBody Customer customer) {
+        Customer savedCustomer = customerService.phoneValidateCode(customer);
+
+        return new ResponseEntity<>(savedCustomer, HttpStatus.OK);
     }
 
     @PostMapping

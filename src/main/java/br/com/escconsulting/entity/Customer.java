@@ -1,6 +1,5 @@
 package br.com.escconsulting.entity;
 
-import br.com.escconsulting.entity.converter.CustomerTypeConverter;
 import br.com.escconsulting.entity.enumeration.CustomerType;
 import br.com.escconsulting.entity.generic.AbstractEntity;
 import jakarta.persistence.*;
@@ -68,7 +67,6 @@ public class Customer extends AbstractEntity implements Serializable {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "customer_type", nullable = false)
-    @Convert(converter = CustomerTypeConverter.class)
     private CustomerType customerType;
 
     @Column(name = "email_validated", nullable = false)
@@ -79,6 +77,9 @@ public class Customer extends AbstractEntity implements Serializable {
 
     @Column(name = "phone_validated", nullable = false)
     private boolean phoneValidated;
+
+    @Column(name = "phone_verification_code", nullable = false)
+    private String phoneVerificationCode;
 
     @Column(name = "driver_license_validated", nullable = false)
     private boolean driverLicenseValidated;

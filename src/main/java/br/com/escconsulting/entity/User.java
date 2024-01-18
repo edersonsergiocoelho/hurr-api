@@ -10,16 +10,12 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
-/**
- * The persistent class for the user database table.
- * 
- */
 @Entity
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode(callSuper = false, of = "id")
+@EqualsAndHashCode(callSuper = false, of = "userId")
 @ToString
 @Table(name = "\"user\"")
 public class User extends AbstractEntity implements Serializable {
@@ -33,7 +29,7 @@ public class User extends AbstractEntity implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "user_id")
-	private UUID id;
+	private UUID userId;
 
 	@Column(name = "provider_user_id")
 	private String providerUserId;
@@ -47,10 +43,15 @@ public class User extends AbstractEntity implements Serializable {
 
 	private String provider;
 
+	@Column(name = "file_id")
+	private UUID fileId;
+
 	@Column(name = "image_url")
 	private String imageURL;
 
-	//@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+	@Column(name = "photo_validated", nullable = false)
+	private Boolean photoValidated;
+
 	@Transient
 	private Set<UserRole> userRoles = new HashSet<>();
 

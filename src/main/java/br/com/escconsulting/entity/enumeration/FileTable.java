@@ -1,6 +1,6 @@
 package br.com.escconsulting.entity.enumeration;
 
-public enum CustomerType {
+public enum FileTable {
     CUSTOMER,
-    OWNER;
+    USER;
 }

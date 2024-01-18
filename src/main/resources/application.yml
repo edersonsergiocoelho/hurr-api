@@ -35,7 +35,6 @@ spring:
     port: 587
     username: edersonsergiocoelho@gmail.com
     password: jyfbeilm hwvv snmr
-    #password: xfdjrdsrpfgucbms
     properties:
       mail:
         smtp:
@@ -45,6 +44,19 @@ spring:
 
   flyway:
     enabled: true
+
+telegram:
+  bot:
+    token: 6763877962:AAElA1aQ8FlaOvZjeStegxm41PQUbKRxJ6M
+
+twilio:
+  account:
+    sid: ACb5e993772f05ca517d681c993a7969cb
+  auth:
+    token: e45a50438c256c1d2cd05e4308bee3e9
+  phone:
+    number: "+18329242707"
+    whatsapp: "+14155238886"
 
 app:
   auth:
