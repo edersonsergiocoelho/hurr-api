@@ -38,14 +38,30 @@ public class Customer extends AbstractEntity implements Serializable {
     @Column(name = "last_name", length = 100)
     private String lastName;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "customer_type", nullable = false)
+    private CustomerType customerType;
+
     @Column(name = "email", length = 300, unique = true, nullable = false)
     private String email;
+
+    @Column(name = "email_validated", nullable = false)
+    private boolean emailValidated;
+
+    @Column(name = "email_verification_code", nullable = false)
+    private String emailVerificationCode;
 
     @Column(name = "ddi_phone", length = 10)
     private String ddiPhone;
 
     @Column(name = "phone", length = 20)
     private String phone;
+
+    @Column(name = "phone_validated", nullable = false)
+    private boolean phoneValidated;
+
+    @Column(name = "phone_verification_code", nullable = false)
+    private String phoneVerificationCode;
 
     @Column(name = "date_of_birth")
     private LocalDate dateOfBirth;
@@ -65,22 +81,9 @@ public class Customer extends AbstractEntity implements Serializable {
     @Column(name = "driver_license_expiration_date")
     private LocalDateTime driverLicenseExpirationDate;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "customer_type", nullable = false)
-    private CustomerType customerType;
-
-    @Column(name = "email_validated", nullable = false)
-    private boolean emailValidated;
-
-    @Column(name = "email_verification_code", nullable = false)
-    private String emailVerificationCode;
-
-    @Column(name = "phone_validated", nullable = false)
-    private boolean phoneValidated;
-
-    @Column(name = "phone_verification_code", nullable = false)
-    private String phoneVerificationCode;
-
     @Column(name = "driver_license_validated", nullable = false)
     private boolean driverLicenseValidated;
+
+    @Column(name = "driver_license_file_id")
+    private UUID driverLicenseFileId;
 }

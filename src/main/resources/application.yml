@@ -30,6 +30,11 @@ spring:
             clientId: 58495673570-raok2adfrlt76dfjivrb53rc3j9l4928.apps.googleusercontent.com
             clientSecret: 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
 
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+
   mail:
     host: smtp.gmail.com
     port: 587

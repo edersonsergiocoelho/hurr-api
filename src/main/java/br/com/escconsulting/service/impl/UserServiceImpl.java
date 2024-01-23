@@ -69,7 +69,7 @@ public class UserServiceImpl implements UserService {
 		user.setPassword(passwordEncoder.encode(formDTO.getPassword()));
 		user.setCreatedDate(Instant.now());
 
-		Role userRole = roleRepository.findByName(Role.ROLE_USER).get();
+		Role userRole = roleRepository.findByRoleName(Role.ROLE_USER).get();
 		UserRole userUserRole = new UserRole();
 		userUserRole.setUser(user);
 		userUserRole.setRole(userRole);
@@ -126,7 +126,7 @@ public class UserServiceImpl implements UserService {
 
 			for (UserRole userRole: user.getUserRoles().stream().toList()) {
 				UserRoleId id = new UserRoleId();
-				id.setRoleId(userRole.getRole().getId());
+				id.setRoleId(userRole.getRole().getRoleId());
 				id.setUserId(userRole.getUser().getUserId());
 
 				userRole.setId(id);
@@ -175,7 +175,7 @@ public class UserServiceImpl implements UserService {
 
 		User userFindByEmail = userRepository.findByEmail(localUser.getUser().getEmail());
 
-		userFindByEmail.setFileId(file.getFileId());
+		userFindByEmail.setPhotoFileId(file.getFileId());
 
 		userRepository.save(userFindByEmail);
 

@@ -43,8 +43,8 @@ public class User extends AbstractEntity implements Serializable {
 
 	private String provider;
 
-	@Column(name = "file_id")
-	private UUID fileId;
+	@Column(name = "photo_file_id")
+	private UUID photoFileId;
 
 	@Column(name = "image_url")
 	private String imageURL;

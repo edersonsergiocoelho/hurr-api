@@ -3,6 +3,8 @@ CREATE TABLE IF NOT EXISTS file_approved
     file_approved_id UUID DEFAULT uuid_generate_v4(),
     file_id UUID NOT NULL,
     approved_by UUID,
+    reproved_by UUID,
+    message TEXT,
     file_table CHARACTER VARYING(100) NOT NULL,
     file_type CHARACTER VARYING(100) NOT NULL,
     created_by UUID NOT NULL,

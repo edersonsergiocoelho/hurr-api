@@ -18,8 +18,13 @@ CREATE TABLE IF NOT EXISTS customer
     driver_license_category CHARACTER VARYING(10),
     driver_license_expiration_date TIMESTAMP WITHOUT TIME ZONE,
     driver_license_validated boolean NOT NULL DEFAULT false,
+    driver_license_file_id UUID,
     created_date TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT current_timestamp,
     modified_date TIMESTAMP WITHOUT TIME ZONE,
     enabled boolean NOT NULL DEFAULT true,
-    CONSTRAINT customer_pkey PRIMARY KEY (customer_id)
+    CONSTRAINT customer_pkey PRIMARY KEY (customer_id),
+    CONSTRAINT customer_to_file_fk FOREIGN KEY (driver_license_file_id)
+        REFERENCES file (file_id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
 );

@@ -15,6 +15,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false, of = "fileId")
 @ToString
+@Builder(toBuilder = true)
 @Table(name = "file")
 public class File extends AbstractEntity implements Serializable {
 
