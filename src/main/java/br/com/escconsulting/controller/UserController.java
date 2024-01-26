@@ -2,16 +2,23 @@ package br.com.escconsulting.controller;
 
 import br.com.escconsulting.config.CurrentUser;
 import br.com.escconsulting.dto.LocalUser;
+import br.com.escconsulting.service.UserService;
 import br.com.escconsulting.util.GeneralUtils;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @RestController
 @RequestMapping("/api")
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class UserController {
+
+	private final UserService userService;
 
 	@GetMapping("/user/me")
 	@PreAuthorize("hasRole('USER')")
@@ -40,5 +47,11 @@ public class UserController {
 	@PreAuthorize("hasRole('MODERATOR')")
 	public ResponseEntity<?> getModeratorContent() {
 		return ResponseEntity.ok("Moderator content goes here");
+	}
+
+	@PostMapping("user/upload")
+	public ResponseEntity<Void> uploadHandler(@CurrentUser LocalUser user, @RequestParam("file") MultipartFile[] files) throws IOException {
+		userService.uploadHandler(user, files);
+		return ResponseEntity.ok().build();
 	}
 }

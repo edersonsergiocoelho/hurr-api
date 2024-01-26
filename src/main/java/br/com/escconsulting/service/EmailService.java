@@ -9,24 +9,20 @@ import org.springframework.stereotype.Service;
 @Service
 public class EmailService {
 
-    private final JavaMailSender emailSender;
+    private final JavaMailSender javaMailSender;
 
     @Autowired
-    public EmailService(JavaMailSender emailSender) {
-        this.emailSender = emailSender;
+    public EmailService(JavaMailSender javaMailSender) {
+        this.javaMailSender = javaMailSender;
     }
 
     public void sendEmailVerification(Customer customer) {
-        try {
 
-            SimpleMailMessage message = new SimpleMailMessage();
-            message.setTo(customer.getEmail());
-            message.setSubject("Seu código de verificação");
-            message.setText("Seu código de verificação é: " + customer.getEmailVerificationCode());
+        SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
+        simpleMailMessage.setTo(customer.getEmail());
+        simpleMailMessage.setSubject("Seu código de verificação");
+        simpleMailMessage.setText("Seu código de verificação é: " + customer.getEmailVerificationCode());
 
-            emailSender.send(message);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        javaMailSender.send(simpleMailMessage);
     }
 }

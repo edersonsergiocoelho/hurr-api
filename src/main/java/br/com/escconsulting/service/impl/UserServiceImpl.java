@@ -3,19 +3,21 @@ package br.com.escconsulting.service.impl;
 import br.com.escconsulting.dto.LocalUser;
 import br.com.escconsulting.dto.SignUpRequest;
 import br.com.escconsulting.dto.SocialProvider;
-import br.com.escconsulting.entity.Role;
-import br.com.escconsulting.entity.User;
-import br.com.escconsulting.entity.UserRole;
-import br.com.escconsulting.entity.UserRoleId;
+import br.com.escconsulting.entity.*;
+import br.com.escconsulting.entity.enumeration.FileTable;
+import br.com.escconsulting.entity.enumeration.FileType;
 import br.com.escconsulting.exception.OAuth2AuthenticationProcessingException;
 import br.com.escconsulting.exception.UserAlreadyExistAuthenticationException;
 import br.com.escconsulting.repository.RoleRepository;
 import br.com.escconsulting.repository.UserRepository;
 import br.com.escconsulting.security.oauth2.user.OAuth2UserInfo;
 import br.com.escconsulting.security.oauth2.user.OAuth2UserInfoFactory;
+import br.com.escconsulting.service.FileApprovedService;
+import br.com.escconsulting.service.FileService;
 import br.com.escconsulting.service.UserRoleService;
 import br.com.escconsulting.service.UserService;
 import br.com.escconsulting.util.GeneralUtils;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.core.oidc.OidcIdToken;
@@ -23,29 +25,28 @@ import org.springframework.security.oauth2.core.oidc.OidcUserInfo;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.Instant;
 import java.util.*;
 import java.util.stream.Collectors;
 
-/**
- * @author Chinna
- * @since 26/3/18
- */
 @Service
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class UserServiceImpl implements UserService {
 
-	@Autowired
-	private UserRepository userRepository;
+	private final UserRepository userRepository;
 
-	@Autowired
-	private RoleRepository roleRepository;
+	private final RoleRepository roleRepository;
 
-	@Autowired
-	private UserRoleService userRoleService;
+	private final UserRoleService userRoleService;
 
-	@Autowired
-	private PasswordEncoder passwordEncoder;
+	private final FileService fileService;
+
+	private final FileApprovedService fileApprovedService;
+
+	private final PasswordEncoder passwordEncoder;
 
 	@Override
 	@Transactional(value = "transactionManager")
@@ -68,7 +69,7 @@ public class UserServiceImpl implements UserService {
 		user.setPassword(passwordEncoder.encode(formDTO.getPassword()));
 		user.setCreatedDate(Instant.now());
 
-		Role userRole = roleRepository.findByName(Role.ROLE_USER).get();
+		Role userRole = roleRepository.findByRoleName(Role.ROLE_USER).get();
 		UserRole userUserRole = new UserRole();
 		userUserRole.setUser(user);
 		userUserRole.setRole(userRole);
@@ -125,8 +126,8 @@ public class UserServiceImpl implements UserService {
 
 			for (UserRole userRole: user.getUserRoles().stream().toList()) {
 				UserRoleId id = new UserRoleId();
-				id.setRoleId(userRole.getRole().getId());
-				id.setUserId(userRole.getUser().getId());
+				id.setRoleId(userRole.getRole().getRoleId());
+				id.setUserId(userRole.getUser().getUserId());
 
 				userRole.setId(id);
 			}
@@ -143,12 +144,50 @@ public class UserServiceImpl implements UserService {
 	}
 
 	private SignUpRequest toUserRegistrationObject(String registrationId, OAuth2UserInfo oAuth2UserInfo) {
-		return SignUpRequest.builder().providerUserId(oAuth2UserInfo.getId()).displayName(oAuth2UserInfo.getName()).email(oAuth2UserInfo.getEmail())
-				.socialProvider(GeneralUtils.toSocialProvider(registrationId)).password("changeit").urlImage(oAuth2UserInfo.getImageUrl()).build();
+		return SignUpRequest.builder()
+				.providerUserId(oAuth2UserInfo.getId())
+				.displayName(oAuth2UserInfo.getName())
+				.email(oAuth2UserInfo.getEmail())
+				.socialProvider(GeneralUtils.toSocialProvider(registrationId))
+				.password("changeit")
+				.urlImage(oAuth2UserInfo.getImageUrl())
+				.build();
 	}
 
 	@Override
 	public Optional<User> findUserById(UUID id) {
 		return userRepository.findById(id);
+	}
+
+	@Override
+	public void uploadHandler(LocalUser localUser, MultipartFile[] files) throws IOException {
+
+		MultipartFile multipartFile = Arrays.stream(files).findFirst().get();
+
+		File file = new File();
+		file.setContentType(multipartFile.getContentType());
+		file.setOriginalFileName(multipartFile.getOriginalFilename());
+		file.setDataAsByteArray(multipartFile.getBytes());
+		file.setCreatedDate(Instant.now());
+		file.setEnabled(Boolean.FALSE);
+
+		file = fileService.save(file);
+
+		User userFindByEmail = userRepository.findByEmail(localUser.getUser().getEmail());
+
+		userFindByEmail.setPhotoFileId(file.getFileId());
+
+		userRepository.save(userFindByEmail);
+
+		FileApproved fileApproved = new FileApproved();
+
+		fileApproved.setFileType(FileType.PROFILE_PICTURE);
+		fileApproved.setFileTable(FileTable.USER);
+		fileApproved.setFileId(file.getFileId());
+		fileApproved.setCreatedBy(localUser.getUser().getUserId());
+		fileApproved.setCreatedDate(Instant.now());
+		fileApproved.setEnabled(Boolean.TRUE);
+
+		fileApprovedService.save(fileApproved);
 	}
 }

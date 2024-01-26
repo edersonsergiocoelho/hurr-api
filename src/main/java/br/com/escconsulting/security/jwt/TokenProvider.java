@@ -68,7 +68,7 @@ public class TokenProvider {
 				.toArray(String[]::new);
 
 		return JWT.create()
-				.withSubject(userPrincipal.getUser().getId().toString())
+				.withSubject(userPrincipal.getUser().getUserId().toString())
 				.withIssuedAt(new Date())
 				.withExpiresAt(expiryDate)
 				.withArrayClaim("roles", authorities) // Adicionando as permissões como um array de strings

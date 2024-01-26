@@ -8,6 +8,11 @@ import org.springframework.util.SerializationUtils;
 import java.util.Base64;
 import java.util.Optional;
 
+/**
+ *
+ * @author Ederson Sergio Monteiro Coelho
+ *
+ */
 public class CookieUtils {
 
 	public static Optional<Cookie> getCookie(HttpServletRequest request, String name) {

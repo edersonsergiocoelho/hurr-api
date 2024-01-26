@@ -13,8 +13,8 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * 
- * @author Chinna
+ *
+ * @author Ederson Sergio Monteiro Coelho
  *
  */
 public class GeneralUtils {
@@ -22,7 +22,7 @@ public class GeneralUtils {
 	public static List<SimpleGrantedAuthority> buildSimpleGrantedAuthorities(final Set<Role> roles) {
 		List<SimpleGrantedAuthority> authorities = new ArrayList<>();
 		for (Role role : roles) {
-			authorities.add(new SimpleGrantedAuthority(role.getName()));
+			authorities.add(new SimpleGrantedAuthority(role.getRoleName()));
 		}
 		return authorities;
 	}
@@ -39,6 +39,6 @@ public class GeneralUtils {
 	public static UserInfo buildUserInfo(LocalUser localUser) {
 		List<String> roles = localUser.getAuthorities().stream().map(item -> item.getAuthority()).collect(Collectors.toList());
 		User user = localUser.getUser();
-		return new UserInfo(user.getId().toString(), user.getDisplayName(), user.getEmail(), user.getImageURL(), roles);
+		return new UserInfo(user.getUserId().toString(), user.getDisplayName(), user.getEmail(), user.getImageURL(), user.getPhotoFileId().toString(), user.getPhotoValidated(), roles);
 	}
 }
