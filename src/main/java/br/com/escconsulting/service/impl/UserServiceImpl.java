@@ -49,6 +49,11 @@ public class UserServiceImpl implements UserService {
 	private final PasswordEncoder passwordEncoder;
 
 	@Override
+	public List<User> findAll() {
+		return userRepository.findAll();
+	}
+
+	@Override
 	@Transactional(value = "transactionManager")
 	public User registerNewUser(final SignUpRequest signUpRequest) throws UserAlreadyExistAuthenticationException {
 		if (signUpRequest.getUserID() != null && userRepository.existsById(signUpRequest.getUserID())) {
@@ -129,7 +134,7 @@ public class UserServiceImpl implements UserService {
 				id.setRoleId(userRole.getRole().getRoleId());
 				id.setUserId(userRole.getUser().getUserId());
 
-				userRole.setId(id);
+				userRole.setUserRoleId(id);
 			}
 
 			userRoleService.saveAll(user.getUserRoles().stream().toList());

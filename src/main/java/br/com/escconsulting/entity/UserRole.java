@@ -12,7 +12,7 @@ import java.io.Serializable;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode(callSuper = false, of = "id")
+@EqualsAndHashCode(callSuper = false, of = "userRoleId")
 @ToString
 @Table(name = "user_role")
 public class UserRole extends AbstractEntity implements Serializable {
@@ -24,7 +24,7 @@ public class UserRole extends AbstractEntity implements Serializable {
     private static final long serialVersionUID = -5527071434834666042L;
 
     @EmbeddedId
-    private UserRoleId id;
+    private UserRoleId userRoleId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", insertable = false, updatable = false)
