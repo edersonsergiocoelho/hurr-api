@@ -1,28 +1,37 @@
 package br.com.escconsulting.service.impl;
 
+import br.com.escconsulting.dto.user.role.UserRoleSearchDTO;
 import br.com.escconsulting.entity.UserRole;
+import br.com.escconsulting.entity.UserRoleId;
 import br.com.escconsulting.repository.UserRoleRepository;
 import br.com.escconsulting.service.UserRoleService;
+import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class UserRoleServiceImpl implements UserRoleService {
 
     private final UserRoleRepository userRoleRepository;
 
-    @Autowired
-    public UserRoleServiceImpl(UserRoleRepository userRoleRepository) {
-        this.userRoleRepository = userRoleRepository;
-    }
-
     @Override
-    public UserRole findById(UUID id) {
-        return userRoleRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Review not found with id: " + id));
+    public Optional<UserRole> findById(UUID userId, UUID roleId) {
+
+        UserRoleId id = new UserRoleId();
+        id.setUserId(userId);
+        id.setRoleId(roleId);
+
+        return Optional.ofNullable(userRoleRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("UserRole not found with id: " + id)));
     }
 
     @Override
@@ -31,8 +40,17 @@ public class UserRoleServiceImpl implements UserRoleService {
     }
 
     @Override
-    public UserRole save(UserRole userRole) {
-        return userRoleRepository.save(userRole);
+    public Page<UserRole> searchPage(UserRoleSearchDTO userRoleSearchDTO, Pageable pageable) {
+        return userRoleRepository.searchPage(userRoleSearchDTO, pageable);
+    }
+
+    @Override
+    public Optional<UserRole> save(UserRole userRole) {
+
+        userRole.setCreatedDate(Instant.now());
+        userRole.setEnabled(Boolean.TRUE);
+
+        return Optional.of(userRoleRepository.save(userRole));
     }
 
     @Override
@@ -41,17 +59,27 @@ public class UserRoleServiceImpl implements UserRoleService {
     }
 
     @Override
-    public UserRole update(UUID id, UserRole review) {
-        UserRole existingReview = findById(id);
-        //existingReview.setReview(review.getReview());
-        //existingReview.setRating(review.getRating());
+    @Transactional
+    public Optional<UserRole> update(UUID userId, UUID roleId, UserRole userRole) {
+        return findById(userId, roleId)
+                .map(existingUserRole -> {
 
-        return userRoleRepository.save(existingReview);
+                    existingUserRole.setEnabled(userRole.getEnabled());
+                    existingUserRole.setModifiedDate(Instant.now());
+
+                    if (!existingUserRole.getUserRoleId().getRoleId().equals(userRole.getUserRoleId().getRoleId())) {
+
+                        userRoleRepository.delete(existingUserRole);
+
+                        return userRoleRepository.save(userRole);
+                    }
+
+                    return userRoleRepository.save(existingUserRole);
+                });
     }
 
     @Override
-    public void delete(UUID id) {
-        UserRole review = findById(id);
-        userRoleRepository.delete(review);
+    public void delete(UUID userId, UUID roleId) {
+        findById(userId, roleId).ifPresent(userRoleRepository::delete);
     }
 }

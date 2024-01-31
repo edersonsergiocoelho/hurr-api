@@ -34,7 +34,7 @@ public class AuthController {
 	TokenProvider tokenProvider;
 
 	@PostMapping("/signin")
-	public ResponseEntity<?> authenticateUser(@Validated @RequestBody LoginRequest loginRequest) {
+	public ResponseEntity<?> signin(@Validated @RequestBody LoginRequest loginRequest) {
 		Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 		String jwt = tokenProvider.createToken(authentication);
@@ -43,7 +43,7 @@ public class AuthController {
 	}
 
 	@PostMapping("/signup")
-	public ResponseEntity<?> registerUser(@Validated @RequestBody SignUpRequest signUpRequest) {
+	public ResponseEntity<?> signup(@Validated @RequestBody SignUpRequest signUpRequest) {
 		try {
 			userService.registerNewUser(signUpRequest);
 		} catch (UserAlreadyExistAuthenticationException e) {

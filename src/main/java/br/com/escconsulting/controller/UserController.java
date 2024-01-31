@@ -21,9 +21,14 @@ public class UserController {
 	private final UserService userService;
 
 	@GetMapping("/user/me")
-	@PreAuthorize("hasRole('USER')")
+	@PreAuthorize("hasAnyRole('USER', 'ADMIN')")
 	public ResponseEntity<?> getCurrentUser(@CurrentUser LocalUser user) {
 		return ResponseEntity.ok(GeneralUtils.buildUserInfo(user));
+	}
+
+	@GetMapping("/user/me/all")
+	public ResponseEntity<?> findAll() {
+		return ResponseEntity.ok(userService.findAll());
 	}
 
 	@GetMapping("/all")
