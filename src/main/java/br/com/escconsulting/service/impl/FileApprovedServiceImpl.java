@@ -1,31 +1,57 @@
 package br.com.escconsulting.service.impl;
 
+import br.com.escconsulting.dto.file.approved.FileApprovedSearchDTO;
+import br.com.escconsulting.entity.Customer;
 import br.com.escconsulting.entity.FileApproved;
+import br.com.escconsulting.entity.enumeration.FileTable;
+import br.com.escconsulting.entity.enumeration.FileType;
+import br.com.escconsulting.repository.FileApprovedCustomRepository;
 import br.com.escconsulting.repository.FileApprovedRepository;
+import br.com.escconsulting.service.CustomerService;
+import br.com.escconsulting.service.EmailService;
 import br.com.escconsulting.service.FileApprovedService;
-import lombok.RequiredArgsConstructor;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
-@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class FileApprovedServiceImpl implements FileApprovedService {
+
+    private final CustomerService customerService;
+
+    private final EmailService emailService;
 
     private final FileApprovedRepository fileApprovedRepository;
 
-    @Override
-    public FileApproved findById(UUID fileApprovedId) {
-        return fileApprovedRepository.findById(fileApprovedId)
-                                     .orElseThrow(() -> new RuntimeException("File Approved not found with fileApprovedId: " + fileApprovedId));
+    private final FileApprovedCustomRepository fileApprovedCustomRepository;
+
+    @Autowired
+    public FileApprovedServiceImpl(@Lazy CustomerService customerService, @Lazy EmailService emailService, @Lazy FileApprovedRepository fileApprovedRepository, @Lazy FileApprovedCustomRepository fileApprovedCustomRepository) {
+        this.customerService = customerService;
+        this.emailService = emailService;
+        this.fileApprovedRepository = fileApprovedRepository;
+        this.fileApprovedCustomRepository = fileApprovedCustomRepository;
     }
 
     @Override
-    public FileApproved findByFileId(UUID fileId) {
-        return fileApprovedRepository.findByFileId(fileId)
-                                     .orElseThrow(() -> new RuntimeException("File Approved not found with fileId: " + fileId));
+    public Optional<FileApproved> findById(UUID fileApprovedId) {
+
+        return Optional.ofNullable(fileApprovedRepository.findById(fileApprovedId)
+                .orElseThrow(() -> new RuntimeException("File Approved not found with fileApprovedId: " + fileApprovedId)));
+    }
+
+    @Override
+    public Optional<FileApproved> findByFileId(UUID fileId) {
+        return Optional.ofNullable(fileApprovedRepository.findByFileId(fileId)
+                .orElseThrow(() -> new RuntimeException("File Approved not found with fileId: " + fileId)));
     }
 
     @Override
@@ -34,20 +60,82 @@ public class FileApprovedServiceImpl implements FileApprovedService {
     }
 
     @Override
-    public FileApproved save(FileApproved fileApproved) {
-        return fileApprovedRepository.save(fileApproved);
+    public Page<FileApproved> searchPage(FileApprovedSearchDTO fileApprovedSearchDTO, Pageable pageable) {
+        return fileApprovedCustomRepository.searchPage(fileApprovedSearchDTO, pageable);
     }
 
     @Override
-    public FileApproved update(UUID fileApprovedId, FileApproved fileApproved) {
-        FileApproved fileApprovedUpdated = findById(fileApprovedId);
+    public Optional<FileApproved> save(FileApproved fileApproved) {
 
-        return fileApprovedRepository.save(fileApprovedUpdated);
+        fileApproved.setCreatedDate(Instant.now());
+        fileApproved.setEnabled(Boolean.TRUE);
+
+        return Optional.of(fileApprovedRepository.save(fileApproved));
+    }
+
+    @Override
+    @Transactional
+    public Optional<FileApproved> update(UUID fileApprovedId, FileApproved fileApproved) {
+        return findById(fileApprovedId)
+                .map(existingFileApproved -> {
+
+                    existingFileApproved.setEnabled(fileApproved.getEnabled());
+                    existingFileApproved.setModifiedDate(Instant.now());
+
+                    existingFileApproved.setMessage(fileApproved.getMessage());
+
+                    if (fileApproved.getApprovedBy() != null) {
+                        existingFileApproved.setApprovedBy(fileApproved.getApprovedBy());
+                    }
+
+                    if (fileApproved.getReprovedBy() != null) {
+                        existingFileApproved.setReprovedBy(fileApproved.getReprovedBy());
+                    }
+
+                    return fileApprovedRepository.save(existingFileApproved);
+
+                }).map(savedFileApproved -> {
+
+                    if (fileApproved.getFileTable().equals(FileTable.CUSTOMER)) {
+                        if (fileApproved.getFileType().equals(FileType.DRIVER_LICENSE)) {
+
+                            Optional<Customer> optionalCustomer = customerService.findById(fileApproved.getCustomerId());
+
+                            if (optionalCustomer.isPresent()) {
+
+                                if (fileApproved.getApprovedBy() != null) {
+                                    emailService.sendDriverLicenseApproved(savedFileApproved, optionalCustomer.get());
+                                }
+
+                                if (fileApproved.getReprovedBy() != null) {
+                                    emailService.sendDriverLicenseDisapprove(savedFileApproved, optionalCustomer.get());
+                                }
+                            }
+                        }
+
+                        if (fileApproved.getFileType().equals(FileType.IDENTITY_NUMBER)) {
+
+                            Optional<Customer> optionalCustomer = customerService.findById(fileApproved.getCustomerId());
+
+                            if (optionalCustomer.isPresent()) {
+
+                                if (fileApproved.getApprovedBy() != null) {
+                                    emailService.sendIdentityNumberApproved(savedFileApproved, optionalCustomer.get());
+                                }
+
+                                if (fileApproved.getReprovedBy() != null) {
+                                    emailService.sendIdentityNumberReproved(savedFileApproved, optionalCustomer.get());
+                                }
+                            }
+                        }
+                    }
+
+                    return savedFileApproved;
+                });
     }
 
     @Override
     public void delete(UUID fileApprovedId) {
-        FileApproved fileApproved = findById(fileApprovedId);
-        fileApprovedRepository.delete(fileApproved);
+        findById(fileApprovedId).ifPresent(fileApprovedRepository::delete);
     }
 }

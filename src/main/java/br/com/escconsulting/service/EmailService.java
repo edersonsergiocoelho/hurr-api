@@ -1,28 +1,17 @@
 package br.com.escconsulting.service;
 
 import br.com.escconsulting.entity.Customer;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import br.com.escconsulting.entity.FileApproved;
 
-@Service
-public class EmailService {
+public interface EmailService {
 
-    private final JavaMailSender javaMailSender;
+    void sendEmailVerification(Customer customer);
 
-    @Autowired
-    public EmailService(JavaMailSender javaMailSender) {
-        this.javaMailSender = javaMailSender;
-    }
+    void sendDriverLicenseApproved(FileApproved fileApproved, Customer customer);
 
-    public void sendEmailVerification(Customer customer) {
+    void sendDriverLicenseDisapprove(FileApproved fileApproved, Customer customer);
 
-        SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
-        simpleMailMessage.setTo(customer.getEmail());
-        simpleMailMessage.setSubject("Seu código de verificação");
-        simpleMailMessage.setText("Seu código de verificação é: " + customer.getEmailVerificationCode());
+    void sendIdentityNumberApproved(FileApproved fileApproved, Customer customer);
 
-        javaMailSender.send(simpleMailMessage);
-    }
+    void sendIdentityNumberReproved(FileApproved fileApproved, Customer customer);
 }

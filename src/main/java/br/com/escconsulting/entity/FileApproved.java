@@ -34,12 +34,24 @@ public class FileApproved extends AbstractEntity implements Serializable {
     @Column(name = "file_id", nullable = false)
     private UUID fileId;
 
-    @Column(name = "approved_by", nullable = false)
+    @Column(name = "approved_by")
     private UUID approvedBy;
+
+    @Column(name = "reproved_by")
+    private UUID reprovedBy;
+
+    @Column(name = "message", nullable = false)
+    private String message;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "file_table", length = 100, nullable = false)
     private FileTable fileTable;
+
+    @Column(name = "customer_id")
+    private UUID customerId;
+
+    @Column(name = "user_id")
+    private UUID userId;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "file_type", length = 100, nullable = false)
@@ -50,4 +62,12 @@ public class FileApproved extends AbstractEntity implements Serializable {
 
     @Column(name = "modified_by")
     private UUID modifiedBy;
+
+    @ManyToOne
+    @JoinColumn(name = "customer_id", insertable = false, updatable = false)
+    private Customer customer;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id", insertable = false, updatable = false)
+    private User user;
 }

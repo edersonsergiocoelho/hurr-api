@@ -8,7 +8,6 @@ import lombok.*;
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
@@ -72,14 +71,35 @@ public class Customer extends AbstractEntity implements Serializable {
     @Column(name = "identity_number", length = 20)
     private String identityNumber;
 
+    @Column(name = "identity_number_issuing_body", length = 20)
+    private String identityNumberIssuingBody;
+
+    @Column(name = "identity_number_issuing_body_uf", length = 10)
+    private String identityNumberIssuingBodyUF;
+
+    @Column(name = "identity_number_validated", nullable = false)
+    private boolean identityNumberValidated;
+
+    @Column(name = "identity_number_file_id")
+    private UUID identityNumberFileId;
+
     @Column(name = "driver_license_registration_number", length = 20)
     private String driverLicenseRegistrationNumber;
 
     @Column(name = "driver_license_category", length = 10)
     private String driverLicenseCategory;
 
+    @Column(name = "driver_license_first_license_date")
+    private LocalDate driverLicenseFirstLicenseDate;
+
     @Column(name = "driver_license_expiration_date")
-    private LocalDateTime driverLicenseExpirationDate;
+    private LocalDate driverLicenseExpirationDate;
+
+    @Column(name = "driver_license_issue_date")
+    private LocalDate driverLicenseIssueDate;
+
+    @Column(name = "driver_license_issue_uf", length = 10)
+    private String driverLicenseIssueUF;
 
     @Column(name = "driver_license_validated", nullable = false)
     private boolean driverLicenseValidated;

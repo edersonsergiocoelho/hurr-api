@@ -2,6 +2,7 @@ package br.com.escconsulting.service;
 
 import br.com.escconsulting.dto.LocalUser;
 import br.com.escconsulting.dto.SignUpRequest;
+import br.com.escconsulting.entity.FileApproved;
 import br.com.escconsulting.entity.User;
 import br.com.escconsulting.exception.UserAlreadyExistAuthenticationException;
 import org.springframework.security.oauth2.core.oidc.OidcIdToken;
@@ -26,5 +27,5 @@ public interface UserService {
 
 	LocalUser processUserRegistration(String registrationId, Map<String, Object> attributes, OidcIdToken idToken, OidcUserInfo userInfo);
 
-	void uploadHandler(LocalUser localUser, MultipartFile[] files) throws IOException;
+	Optional<FileApproved> uploadHandler(LocalUser localUser, MultipartFile[] files) throws IOException;
 }

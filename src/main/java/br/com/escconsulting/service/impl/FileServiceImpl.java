@@ -3,11 +3,14 @@ package br.com.escconsulting.service.impl;
 import br.com.escconsulting.entity.File;
 import br.com.escconsulting.repository.FileRepository;
 import br.com.escconsulting.service.FileService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -17,9 +20,10 @@ public class FileServiceImpl implements FileService {
     private final FileRepository fileRepository;
 
     @Override
-    public File findById(UUID fileId) {
-        return fileRepository.findById(fileId)
-                             .orElseThrow(() -> new RuntimeException("File not found with fileId: " + fileId));
+    public Optional<File> findById(UUID fileId) {
+
+        return Optional.ofNullable(fileRepository.findById(fileId)
+                .orElseThrow(() -> new RuntimeException("File Approved not found with fileId: " + fileId)));
     }
 
     @Override
@@ -28,19 +32,29 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
-    public File save(File file) {
-        return fileRepository.save(file);
+    public Optional<File> save(File file) {
+
+        file.setCreatedDate(Instant.now());
+        file.setEnabled(Boolean.TRUE);
+
+        return Optional.of(fileRepository.save(file));
     }
 
     @Override
-    public File update(UUID fileId, File file) {
-        File fileUpdated = findById(fileId);
-        return fileRepository.save(fileUpdated);
+    @Transactional
+    public Optional<File> update(UUID fileId, File file) {
+        return findById(fileId)
+                .map(existingFile -> {
+
+                    existingFile.setEnabled(file.getEnabled());
+                    existingFile.setModifiedDate(Instant.now());
+
+                    return fileRepository.save(existingFile);
+                });
     }
 
     @Override
     public void delete(UUID fileId) {
-        File file = findById(fileId);
-        fileRepository.delete(file);
+        findById(fileId).ifPresent(fileRepository::delete);
     }
 }

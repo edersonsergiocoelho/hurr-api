@@ -52,6 +52,13 @@ public class User extends AbstractEntity implements Serializable {
 	@Column(name = "photo_validated", nullable = false)
 	private Boolean photoValidated;
 
+	@PrePersist
+	protected void prePersist() {
+		if (this.photoValidated == null) {
+			this.photoValidated = false;
+		}
+	}
+
 	@Transient
 	private Set<UserRole> userRoles = new HashSet<>();
 

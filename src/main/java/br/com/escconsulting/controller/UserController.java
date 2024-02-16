@@ -55,8 +55,9 @@ public class UserController {
 	}
 
 	@PostMapping("user/upload")
-	public ResponseEntity<Void> uploadHandler(@CurrentUser LocalUser user, @RequestParam("file") MultipartFile[] files) throws IOException {
-		userService.uploadHandler(user, files);
-		return ResponseEntity.ok().build();
+	public ResponseEntity<?> uploadHandler(@CurrentUser LocalUser user, @RequestParam("file") MultipartFile[] files) throws IOException {
+		return userService.uploadHandler(user, files)
+				.map(ResponseEntity::ok)
+				.orElseThrow(() -> new IllegalStateException("Failed to upload profile picture"));
 	}
 }

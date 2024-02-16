@@ -4,7 +4,6 @@ import br.com.escconsulting.config.CurrentUser;
 import br.com.escconsulting.dto.LocalUser;
 import br.com.escconsulting.entity.Customer;
 import br.com.escconsulting.service.CustomerService;
-import br.com.escconsulting.service.EmailService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -13,7 +12,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.Optional;
 import java.util.UUID;
 
 @RestController
@@ -22,8 +20,6 @@ import java.util.UUID;
 public class CustomerController {
 
     private final CustomerService customerService;
-
-    private final EmailService emailService;
 
     @GetMapping("/{id}")
     public ResponseEntity<?> findById(@PathVariable("id") UUID id) {
@@ -44,6 +40,7 @@ public class CustomerController {
         return ResponseEntity.ok(customerService.findAll());
     }
 
+    /*
     @PostMapping("emailVerificationCode")
     public ResponseEntity<?> emailVerificationCode(@RequestBody Customer customer) {
         return customerService.emailVerificationCode(customer)
@@ -59,6 +56,14 @@ public class CustomerController {
                 })
                 .map(ResponseEntity::ok)
                 .orElseThrow(() -> new IllegalStateException("Failed to send verification code"));
+    }
+    */
+
+    @PostMapping("emailVerificationCode")
+    public ResponseEntity<?> emailVerificationCode(@RequestBody Customer customer) {
+        return customerService.emailVerificationCode(customer)
+                .map(ResponseEntity::ok)
+                .orElseThrow(() -> new IllegalStateException("Failed to create customer or send verification code"));
     }
 
     @PostMapping("emailValidateCode")
@@ -91,7 +96,7 @@ public class CustomerController {
     @PostMapping("phoneVerificationCodeWhatsApp")
     public ResponseEntity<?> phoneVerificationCodeWhatsApp(@RequestBody Customer customer) {
         return customerService.phoneVerificationCodeWhatsApp(customer)
-                .map(message -> ResponseEntity.ok().build())  // Create 200 OK response if message sent
+                .map(message -> ResponseEntity.ok().build())
                 .orElseThrow(() -> new IllegalStateException("Failed to send verification code"));
     }
 
@@ -102,10 +107,18 @@ public class CustomerController {
                 .orElseThrow(() -> new IllegalStateException("Failed to validate phone code"));
     }
 
-    @PostMapping("upload")
-    public ResponseEntity<?> uploadHandler(@CurrentUser LocalUser user, @RequestParam("file") MultipartFile[] files) throws IOException {
-        customerService.uploadHandler(user, files);
-        return ResponseEntity.ok().build();
+    @PostMapping("uploadIdentityNumber")
+    public ResponseEntity<?> uploadIdentityNumber(@CurrentUser LocalUser user, @RequestParam("file") MultipartFile[] files) throws IOException {
+        return customerService.uploadIdentityNumber(user, files)
+                .map(ResponseEntity::ok)
+                .orElseThrow(() -> new IllegalStateException("Failed to upload identity number"));
+    }
+
+    @PostMapping("uploadDriverLicense")
+    public ResponseEntity<?> uploadDriverLicense(@CurrentUser LocalUser user, @RequestParam("file") MultipartFile[] files) throws IOException {
+        return customerService.uploadDriverLicense(user, files)
+                .map(ResponseEntity::ok)
+                .orElseThrow(() -> new IllegalStateException("Failed to upload driver license"));
     }
 
     @PostMapping

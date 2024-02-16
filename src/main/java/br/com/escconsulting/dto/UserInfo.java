@@ -6,7 +6,7 @@ import java.util.List;
 
 @Value
 public class UserInfo {
-	private String id, displayName, email, imageURL, fileId;
+	private String userId, displayName, email, imageURL, photoFileId;
 	private Boolean photoValidated;
 	private List<String> roles;
 }
