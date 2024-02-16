@@ -48,7 +48,7 @@ public class WebSecurityConfig {
 	private CustomOAuth2UserService customOAuth2UserService;
 
 	@Autowired
-	CustomOidcUserService customOidcUserService;
+	private CustomOidcUserService customOidcUserService;
 
 	@Autowired
 	private OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
@@ -129,9 +129,9 @@ public class WebSecurityConfig {
 	}
 
 	// This bean is load the user specific data when form login is used.
-	public UserDetailsService userDetailsService() {
-		return userDetailsService;
-	}
+	//public UserDetailsService userDetailsService() {
+	//	return userDetailsService;
+	//}
 
 	@Bean
 	public PasswordEncoder passwordEncoder() {

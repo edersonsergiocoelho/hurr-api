@@ -3,16 +3,17 @@ package br.com.escconsulting.service;
 import br.com.escconsulting.entity.File;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public interface FileService {
-    File findById(UUID id);
+    Optional<File> findById(UUID fileId);
 
     List<File> findAll();
 
-    File save(File review);
+    Optional<File> save(File file);
 
-    File update(UUID id, File file);
+    Optional<File> update(UUID fileId, File file);
 
-    void delete(UUID id);
+    void delete(UUID fileId);
 }

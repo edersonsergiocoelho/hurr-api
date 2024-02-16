@@ -6,6 +6,8 @@ CREATE TABLE IF NOT EXISTS file_approved
     reproved_by UUID,
     message TEXT,
     file_table CHARACTER VARYING(100) NOT NULL,
+    customer_id UUID,
+    user_id UUID,
     file_type CHARACTER VARYING(100) NOT NULL,
     created_by UUID NOT NULL,
     created_date TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT current_timestamp,
@@ -15,6 +17,14 @@ CREATE TABLE IF NOT EXISTS file_approved
     CONSTRAINT file_approved_pkey PRIMARY KEY (file_approved_id),
     CONSTRAINT file_approved_to_file_fk FOREIGN KEY (file_id)
         REFERENCES file (file_id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION,
+    CONSTRAINT file_approved_to_customer_fk FOREIGN KEY (customer_id)
+        REFERENCES customer (customer_id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION,
+    CONSTRAINT file_approved_to_user_fk FOREIGN KEY (user_id)
+        REFERENCES user (user_id) MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE NO ACTION
 );

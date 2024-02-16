@@ -39,6 +39,7 @@ public class GeneralUtils {
 	public static UserInfo buildUserInfo(LocalUser localUser) {
 		List<String> roles = localUser.getAuthorities().stream().map(item -> item.getAuthority()).collect(Collectors.toList());
 		User user = localUser.getUser();
-		return new UserInfo(user.getUserId().toString(), user.getDisplayName(), user.getEmail(), user.getImageURL(), user.getPhotoFileId().toString(), user.getPhotoValidated(), roles);
+		String photoFileId = (user.getPhotoFileId() != null) ? user.getPhotoFileId().toString() : null;
+		return new UserInfo(user.getUserId().toString(), user.getDisplayName(), user.getEmail(), user.getImageURL(), photoFileId, user.getPhotoValidated(), roles);
 	}
 }

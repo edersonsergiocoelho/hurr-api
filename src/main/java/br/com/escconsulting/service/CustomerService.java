@@ -2,6 +2,7 @@ package br.com.escconsulting.service;
 
 import br.com.escconsulting.dto.LocalUser;
 import br.com.escconsulting.entity.Customer;
+import br.com.escconsulting.entity.FileApproved;
 import com.twilio.rest.api.v2010.account.Message;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -23,11 +24,13 @@ public interface CustomerService {
 
     Optional<Message> phoneVerificationCodeSMS(Customer customer);
 
-    Optional<Message> phoneVerificationCodeWhatsApp(Customer customer);
+    Optional<Customer> phoneVerificationCodeWhatsApp(Customer customer);
 
     Optional<Customer> phoneValidateCode(Customer customer);
 
-    void uploadHandler(LocalUser localUser, MultipartFile[] files) throws IOException;
+    Optional<FileApproved> uploadIdentityNumber(LocalUser localUser, MultipartFile[] files) throws IOException;
+
+    Optional<FileApproved> uploadDriverLicense(LocalUser localUser, MultipartFile[] files) throws IOException;
 
     Optional<Customer> save(Customer customer);
 

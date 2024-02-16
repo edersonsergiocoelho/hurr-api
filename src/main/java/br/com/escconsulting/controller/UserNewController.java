@@ -1,0 +1,73 @@
+package br.com.escconsulting.controller;
+
+import br.com.escconsulting.dto.user.UserSearchDTO;
+import br.com.escconsulting.entity.User;
+import br.com.escconsulting.service.UserNewService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.UUID;
+
+@RestController
+@RequestMapping("/user")
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
+public class UserNewController {
+
+    private final UserNewService userNewService;
+
+    @GetMapping("/{userId}")
+    public ResponseEntity<User> findById(@PathVariable("userId") UUID userId) {
+        return userNewService.findById(userId)
+                .map(ResponseEntity::ok)
+                .orElseGet(ResponseEntity.notFound()::build);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<User>> findAll() {
+        List<User> listUser = userNewService.findAll();
+        return ResponseEntity.ok(listUser);
+    }
+
+    @PostMapping("/search/page")
+    public ResponseEntity<?> search(
+            @RequestBody UserSearchDTO userSearchDTO,
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "10") int size,
+            @RequestParam(value = "sortDir", defaultValue = "ASC") String sortDir,
+            @RequestParam(value = "sortBy", defaultValue = "createdDate") String sortBy) {
+
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(sortDir), sortBy));
+
+        Page<User> users = userNewService.searchPage(userSearchDTO, pageable);
+
+        return ResponseEntity.ok(users);
+    }
+
+    @PostMapping
+    public ResponseEntity<?> save(@RequestBody User user) {
+        return userNewService.save(user)
+                .map(ResponseEntity::ok)
+                .orElseThrow(() -> new IllegalStateException("Failed to save user"));
+    }
+
+    @PutMapping("/{userId}")
+    public ResponseEntity<?> update(@PathVariable("userId") UUID userId,
+                                    @RequestBody User user) {
+        return userNewService.update(userId, user)
+                .map(updatedUser -> ResponseEntity.ok(updatedUser))
+                .orElseThrow(() -> new IllegalStateException("Failed to update user"));
+    }
+
+    @DeleteMapping("/{userId}")
+    public ResponseEntity<?> delete(@PathVariable("userId") UUID userId) {
+        userNewService.delete(userId);
+        return ResponseEntity.noContent().build();
+    }
+}

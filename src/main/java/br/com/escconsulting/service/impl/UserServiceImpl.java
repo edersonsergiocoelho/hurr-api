@@ -48,7 +48,7 @@ public class UserServiceImpl implements UserService {
 
 	private final PasswordEncoder passwordEncoder;
 
-	@Override
+    @Override
 	public List<User> findAll() {
 		return userRepository.findAll();
 	}
@@ -165,7 +165,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public void uploadHandler(LocalUser localUser, MultipartFile[] files) throws IOException {
+	public Optional<FileApproved> uploadHandler(LocalUser localUser, MultipartFile[] files) throws IOException {
 
 		MultipartFile multipartFile = Arrays.stream(files).findFirst().get();
 
@@ -176,7 +176,7 @@ public class UserServiceImpl implements UserService {
 		file.setCreatedDate(Instant.now());
 		file.setEnabled(Boolean.FALSE);
 
-		file = fileService.save(file);
+		file = fileService.save(file).get();
 
 		User userFindByEmail = userRepository.findByEmail(localUser.getUser().getEmail());
 
@@ -188,11 +188,12 @@ public class UserServiceImpl implements UserService {
 
 		fileApproved.setFileType(FileType.PROFILE_PICTURE);
 		fileApproved.setFileTable(FileTable.USER);
+		fileApproved.setUserId(userFindByEmail.getUserId());
 		fileApproved.setFileId(file.getFileId());
 		fileApproved.setCreatedBy(localUser.getUser().getUserId());
 		fileApproved.setCreatedDate(Instant.now());
 		fileApproved.setEnabled(Boolean.TRUE);
 
-		fileApprovedService.save(fileApproved);
+		return fileApprovedService.save(fileApproved);
 	}
 }
