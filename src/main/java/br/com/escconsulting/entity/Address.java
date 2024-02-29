@@ -1,5 +1,6 @@
 package br.com.escconsulting.entity;
 
+import br.com.escconsulting.entity.enumeration.AddressType;
 import br.com.escconsulting.entity.generic.AbstractEntity;
 import jakarta.persistence.*;
 import lombok.*;
@@ -27,7 +28,10 @@ public class Address extends AbstractEntity implements Serializable {
     @Id
     @GeneratedValue(generator = "UUID")
     @Column(name = "address_id", updatable = false, nullable = false)
-    private UUID id;
+    private UUID addressId;
+
+    @Column(name = "nickname", length = 100)
+    private String nickname;
 
     @Column(name = "street_address", length = 300, nullable = false)
     private String streetAddress;
@@ -40,6 +44,10 @@ public class Address extends AbstractEntity implements Serializable {
 
     @Column(name = "zip_code", length = 20)
     private String zipCode;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "address_type", length = 100, nullable = false)
+    private AddressType addressType;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "country_id", nullable = false)
