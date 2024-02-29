@@ -27,7 +27,7 @@ public class State extends AbstractEntity implements Serializable {
     @Id
     @GeneratedValue(generator = "UUID")
     @Column(name = "state_id", updatable = false, nullable = false)
-    private UUID id;
+    private UUID stateId;
 
     @Column(name = "state_name", length = 100, nullable = false, unique = true)
     private String stateName;
