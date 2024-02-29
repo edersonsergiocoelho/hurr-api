@@ -27,7 +27,7 @@ public class Country extends AbstractEntity implements Serializable {
     @Id
     @GeneratedValue(generator = "UUID")
     @Column(name = "country_id", updatable = false, nullable = false)
-    private UUID id;
+    private UUID countryId;
 
     @Column(name = "country_name", length = 100, nullable = false, unique = true)
     private String countryName;
