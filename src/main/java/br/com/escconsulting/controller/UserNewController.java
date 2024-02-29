@@ -1,8 +1,11 @@
 package br.com.escconsulting.controller;
 
+import br.com.escconsulting.config.CurrentUser;
+import br.com.escconsulting.dto.LocalUser;
 import br.com.escconsulting.dto.user.UserSearchDTO;
 import br.com.escconsulting.entity.User;
 import br.com.escconsulting.service.UserNewService;
+import br.com.escconsulting.util.GeneralUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -10,8 +13,11 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
@@ -29,10 +35,23 @@ public class UserNewController {
                 .orElseGet(ResponseEntity.notFound()::build);
     }
 
+    @GetMapping("/by/email/{email}")
+    public ResponseEntity<User> findByEmail(@PathVariable("email") String email) {
+        return userNewService.findByEmail(email)
+                .map(ResponseEntity::ok)
+                .orElseGet(ResponseEntity.notFound()::build);
+    }
+
     @GetMapping
     public ResponseEntity<List<User>> findAll() {
         List<User> listUser = userNewService.findAll();
         return ResponseEntity.ok(listUser);
+    }
+
+    @GetMapping("/me")
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
+    public ResponseEntity<?> getCurrentUser(@CurrentUser LocalUser user) {
+        return ResponseEntity.ok(GeneralUtils.buildUserInfo(user));
     }
 
     @PostMapping("/search/page")
@@ -48,6 +67,13 @@ public class UserNewController {
         Page<User> users = userNewService.searchPage(userSearchDTO, pageable);
 
         return ResponseEntity.ok(users);
+    }
+
+    @PostMapping("upload")
+    public ResponseEntity<?> upload(@CurrentUser LocalUser user, @RequestParam("file") MultipartFile[] files) throws IOException {
+        return userNewService.upload(user, files)
+                .map(ResponseEntity::ok)
+                .orElseThrow(() -> new IllegalStateException("Failed to upload profile picture"));
     }
 
     @PostMapping

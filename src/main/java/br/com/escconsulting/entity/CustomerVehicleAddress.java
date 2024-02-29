@@ -1,6 +1,5 @@
 package br.com.escconsulting.entity;
 
-import br.com.escconsulting.entity.enumeration.AddressType;
 import br.com.escconsulting.entity.generic.AbstractEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
@@ -39,8 +38,4 @@ public class CustomerVehicleAddress extends AbstractEntity implements Serializab
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "address_id")
     private Address address;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "address_type", nullable = false)
-    private AddressType addressType;
 }
