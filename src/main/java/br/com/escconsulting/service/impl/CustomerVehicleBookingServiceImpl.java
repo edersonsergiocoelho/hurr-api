@@ -1,0 +1,83 @@
+package br.com.escconsulting.service.impl;
+
+import br.com.escconsulting.dto.customer.vehicle.booking.CustomerVehicleBookingSearchDTO;
+import br.com.escconsulting.entity.CustomerVehicleBooking;
+import br.com.escconsulting.repository.CustomerVehicleBookingRepository;
+import br.com.escconsulting.repository.custom.CustomerVehicleBookingCustomRepository;
+import br.com.escconsulting.service.CustomerVehicleBookingService;
+import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+
+import java.time.Instant;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
+@Service
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
+public class CustomerVehicleBookingServiceImpl implements CustomerVehicleBookingService {
+
+    private final CustomerVehicleBookingRepository customerVehicleBookingRepository;
+
+    private final CustomerVehicleBookingCustomRepository customerVehicleBookingCustomRepository;
+
+    @Transactional
+    @Override
+    public Optional<CustomerVehicleBooking> findById(UUID customerVehicleBookingId) {
+
+        return Optional.ofNullable(customerVehicleBookingRepository.findById(customerVehicleBookingId)
+                .orElseThrow(() -> new RuntimeException("CustomerVehicleBooking not found with customerVehicleBookingId: " + customerVehicleBookingId)));
+    }
+
+    @Transactional
+    @Override
+    public boolean existsByBooking(String booking) {
+        return customerVehicleBookingRepository.existsByBooking(booking);
+    }
+
+    @Transactional
+    @Override
+    public List<CustomerVehicleBooking> findAll() {
+        return customerVehicleBookingRepository.findAll();
+    }
+
+    @Transactional
+    @Override
+    public Page<CustomerVehicleBooking> searchPage(CustomerVehicleBookingSearchDTO customerVehicleBookingSearchDTO, Pageable pageable) {
+        return customerVehicleBookingCustomRepository.searchPage(customerVehicleBookingSearchDTO, pageable);
+    }
+
+    @Transactional
+    @Override
+    public Optional<CustomerVehicleBooking> save(CustomerVehicleBooking customerVehicleBooking) {
+
+        customerVehicleBooking.setCreatedDate(Instant.now());
+        customerVehicleBooking.setEnabled(Boolean.TRUE);
+
+        return Optional.of(customerVehicleBookingRepository.save(customerVehicleBooking));
+    }
+
+    @Transactional
+    @Override
+    public Optional<CustomerVehicleBooking> update(UUID customerVehicleBookingId, CustomerVehicleBooking customerVehicleBooking) {
+        return findById(customerVehicleBookingId)
+                .map(existingCustomerVehicleBooking -> {
+
+                    existingCustomerVehicleBooking.setEnabled(customerVehicleBooking.getEnabled());
+                    existingCustomerVehicleBooking.setModifiedDate(Instant.now());
+
+                    return customerVehicleBookingRepository.save(existingCustomerVehicleBooking);
+
+                });
+    }
+
+    @Transactional
+    @Override
+    public void delete(UUID customerVehicleBookingId) {
+        findById(customerVehicleBookingId).ifPresent(customerVehicleBookingRepository::delete);
+    }
+}

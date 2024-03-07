@@ -25,6 +25,7 @@ public class CountryServiceImpl implements CountryService {
 
     private final CountryCustomRepository countryCustomRepository;
 
+    @Transactional
     @Override
     public Optional<Country> findById(UUID countryId) {
 
@@ -32,16 +33,19 @@ public class CountryServiceImpl implements CountryService {
                 .orElseThrow(() -> new RuntimeException("Country not found with countryId: " + countryId)));
     }
 
+    @Transactional
     @Override
     public List<Country> findAll() {
         return countryRepository.findAll();
     }
 
+    @Transactional
     @Override
     public Page<Country> searchPage(CountrySearchDTO countrySearchDTO, Pageable pageable) {
         return countryCustomRepository.searchPage(countrySearchDTO, pageable);
     }
 
+    @Transactional
     @Override
     public Optional<Country> save(Country country) {
 
@@ -51,8 +55,8 @@ public class CountryServiceImpl implements CountryService {
         return Optional.of(countryRepository.save(country));
     }
 
-    @Override
     @Transactional
+    @Override
     public Optional<Country> update(UUID countryId, Country country) {
         return findById(countryId)
                 .map(existingCountry -> {
@@ -65,6 +69,7 @@ public class CountryServiceImpl implements CountryService {
                 });
     }
 
+    @Transactional
     @Override
     public void delete(UUID countryId) {
         findById(countryId).ifPresent(countryRepository::delete);
