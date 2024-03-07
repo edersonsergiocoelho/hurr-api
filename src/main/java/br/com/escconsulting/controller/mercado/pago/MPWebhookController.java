@@ -1,9 +1,11 @@
 package br.com.escconsulting.controller.mercado.pago;
 
-import br.com.escconsulting.config.MPConfig;
+import br.com.escconsulting.service.mercado.pago.MPWebhookService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.mercadopago.exceptions.MPApiException;
+import com.mercadopago.exceptions.MPException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -15,14 +17,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class MPWebhookController {
 
-    private final MPConfig mpConfig;
+    private final MPWebhookService mpWebhookService;
 
     @PostMapping
-    public ResponseEntity<String> handleWebhook(@RequestBody String notification) {
-        // Lógica para lidar com a notificação aqui
-        System.out.println("Received Mercado Pago Webhook Notification: " + notification.toString());
-
-        // Responda ao Mercado Pago com sucesso (HTTP 200 OK)
-        return new ResponseEntity<>("OK", HttpStatus.OK);
+    public ResponseEntity<String> webhook(@RequestBody String notification) throws JsonProcessingException, MPException, MPApiException {
+        return mpWebhookService.webhook(notification);
     }
 }

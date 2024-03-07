@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS customer_vehicle_file
     modified_date TIMESTAMP WITHOUT TIME ZONE,
     enabled boolean NOT NULL DEFAULT true,
     CONSTRAINT customer_vehicle_file_pkey PRIMARY KEY (customer_vehicle_file_id),
-    CONSTRAINT customer_vehicle_id FOREIGN KEY (customer_vehicle_id)
+    CONSTRAINT customer_vehicle_file_to_customer_vehicle_fk FOREIGN KEY (customer_vehicle_id)
         REFERENCES customer_vehicle (customer_vehicle_id) MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE NO ACTION

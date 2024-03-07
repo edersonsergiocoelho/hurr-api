@@ -13,15 +13,15 @@ CREATE TABLE IF NOT EXISTS address (
     modified_date TIMESTAMP WITHOUT TIME ZONE,
     enabled boolean NOT NULL DEFAULT true,
     CONSTRAINT address_pkey PRIMARY KEY (address_id),
-    CONSTRAINT country_id FOREIGN KEY (country_id)
+    CONSTRAINT address_to_country_fk FOREIGN KEY (country_id)
         REFERENCES country (country_id) MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE NO ACTION,
-    CONSTRAINT city_id FOREIGN KEY (city_id)
+    CONSTRAINT address_to_city_fk FOREIGN KEY (city_id)
         REFERENCES city (city_id) MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE NO ACTION,
-    CONSTRAINT state_id FOREIGN KEY (state_id)
+    CONSTRAINT address_to_state_fk FOREIGN KEY (state_id)
         REFERENCES state (state_id) MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE NO ACTION

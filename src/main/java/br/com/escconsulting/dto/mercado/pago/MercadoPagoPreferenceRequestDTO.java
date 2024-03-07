@@ -21,7 +21,7 @@ public class MercadoPagoPreferenceRequestDTO {
 
     private final String additionalInfo;
     private final String autoReturn;
-    private final PreferenceBackUrlsRequest backUrls;
+    private final MercadoPagoPreferenceBackUrlsRequestDTO backUrls;
     private final Boolean binaryMode;
     private final OffsetDateTime dateOfExpiration;
     private final PreferenceDifferentialPricingRequest differentialPricing;
