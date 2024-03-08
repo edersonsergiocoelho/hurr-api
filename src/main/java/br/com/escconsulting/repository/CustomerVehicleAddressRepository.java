@@ -1,6 +1,7 @@
 package br.com.escconsulting.repository;
 
 import br.com.escconsulting.entity.CustomerVehicleAddress;
+import br.com.escconsulting.entity.enumeration.AddressType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -28,6 +29,6 @@ public interface CustomerVehicleAddressRepository extends JpaRepository<Customer
             "JOIN FETCH address.city " +
             "JOIN FETCH address.state " +
             "WHERE cv.customerVehicleId = :customerVehicleId " +
-            "AND CAST(cva.addressType AS text) = :addressType")
-    List<CustomerVehicleAddress> findAllByCustomerVehicleIdAndAddressType(@Param("customerVehicleId") UUID customerVehicleId, @Param("addressType") String addressType);
+            "AND address.addressType = :addressType")
+    List<CustomerVehicleAddress> findAllByCustomerVehicleIdAndAddressType(@Param("customerVehicleId") UUID customerVehicleId, @Param("addressType") AddressType addressType);
 }

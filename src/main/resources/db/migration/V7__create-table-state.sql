@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS state
     modified_date TIMESTAMP WITHOUT TIME ZONE,
     enabled boolean NOT NULL DEFAULT true,
     CONSTRAINT state_pkey PRIMARY KEY (state_id),
-    CONSTRAINT country_id FOREIGN KEY (country_id)
+    CONSTRAINT state_to_country_fk FOREIGN KEY (country_id)
         REFERENCES country (country_id) MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE NO ACTION

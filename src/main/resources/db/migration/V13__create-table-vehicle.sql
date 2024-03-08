@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS vehicle
     modified_date TIMESTAMP WITHOUT TIME ZONE,
     enabled boolean NOT NULL DEFAULT true,
     CONSTRAINT vehicle_pkey PRIMARY KEY (vehicle_id),
-    CONSTRAINT vehicle_brand_id FOREIGN KEY (vehicle_brand_id)
+    CONSTRAINT vehicle_to_brand_fk FOREIGN KEY (vehicle_brand_id)
         REFERENCES vehicle_brand (vehicle_brand_id) MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE NO ACTION

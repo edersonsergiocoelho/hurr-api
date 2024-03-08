@@ -33,10 +33,6 @@ public class City extends AbstractEntity implements Serializable {
     private String cityName;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "country_id", nullable = false)
-    private Country country;
-
-    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "state_id", nullable = false)
     private State state;
 }

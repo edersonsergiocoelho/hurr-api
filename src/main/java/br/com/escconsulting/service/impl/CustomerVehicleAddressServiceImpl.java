@@ -1,6 +1,7 @@
 package br.com.escconsulting.service.impl;
 
 import br.com.escconsulting.entity.CustomerVehicleAddress;
+import br.com.escconsulting.entity.enumeration.AddressType;
 import br.com.escconsulting.repository.CustomerVehicleAddressRepository;
 import br.com.escconsulting.service.CustomerVehicleAddressService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +37,7 @@ public class CustomerVehicleAddressServiceImpl implements CustomerVehicleAddress
     }
 
     @Override
-    public List<CustomerVehicleAddress> findAllByCustomerVehicleIdAndAddressType(UUID customerVehicleId, String addressType) {
+    public List<CustomerVehicleAddress> findAllByCustomerVehicleIdAndAddressType(UUID customerVehicleId, AddressType addressType) {
         return customerVehicleAddressRepository.findAllByCustomerVehicleIdAndAddressType(customerVehicleId, addressType);
     }
 

@@ -50,6 +50,9 @@ spring:
   flyway:
     enabled: true
 
+mercado.pago:
+  access.token: TEST-2684799542969721-121823-a68944e3c00bde61be46c2cee16899d2-70202035
+
 telegram:
   bot:
     token: 6763877962:AAElA1aQ8FlaOvZjeStegxm41PQUbKRxJ6M

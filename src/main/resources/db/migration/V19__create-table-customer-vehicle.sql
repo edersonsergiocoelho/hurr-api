@@ -26,27 +26,27 @@ CREATE TABLE IF NOT EXISTS customer_vehicle
     modified_date TIMESTAMP WITHOUT TIME ZONE,
     enabled BOOLEAN NOT NULL DEFAULT true,
     CONSTRAINT customer_vehicle_id_pkey PRIMARY KEY (customer_vehicle_id),
-    CONSTRAINT customer_id FOREIGN KEY (customer_id)
+    CONSTRAINT customer_vehicle_to_customer_fk FOREIGN KEY (customer_id)
         REFERENCES customer (customer_id) MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE NO ACTION,
-    CONSTRAINT vehicle_id FOREIGN KEY (vehicle_id)
+    CONSTRAINT customer_vehicle_to_vehicle_fk FOREIGN KEY (vehicle_id)
         REFERENCES vehicle (vehicle_id) MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE NO ACTION,
-    CONSTRAINT vehicle_model_id FOREIGN KEY (vehicle_model_id)
+    CONSTRAINT customer_vehicle_to_vehicle_model_fk FOREIGN KEY (vehicle_model_id)
         REFERENCES vehicle_model (vehicle_model_id) MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE NO ACTION,
-    CONSTRAINT vehicle_color_id FOREIGN KEY (vehicle_color_id)
+    CONSTRAINT customer_vehicle_to_vehicle_color_fk FOREIGN KEY (vehicle_color_id)
         REFERENCES vehicle_color (vehicle_color_id) MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE NO ACTION,
-    CONSTRAINT vehicle_fuel_type_id FOREIGN KEY (vehicle_fuel_type_id)
+    CONSTRAINT customer_vehicle_to_vehicle_fuel_type_fk FOREIGN KEY (vehicle_fuel_type_id)
         REFERENCES vehicle_fuel_type (vehicle_fuel_type_id) MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE NO ACTION,
-    CONSTRAINT vehicle_transmission_id FOREIGN KEY (vehicle_transmission_id)
+    CONSTRAINT customer_vehicle_to_vehicle_transmission_fk FOREIGN KEY (vehicle_transmission_id)
         REFERENCES vehicle_transmission (vehicle_transmission_id) MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE NO ACTION
