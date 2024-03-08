@@ -1,5 +1,7 @@
 package br.com.escconsulting.controller;
 
+import br.com.escconsulting.config.CurrentUser;
+import br.com.escconsulting.dto.LocalUser;
 import br.com.escconsulting.dto.customer.vehicle.booking.CustomerVehicleBookingSearchDTO;
 import br.com.escconsulting.entity.CustomerVehicleBooking;
 import br.com.escconsulting.service.CustomerVehicleBookingService;
@@ -37,6 +39,7 @@ public class CustomerVehicleBookingController {
 
     @PostMapping("/search/page")
     public ResponseEntity<?> search(
+            @CurrentUser LocalUser localUser,
             @RequestBody CustomerVehicleBookingSearchDTO customerVehicleBookingSearchDTO,
             @RequestParam(value = "page", defaultValue = "0") int page,
             @RequestParam(value = "size", defaultValue = "10") int size,
@@ -45,9 +48,9 @@ public class CustomerVehicleBookingController {
 
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(sortDir), sortBy));
 
-        Page<CustomerVehicleBooking> countries = customerVehicleBookingService.searchPage(customerVehicleBookingSearchDTO, pageable);
+        Page<CustomerVehicleBooking> customerVehicleBookings = customerVehicleBookingService.searchPage(localUser, customerVehicleBookingSearchDTO, pageable);
 
-        return ResponseEntity.ok(countries);
+        return ResponseEntity.ok(customerVehicleBookings);
     }
 
     @PostMapping

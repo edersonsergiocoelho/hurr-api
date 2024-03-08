@@ -1,9 +1,12 @@
 package br.com.escconsulting.service.impl;
 
+import br.com.escconsulting.dto.LocalUser;
 import br.com.escconsulting.dto.customer.vehicle.booking.CustomerVehicleBookingSearchDTO;
+import br.com.escconsulting.entity.Customer;
 import br.com.escconsulting.entity.CustomerVehicleBooking;
 import br.com.escconsulting.repository.CustomerVehicleBookingRepository;
 import br.com.escconsulting.repository.custom.CustomerVehicleBookingCustomRepository;
+import br.com.escconsulting.service.CustomerService;
 import br.com.escconsulting.service.CustomerVehicleBookingService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +23,8 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class CustomerVehicleBookingServiceImpl implements CustomerVehicleBookingService {
+
+    private final CustomerService customerService;
 
     private final CustomerVehicleBookingRepository customerVehicleBookingRepository;
 
@@ -47,8 +52,13 @@ public class CustomerVehicleBookingServiceImpl implements CustomerVehicleBooking
 
     @Transactional
     @Override
-    public Page<CustomerVehicleBooking> searchPage(CustomerVehicleBookingSearchDTO customerVehicleBookingSearchDTO, Pageable pageable) {
-        return customerVehicleBookingCustomRepository.searchPage(customerVehicleBookingSearchDTO, pageable);
+    public Page<CustomerVehicleBooking> searchPage(LocalUser localUser, CustomerVehicleBookingSearchDTO customerVehicleBookingSearchDTO, Pageable pageable) {
+        Optional<Customer> optionalCustomer = customerService.findByEmail(localUser.getUsername());
+
+        return optionalCustomer.map(customer -> {
+            customerVehicleBookingSearchDTO.setCustomerId(customer.getCustomerId());
+            return customerVehicleBookingCustomRepository.searchPage(customerVehicleBookingSearchDTO, pageable);
+        }).orElseThrow(() -> new RuntimeException("Customer not found for email: " + localUser.getUsername()));
     }
 
     @Transactional

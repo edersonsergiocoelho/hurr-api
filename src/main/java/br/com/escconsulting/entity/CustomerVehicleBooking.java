@@ -8,6 +8,7 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
@@ -54,9 +55,12 @@ public class CustomerVehicleBooking extends AbstractEntity implements Serializab
     @Column(name = "booking_end_time", length = 5, nullable = false)
     private String bookingEndTime;
 
+    @Column(name = "booking_delivery_date")
+    private LocalDateTime bookingDeliveryDate;
+
     @Column(name = "total_booking_value", precision = 13, scale = 2, nullable = false)
     private BigDecimal totalBookingValue;
 
-    @Column(name = "mp_payment_id")
+    @Column(name = "mp_payment_id", nullable = false)
     private Long mpPaymentId;
 }

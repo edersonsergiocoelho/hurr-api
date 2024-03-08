@@ -61,7 +61,7 @@ public class CustomerVehicleBookingCustomRepositoryImpl extends SimpleJpaReposit
         Predicate spec = cb.conjunction();
 
         if (customerVehicleBookingSearchDTO != null) {
-
+            spec = cb.and(spec, cb.equal(root.get("customer").get("customerId"), customerVehicleBookingSearchDTO.getCustomerId()));
         }
 
         cq.where(spec);

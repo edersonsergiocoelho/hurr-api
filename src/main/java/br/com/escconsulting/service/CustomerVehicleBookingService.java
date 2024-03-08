@@ -1,5 +1,6 @@
 package br.com.escconsulting.service;
 
+import br.com.escconsulting.dto.LocalUser;
 import br.com.escconsulting.dto.customer.vehicle.booking.CustomerVehicleBookingSearchDTO;
 import br.com.escconsulting.entity.CustomerVehicleBooking;
 import org.springframework.data.domain.Page;
@@ -16,7 +17,7 @@ public interface CustomerVehicleBookingService {
 
     List<CustomerVehicleBooking> findAll();
 
-    Page<CustomerVehicleBooking> searchPage(CustomerVehicleBookingSearchDTO customerVehicleBookingSearchDTO, Pageable pageable);
+    Page<CustomerVehicleBooking> searchPage(LocalUser localUser, CustomerVehicleBookingSearchDTO customerVehicleBookingSearchDTO, Pageable pageable);
 
     Optional<CustomerVehicleBooking> save(CustomerVehicleBooking customerVehicleBooking);
 
