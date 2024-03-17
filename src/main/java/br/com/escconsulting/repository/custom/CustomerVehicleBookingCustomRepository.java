@@ -12,5 +12,9 @@ public interface CustomerVehicleBookingCustomRepository extends JpaRepository<Cu
 
     Page<CustomerVehicleBooking> searchPage(CustomerVehicleBookingSearchDTO customerVehicleBookingSearchDTO, Pageable pageable);
 
+    Page<CustomerVehicleBooking> customerVehicleSearchPage(CustomerVehicleBookingSearchDTO customerVehicleBookingSearchDTO, Pageable pageable);
+
     Long countSearchPage(CustomerVehicleBookingSearchDTO customerVehicleBookingSearchDTO);
+
+    Long countCustomerVehicleSearchPage(CustomerVehicleBookingSearchDTO customerVehicleBookingSearchDTO);
 }

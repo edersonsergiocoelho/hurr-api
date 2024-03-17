@@ -53,6 +53,22 @@ public class CustomerVehicleBookingController {
         return ResponseEntity.ok(customerVehicleBookings);
     }
 
+    @PostMapping("/customer-vehicle/search/page")
+    public ResponseEntity<?> customerVehicleSearchPage(
+            @CurrentUser LocalUser localUser,
+            @RequestBody CustomerVehicleBookingSearchDTO customerVehicleBookingSearchDTO,
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "10") int size,
+            @RequestParam(value = "sortDir", defaultValue = "DESC") String sortDir,
+            @RequestParam(value = "sortBy", defaultValue = "createdDate") String sortBy) {
+
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(sortDir), sortBy));
+
+        Page<CustomerVehicleBooking> customerVehicleBookings = customerVehicleBookingService.customerVehicleSearchPage(localUser, customerVehicleBookingSearchDTO, pageable);
+
+        return ResponseEntity.ok(customerVehicleBookings);
+    }
+
     @PostMapping
     public ResponseEntity<?> save(@RequestBody CustomerVehicleBooking customerVehicleBooking) {
         return customerVehicleBookingService.save(customerVehicleBooking)

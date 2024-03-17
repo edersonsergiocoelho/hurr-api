@@ -86,6 +86,62 @@ public class CustomerVehicleBookingCustomRepositoryImpl extends SimpleJpaReposit
         return new PageImpl<>(resultList, pageable, this.countSearchPage(customerVehicleBookingSearchDTO));
     }
 
+    public Page<CustomerVehicleBooking> customerVehicleSearchPage(CustomerVehicleBookingSearchDTO customerVehicleBookingSearchDTO, Pageable pageable) {
+
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<CustomerVehicleBooking> cq = cb.createQuery(CustomerVehicleBooking.class);
+        Root<CustomerVehicleBooking> root = cq.from(CustomerVehicleBooking.class);
+
+        Fetch<CustomerVehicleBooking, CustomerVehicle> customerVehicleFetch = root.fetch("customerVehicle");
+        Fetch<CustomerVehicle, Customer> customerVehicleCustomerFetch = customerVehicleFetch.fetch("customer");
+
+        Fetch<CustomerVehicle, Vehicle> customerVehicleVehicleFetch = customerVehicleFetch.fetch("vehicle");
+        Fetch<Vehicle, VehicleBrand> vehicleVehicleBrandFetch = customerVehicleVehicleFetch.fetch("vehicleBrand");
+
+        Fetch<CustomerVehicle, VehicleModel> customerVehicleVehicleModelFetch = customerVehicleFetch.fetch("vehicleModel");
+        Fetch<VehicleModel, VehicleCategory> vehicleModelVehicleCategoryFetch = customerVehicleVehicleModelFetch.fetch("vehicleCategory");
+
+        Fetch<CustomerVehicle, VehicleColor> customerVehicleVehicleColorFetch = customerVehicleFetch.fetch("vehicleColor");
+        Fetch<CustomerVehicle, VehicleFuelType> customerVehicleVehicleFuelTypeFetch = customerVehicleFetch.fetch("vehicleFuelType");
+        Fetch<CustomerVehicle, VehicleTransmission> customerVehicleVehicleTransmissionFetch = customerVehicleFetch.fetch("vehicleTransmission");
+
+        Fetch<CustomerVehicle, CustomerVehicleAddress> customerVehicleCustomerVehicleAddressFetch = customerVehicleFetch.fetch("addresses");
+        Fetch<CustomerVehicleAddress, Address> customerVehicleAddressAddressFetch = customerVehicleCustomerVehicleAddressFetch.fetch("address");
+
+        Fetch<Address, Country> addressCountryFetch = customerVehicleAddressAddressFetch.fetch("country");
+        Fetch<Address, State> addressStateFetch = customerVehicleAddressAddressFetch.fetch("state");
+        Fetch<Address, City> addressCityFetch = customerVehicleAddressAddressFetch.fetch("city");
+
+        Fetch<CustomerVehicleBooking, Customer> customerFetch = root.fetch("customer");
+
+        Predicate spec = cb.conjunction();
+
+        if (customerVehicleBookingSearchDTO != null) {
+            spec = cb.and(spec, cb.equal(root.get("customerVehicle").get("customer").get("customerId"), customerVehicleBookingSearchDTO.getCustomerId()));
+        }
+
+        cq.where(spec);
+
+        if (pageable.getSort().isSorted()) {
+            List<Order> orders = pageable.getSort().stream()
+                    .map(order -> {
+                        String property = order.getProperty();
+                        return order.isAscending() ? cb.asc(root.get(property)) : cb.desc(root.get(property));
+                    })
+                    .collect(Collectors.toList());
+
+            cq.orderBy(orders);
+        }
+
+        TypedQuery<CustomerVehicleBooking> query = entityManager.createQuery(cq);
+
+        query.setFirstResult((int) pageable.getOffset());
+        query.setMaxResults(pageable.getPageSize());
+
+        List<CustomerVehicleBooking> resultList = query.getResultList();
+        return new PageImpl<>(resultList, pageable, this.countSearchPage(customerVehicleBookingSearchDTO));
+    }
+
     public Long countSearchPage(CustomerVehicleBookingSearchDTO customerVehicleBookingSearchDTO) {
 
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
@@ -96,6 +152,25 @@ public class CustomerVehicleBookingCustomRepositoryImpl extends SimpleJpaReposit
         Predicate spec = cb.conjunction();
 
         if (customerVehicleBookingSearchDTO != null) {
+            spec = cb.and(spec, cb.equal(root.get("customer").get("customerId"), customerVehicleBookingSearchDTO.getCustomerId()));
+        }
+
+        cq.where(spec);
+
+        return entityManager.createQuery(cq).getSingleResult();
+    }
+
+    public Long countCustomerVehicleSearchPage(CustomerVehicleBookingSearchDTO customerVehicleBookingSearchDTO) {
+
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Long> cq = cb.createQuery(Long.class);
+        Root<CustomerVehicleBooking> root = cq.from(CustomerVehicleBooking.class);
+        cq.select(cb.count(root));
+
+        Predicate spec = cb.conjunction();
+
+        if (customerVehicleBookingSearchDTO != null) {
+            spec = cb.and(spec, cb.equal(root.get("customerVehicle").get("customer").get("customerId"), customerVehicleBookingSearchDTO.getCustomerId()));
         }
 
         cq.where(spec);
