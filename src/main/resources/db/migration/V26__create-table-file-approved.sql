@@ -24,7 +24,7 @@ CREATE TABLE IF NOT EXISTS file_approved
         ON UPDATE NO ACTION
         ON DELETE NO ACTION,
     CONSTRAINT file_approved_to_user_fk FOREIGN KEY (user_id)
-        REFERENCES user (user_id) MATCH SIMPLE
+        REFERENCES "user" (user_id) MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE NO ACTION
 );
