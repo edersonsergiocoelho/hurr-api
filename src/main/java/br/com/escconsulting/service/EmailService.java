@@ -2,10 +2,17 @@ package br.com.escconsulting.service;
 
 import br.com.escconsulting.entity.Customer;
 import br.com.escconsulting.entity.FileApproved;
+import br.com.escconsulting.entity.User;
 
 public interface EmailService {
 
-    void sendEmailVerification(Customer customer);
+    void sendForgotPasswordVerificationCode(User user);
+
+    void sendForgotPasswordValidated(User user);
+
+    void sendForgotPassword(User user);
+
+    void sendEmailVerificationCode(Customer customer);
 
     void sendDriverLicenseApproved(FileApproved fileApproved, Customer customer);
 

@@ -2,7 +2,11 @@ package br.com.escconsulting.controller;
 
 import br.com.escconsulting.config.CurrentUser;
 import br.com.escconsulting.dto.LocalUser;
+import br.com.escconsulting.dto.user.UserForgotPasswordDTO;
+import br.com.escconsulting.dto.user.UserPasswordValidateCodeDTO;
+import br.com.escconsulting.dto.user.UserPasswordVerificationCodeDTO;
 import br.com.escconsulting.dto.user.UserSearchDTO;
+import br.com.escconsulting.entity.Customer;
 import br.com.escconsulting.entity.User;
 import br.com.escconsulting.service.UserNewService;
 import br.com.escconsulting.util.GeneralUtils;
@@ -83,10 +87,31 @@ public class UserNewController {
                 .orElseThrow(() -> new IllegalStateException("Failed to save user"));
     }
 
+    @PostMapping("forgotPasswordVerificationCode")
+    public ResponseEntity<?> forgotPasswordVerificationCode(@RequestBody UserPasswordVerificationCodeDTO userPasswordVerificationCodeDTO) {
+        return userNewService.forgotPasswordVerificationCode(userPasswordVerificationCodeDTO)
+                .map(ResponseEntity::ok)
+                .orElseThrow(() -> new IllegalStateException("Failed to forgot password verification code"));
+    }
+
+    @PostMapping("forgotPasswordValidated")
+    public ResponseEntity<?> forgotPasswordValidated(@RequestBody UserPasswordValidateCodeDTO userPasswordValidateCodeDTO) {
+        return userNewService.forgotPasswordValidated(userPasswordValidateCodeDTO)
+                .map(ResponseEntity::ok)
+                .orElseThrow(() -> new IllegalStateException("Failed to forgot password validated"));
+    }
+
     @PutMapping("/{userId}")
     public ResponseEntity<?> update(@PathVariable("userId") UUID userId,
                                     @RequestBody User user) {
         return userNewService.update(userId, user)
+                .map(updatedUser -> ResponseEntity.ok(updatedUser))
+                .orElseThrow(() -> new IllegalStateException("Failed to update user"));
+    }
+
+    @PutMapping("/forgotPassword")
+    public ResponseEntity<?> forgotPassword(@RequestBody UserForgotPasswordDTO userForgotPasswordDTO) {
+        return userNewService.forgotPassword(userForgotPasswordDTO)
                 .map(updatedUser -> ResponseEntity.ok(updatedUser))
                 .orElseThrow(() -> new IllegalStateException("Failed to update user"));
     }

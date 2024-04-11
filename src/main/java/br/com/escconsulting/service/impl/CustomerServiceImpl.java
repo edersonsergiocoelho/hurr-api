@@ -80,7 +80,7 @@ public class CustomerServiceImpl implements CustomerService {
                 });
 
         if (savedCustomer.getEmailVerificationCode() != null) {
-            emailService.sendEmailVerification(savedCustomer);
+            emailService.sendEmailVerificationCode(savedCustomer);
             return Optional.of(savedCustomer);
         } else {
             return Optional.empty();

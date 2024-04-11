@@ -41,6 +41,12 @@ public class User extends AbstractEntity implements Serializable {
 
 	private String password;
 
+	@Column(name = "forgot_password_verification_code")
+	private String forgotPasswordVerificationCode;
+
+	@Column(name = "forgot_password_validated", nullable = false)
+	private Boolean forgotPasswordValidated;
+
 	private String provider;
 
 	@Column(name = "photo_file_id")

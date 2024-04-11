@@ -5,6 +5,7 @@ import br.com.escconsulting.exception.UserAlreadyExistAuthenticationException;
 import br.com.escconsulting.security.jwt.TokenProvider;
 import br.com.escconsulting.service.UserService;
 import br.com.escconsulting.util.GeneralUtils;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,11 +14,18 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @RestController
@@ -34,7 +42,7 @@ public class AuthController {
 	TokenProvider tokenProvider;
 
 	@PostMapping("/signin")
-	public ResponseEntity<?> signin(@Validated @RequestBody LoginRequest loginRequest) {
+	public ResponseEntity<?> signin(@Valid @RequestBody LoginRequest loginRequest) {
 		Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 		String jwt = tokenProvider.createToken(authentication);
@@ -43,7 +51,7 @@ public class AuthController {
 	}
 
 	@PostMapping("/signup")
-	public ResponseEntity<?> signup(@Validated @RequestBody SignUpRequest signUpRequest) {
+	public ResponseEntity<?> signup(@Valid @RequestBody SignUpRequest signUpRequest) {
 		try {
 			userService.registerNewUser(signUpRequest);
 		} catch (UserAlreadyExistAuthenticationException e) {
