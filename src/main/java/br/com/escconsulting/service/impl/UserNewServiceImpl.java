@@ -20,6 +20,7 @@ import br.com.escconsulting.service.FileService;
 import br.com.escconsulting.service.UserNewService;
 import br.com.escconsulting.util.RandomCodeGenerator;
 import jakarta.transaction.Transactional;
+import jakarta.ws.rs.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
@@ -66,9 +67,7 @@ public class UserNewServiceImpl implements UserNewService {
     @Transactional
     @Override
     public Optional<User> findByEmail(String email) {
-
-        return Optional.ofNullable(userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("User not found with email: " + email)));
+        return userRepository.findByEmail(email);
     }
 
     @Transactional

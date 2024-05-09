@@ -63,6 +63,10 @@ public class User extends AbstractEntity implements Serializable {
 		if (this.photoValidated == null) {
 			this.photoValidated = false;
 		}
+
+		if (this.forgotPasswordValidated == null) {
+			this.forgotPasswordValidated = false;
+		}
 	}
 
 	@Transient

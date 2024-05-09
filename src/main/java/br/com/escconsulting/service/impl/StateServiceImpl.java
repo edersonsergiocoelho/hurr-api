@@ -26,6 +26,7 @@ public class StateServiceImpl implements StateService {
     private final StateCustomRepository stateCustomRepository;
 
     @Override
+    @Transactional
     public Optional<State> findById(UUID stateId) {
 
         return Optional.ofNullable(stateRepository.findById(stateId)
@@ -33,21 +34,25 @@ public class StateServiceImpl implements StateService {
     }
 
     @Override
+    @Transactional
     public List<State> findByCountryId(UUID countryId) {
         return stateRepository.findByCountryId(countryId);
     }
 
     @Override
+    @Transactional
     public List<State> findAll() {
         return stateRepository.findAll();
     }
 
     @Override
+    @Transactional
     public Page<State> searchPage(StateSearchDTO stateSearchDTO, Pageable pageable) {
         return stateCustomRepository.searchPage(stateSearchDTO, pageable);
     }
 
     @Override
+    @Transactional
     public Optional<State> save(State state) {
 
         state.setCreatedDate(Instant.now());
@@ -71,6 +76,7 @@ public class StateServiceImpl implements StateService {
     }
 
     @Override
+    @Transactional
     public void delete(UUID stateId) {
         findById(stateId).ifPresent(stateRepository::delete);
     }
