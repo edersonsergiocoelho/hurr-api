@@ -7,7 +7,6 @@ CREATE TABLE IF NOT EXISTS address (
     city_id UUID NOT NULL,
     state_id UUID NOT NULL,
     zip_code CHARACTER VARYING(20) NOT NULL,
-    address_type CHARACTER VARYING(100) NOT NULL,
     nickname CHARACTER VARYING(100) NOT NULL,
     created_date TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT current_timestamp,
     modified_date TIMESTAMP WITHOUT TIME ZONE,
@@ -24,5 +23,4 @@ CREATE TABLE IF NOT EXISTS address (
     CONSTRAINT address_to_state_fk FOREIGN KEY (state_id)
         REFERENCES state (state_id) MATCH SIMPLE
         ON UPDATE NO ACTION
-        ON DELETE NO ACTION
-);
+        ON DELETE NO ACTION);
