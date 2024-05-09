@@ -161,14 +161,20 @@ public class CustomerVehicle extends AbstractEntity implements Serializable {
     private Boolean deliverToAddress;
 
     /**
+     * Taxa de quilometragem para entrega do veículo.
+     */
+    @Column(name = "mileage_fee_delivery", precision = 13, scale = 2)
+    private BigDecimal mileageFeeDelivery;
+
+    /**
      * Indica se o veículo será retirado no endereço do cliente.
      */
     @Column(name = "pick_up_at_address", nullable = false)
     private Boolean pickUpAtAddress;
 
     /**
-     * Taxa de quilometragem para entrega do veículo.
+     * Taxa de quilometragem para retirada do veículo.
      */
-    @Column(name = "mileage_fee_delivery", precision = 13, scale = 2)
-    private BigDecimal mileageFeeDelivery;
+    @Column(name = "mileage_fee_pick_up", precision = 13, scale = 2)
+    private BigDecimal mileageFeePickUp;
 }

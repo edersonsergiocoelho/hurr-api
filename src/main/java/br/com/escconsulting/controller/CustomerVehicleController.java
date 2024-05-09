@@ -3,6 +3,7 @@ package br.com.escconsulting.controller;
 import br.com.escconsulting.dto.customer.vehicle.SearchCustomerVehicle;
 import br.com.escconsulting.entity.CustomerVehicle;
 import br.com.escconsulting.service.CustomerVehicleService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,21 +14,22 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/customer-vehicle")
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class CustomerVehicleController {
 
-    @Autowired
-    private CustomerVehicleService customerVehicleService;
-
-    @GetMapping
-    public ResponseEntity<List<CustomerVehicle>> getAllCustomerVehicles() {
-        List<CustomerVehicle> customerVehicles = customerVehicleService.findAll();
-        return ResponseEntity.ok(customerVehicles);
-    }
+    private final CustomerVehicleService customerVehicleService;
 
     @GetMapping("/{customerVehicleId}")
-    public ResponseEntity<CustomerVehicle> getCustomerVehicleById(@PathVariable UUID customerVehicleId) {
-        CustomerVehicle customerVehicle = customerVehicleService.findById(customerVehicleId);
-        return ResponseEntity.ok(customerVehicle);
+    public ResponseEntity<CustomerVehicle> findById(@PathVariable UUID customerVehicleId) {
+        return customerVehicleService.findById(customerVehicleId)
+                .map(ResponseEntity::ok)
+                .orElseGet(ResponseEntity.notFound()::build);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<CustomerVehicle>> findAll() {
+        List<CustomerVehicle> customerVehicles = customerVehicleService.findAll();
+        return ResponseEntity.ok(customerVehicles);
     }
 
     @PostMapping("/search")
@@ -39,21 +41,21 @@ public class CustomerVehicleController {
     }
 
     @PostMapping
-    public ResponseEntity<CustomerVehicle> createCustomerVehicle(@RequestBody CustomerVehicle customerVehicle) {
+    public ResponseEntity<CustomerVehicle> save(@RequestBody CustomerVehicle customerVehicle) {
         customerVehicleService.save(customerVehicle);
         return ResponseEntity.status(HttpStatus.CREATED).body(customerVehicle);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<CustomerVehicle> updateCustomerVehicle(@PathVariable UUID id, @RequestBody CustomerVehicle customerVehicle) {
+    public ResponseEntity<CustomerVehicle> update(@PathVariable UUID id, @RequestBody CustomerVehicle customerVehicle) {
         customerVehicle.setCustomerVehicleId(id);
         customerVehicleService.save(customerVehicle);
         return ResponseEntity.ok(customerVehicle);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteCustomerVehicle(@PathVariable UUID id) {
-        customerVehicleService.deleteById(id);
+    public ResponseEntity<Void> delete(@PathVariable UUID id) {
+        customerVehicleService.delete(id);
         return ResponseEntity.noContent().build();
     }
 }

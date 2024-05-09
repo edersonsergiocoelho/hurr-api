@@ -4,7 +4,7 @@ import br.com.escconsulting.config.MPConfig;
 import br.com.escconsulting.entity.CustomerVehicleBooking;
 import br.com.escconsulting.service.CustomerService;
 import br.com.escconsulting.service.CustomerVehicleBookingService;
-import br.com.escconsulting.service.CustomerVehicleService;
+import br.com.escconsulting.service.impl.CustomerVehicleServiceImpl;
 import br.com.escconsulting.service.mercado.pago.MPWebhookService;
 import br.com.escconsulting.util.RandomCodeGenerator;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -38,7 +38,7 @@ public class MPWebhookServiceImpl implements MPWebhookService {
 
     private final CustomerService customerService;
 
-    private final CustomerVehicleService customerVehicleService;
+    private final CustomerVehicleServiceImpl customerVehicleServiceImpl;
 
     private final CustomerVehicleBookingService customerVehicleBookingService;
 
@@ -89,7 +89,7 @@ public class MPWebhookServiceImpl implements MPWebhookService {
             customerVehicleBooking.setBooking(booking);
 
             customerVehicleBooking.setCustomer(customerService.findById(UUID.fromString(customerId)).get());
-            customerVehicleBooking.setCustomerVehicle(customerVehicleService.findById(UUID.fromString(customerVehicleId)));
+            customerVehicleBooking.setCustomerVehicle(customerVehicleServiceImpl.findById(UUID.fromString(customerVehicleId)).get());
             customerVehicleBooking.setBookingStartDate(bookingStartDate.toLocalDate());
             customerVehicleBooking.setBookingStartTime(bookingStartTime);
             customerVehicleBooking.setBookingEndDate(bookingEndDate.toLocalDate());
