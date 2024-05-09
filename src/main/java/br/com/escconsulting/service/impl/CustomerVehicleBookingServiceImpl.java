@@ -63,6 +63,17 @@ public class CustomerVehicleBookingServiceImpl implements CustomerVehicleBooking
 
     @Transactional
     @Override
+    public Page<CustomerVehicleBooking> customerVehicleSearchPage(LocalUser localUser, CustomerVehicleBookingSearchDTO customerVehicleBookingSearchDTO, Pageable pageable) {
+        Optional<Customer> optionalCustomer = customerService.findByEmail(localUser.getUsername());
+
+        return optionalCustomer.map(customer -> {
+            customerVehicleBookingSearchDTO.setCustomerId(customer.getCustomerId());
+            return customerVehicleBookingCustomRepository.customerVehicleSearchPage(customerVehicleBookingSearchDTO, pageable);
+        }).orElseThrow(() -> new RuntimeException("Customer not found for email: " + localUser.getUsername()));
+    }
+
+    @Transactional
+    @Override
     public Optional<CustomerVehicleBooking> save(CustomerVehicleBooking customerVehicleBooking) {
 
         customerVehicleBooking.setCreatedDate(Instant.now());

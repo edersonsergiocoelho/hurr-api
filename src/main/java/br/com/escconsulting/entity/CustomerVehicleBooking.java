@@ -55,6 +55,12 @@ public class CustomerVehicleBooking extends AbstractEntity implements Serializab
     @Column(name = "booking_end_time", length = 5, nullable = false)
     private String bookingEndTime;
 
+    @Column(name = "booking_start_km")
+    private Long bookingStartKM;
+
+    @Column(name = "booking_end_km")
+    private Long bookingEndKM;
+
     @Column(name = "booking_delivery_date")
     private LocalDateTime bookingDeliveryDate;
 

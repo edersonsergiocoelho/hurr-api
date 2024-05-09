@@ -8,6 +8,8 @@ CREATE TABLE IF NOT EXISTS customer_vehicle_booking
     booking_end_date TIMESTAMP WITHOUT TIME ZONE NOT NULL,
     booking_start_time CHARACTER VARYING(5) NOT NULL,
     booking_end_time CHARACTER VARYING(5) NOT NULL,
+    booking_start_km NUMERIC,
+    booking_end_km NUMERIC,
     booking_delivery_date TIMESTAMP WITHOUT TIME ZONE,
     total_booking_value NUMERIC(13,2) NOT NULL,
     mp_payment_id NUMERIC NOT NULL,

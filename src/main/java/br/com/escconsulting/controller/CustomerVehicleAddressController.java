@@ -1,7 +1,6 @@
 package br.com.escconsulting.controller;
 
 import br.com.escconsulting.entity.CustomerVehicleAddress;
-import br.com.escconsulting.entity.enumeration.AddressType;
 import br.com.escconsulting.service.CustomerVehicleAddressService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -40,9 +39,9 @@ public class CustomerVehicleAddressController {
         return ResponseEntity.ok(listCustomerVehicleAddress);
     }
 
-    @GetMapping("/by/customer-vehicle/{customerVehicleId}/address-type/{addressType}")
-    public ResponseEntity<List<CustomerVehicleAddress>> findAllByCustomerVehicleIdAndAddressType(@PathVariable("customerVehicleId") UUID customerVehicleId, @PathVariable("addressType") AddressType addressType) {
-        List<CustomerVehicleAddress> listCustomerVehicleAddress = customerVehicleAddressService.findAllByCustomerVehicleIdAndAddressType(customerVehicleId, addressType);
+    @GetMapping("/by/customer-vehicle/{customerVehicleId}/address-type/{addressTypeName}")
+    public ResponseEntity<List<CustomerVehicleAddress>> findAllByCustomerVehicleIdAndAddressType(@PathVariable("customerVehicleId") UUID customerVehicleId, @PathVariable("addressTypeName") String addressTypeName) {
+        List<CustomerVehicleAddress> listCustomerVehicleAddress = customerVehicleAddressService.findAllByCustomerVehicleIdAndAddressType(customerVehicleId, addressTypeName);
         return ResponseEntity.ok(listCustomerVehicleAddress);
     }
 

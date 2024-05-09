@@ -145,6 +145,7 @@ public class UserServiceImpl implements UserService {
 
 	private User updateExistingUser(User existingUser, OAuth2UserInfo oAuth2UserInfo) {
 		existingUser.setDisplayName(oAuth2UserInfo.getName());
+		existingUser.setImageURL(oAuth2UserInfo.getImageUrl());
 		return userRepository.save(existingUser);
 	}
 

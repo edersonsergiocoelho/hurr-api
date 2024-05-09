@@ -1,12 +1,13 @@
 package br.com.escconsulting.entity;
 
-import br.com.escconsulting.entity.enumeration.AddressType;
 import br.com.escconsulting.entity.generic.AbstractEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -14,7 +15,7 @@ import java.util.UUID;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode(callSuper = false)
+@EqualsAndHashCode(callSuper = false, of = "addressId")
 @ToString
 @Table(name = "address")
 public class Address extends AbstractEntity implements Serializable {
@@ -45,10 +46,6 @@ public class Address extends AbstractEntity implements Serializable {
     @Column(name = "zip_code", length = 20)
     private String zipCode;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "address_type", length = 100, nullable = false)
-    private AddressType addressType;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "country_id", nullable = false)
     private Country country;
@@ -60,4 +57,7 @@ public class Address extends AbstractEntity implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "state_id", nullable = false)
     private State state;
+
+    @OneToMany(mappedBy = "address")
+    private Set<AddressAddressType> addressTypes;
 }

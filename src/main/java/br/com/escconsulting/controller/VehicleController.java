@@ -2,7 +2,10 @@ package br.com.escconsulting.controller;
 
 import br.com.escconsulting.entity.Vehicle;
 import br.com.escconsulting.service.VehicleService;
+import br.com.escconsulting.service.impl.VehicleServiceImpl;
 import jakarta.annotation.security.PermitAll;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,16 +16,23 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/vehicle")
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class VehicleController {
 
     private final VehicleService vehicleService;
 
-    public VehicleController(VehicleService vehicleRepository) {
-        this.vehicleService = vehicleRepository;
+    @GetMapping("/{id}")
+    public ResponseEntity<Vehicle> findById(@PathVariable UUID id) {
+        Optional<Vehicle> vehicleOptional = vehicleService.findById(id);
+        if (vehicleOptional.isPresent()) {
+            return ResponseEntity.ok(vehicleOptional.get());
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
-
+    
     @GetMapping
-    public ResponseEntity<List<Vehicle>> getAllVehicles() {
+    public ResponseEntity<List<Vehicle>> findAll() {
         List<Vehicle> vehicles = vehicleService.findAll();
         return ResponseEntity.ok(vehicles);
     }
@@ -38,24 +48,14 @@ public class VehicleController {
         }
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Vehicle> getVehicleById(@PathVariable UUID id) {
-        Optional<Vehicle> vehicleOptional = vehicleService.findById(id);
-        if (vehicleOptional.isPresent()) {
-            return ResponseEntity.ok(vehicleOptional.get());
-        } else {
-            return ResponseEntity.notFound().build();
-        }
-    }
-
     @PostMapping
-    public ResponseEntity<Vehicle> createVehicle(@RequestBody Vehicle vehicle) {
+    public ResponseEntity<Vehicle> save(@RequestBody Vehicle vehicle) {
         Vehicle savedVehicle = vehicleService.save(vehicle);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedVehicle);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Vehicle> updateVehicle(@PathVariable UUID id, @RequestBody Vehicle vehicle) {
+    public ResponseEntity<Vehicle> update(@PathVariable UUID id, @RequestBody Vehicle vehicle) {
         Vehicle updatedVehicle = vehicleService.updateVehicle(id, vehicle);
         if (updatedVehicle != null) {
             return ResponseEntity.ok(updatedVehicle);
@@ -65,8 +65,8 @@ public class VehicleController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteVehicle(@PathVariable UUID id) {
-        vehicleService.deleteById(id);
+    public ResponseEntity<Void> delete(@PathVariable UUID id) {
+        vehicleService.delete(id);
         return ResponseEntity.noContent().build();
     }
 }

@@ -10,6 +10,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface StateService {
+
     Optional<State> findById(UUID stateId);
 
     List<State> findByCountryId(UUID countryId);
