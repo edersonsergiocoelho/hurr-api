@@ -3,6 +3,7 @@ package br.com.escconsulting.service.impl;
 import br.com.escconsulting.dto.file.approved.FileApprovedSearchDTO;
 import br.com.escconsulting.entity.Customer;
 import br.com.escconsulting.entity.FileApproved;
+import br.com.escconsulting.entity.User;
 import br.com.escconsulting.entity.enumeration.FileTable;
 import br.com.escconsulting.entity.enumeration.FileType;
 import br.com.escconsulting.repository.FileApprovedCustomRepository;
@@ -10,6 +11,7 @@ import br.com.escconsulting.repository.FileApprovedRepository;
 import br.com.escconsulting.service.CustomerService;
 import br.com.escconsulting.service.EmailService;
 import br.com.escconsulting.service.FileApprovedService;
+import br.com.escconsulting.service.UserNewService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -29,14 +31,17 @@ public class FileApprovedServiceImpl implements FileApprovedService {
 
     private final EmailService emailService;
 
+    private final UserNewService userNewService;
+
     private final FileApprovedRepository fileApprovedRepository;
 
     private final FileApprovedCustomRepository fileApprovedCustomRepository;
 
     @Autowired
-    public FileApprovedServiceImpl(@Lazy CustomerService customerService, @Lazy EmailService emailService, @Lazy FileApprovedRepository fileApprovedRepository, @Lazy FileApprovedCustomRepository fileApprovedCustomRepository) {
+    public FileApprovedServiceImpl(@Lazy CustomerService customerService, @Lazy EmailService emailService, @Lazy UserNewService userNewService, @Lazy FileApprovedRepository fileApprovedRepository, @Lazy FileApprovedCustomRepository fileApprovedCustomRepository) {
         this.customerService = customerService;
         this.emailService = emailService;
+        this.userNewService = userNewService;
         this.fileApprovedRepository = fileApprovedRepository;
         this.fileApprovedCustomRepository = fileApprovedCustomRepository;
     }
@@ -125,6 +130,24 @@ public class FileApprovedServiceImpl implements FileApprovedService {
 
                                 if (fileApproved.getReprovedBy() != null) {
                                     emailService.sendIdentityNumberReproved(savedFileApproved, optionalCustomer.get());
+                                }
+                            }
+                        }
+                    }
+
+                    if (fileApproved.getFileTable().equals(FileTable.USER)) {
+                        if (fileApproved.getFileType().equals(FileType.PROFILE_PICTURE)) {
+
+                            Optional<User> optionalUser = userNewService.findById(fileApproved.getUserId());
+
+                            if (optionalUser.isPresent()) {
+
+                                if (fileApproved.getApprovedBy() != null) {
+                                    emailService.sendProfilePictureApproved(savedFileApproved, optionalUser.get());
+                                }
+
+                                if (fileApproved.getReprovedBy() != null) {
+                                    emailService.sendProfilePictureReproved(savedFileApproved, optionalUser.get());
                                 }
                             }
                         }
