@@ -2,6 +2,7 @@ package br.com.escconsulting.service.impl;
 
 import br.com.escconsulting.dto.address.address.type.AddressAddressTypeSearchDTO;
 import br.com.escconsulting.entity.AddressAddressType;
+import br.com.escconsulting.entity.AddressAddressTypeId;
 import br.com.escconsulting.repository.AddressAddressTypeRepository;
 import br.com.escconsulting.repository.custom.AddressAddressTypeCustomRepository;
 import br.com.escconsulting.service.AddressAddressTypeService;
@@ -27,7 +28,11 @@ public class AddressAddressTypeServiceImpl implements AddressAddressTypeService 
 
     @Override
     @Transactional
-    public Optional<AddressAddressType> findById(UUID addressAddressTypeId) {
+    public Optional<AddressAddressType> findById(UUID addressId, UUID addressTypeId) {
+
+        AddressAddressTypeId addressAddressTypeId = new AddressAddressTypeId();
+        addressAddressTypeId.setAddressId(addressId);
+        addressAddressTypeId.setAddressTypeId(addressTypeId);
 
         return Optional.ofNullable(addressAddressTypeRepository.findById(addressAddressTypeId)
                 .orElseThrow(() -> new RuntimeException("AddressAddressType not found with addressAddressTypeId: " + addressAddressTypeId)));
@@ -57,8 +62,9 @@ public class AddressAddressTypeServiceImpl implements AddressAddressTypeService 
 
     @Override
     @Transactional
-    public Optional<AddressAddressType> update(UUID addressAddressTypeId, AddressAddressType addressAddressType) {
-        return findById(addressAddressTypeId)
+    public Optional<AddressAddressType> update(UUID addressId, UUID addressTypeId, AddressAddressType addressAddressType) {
+
+        return findById(addressId, addressTypeId)
                 .map(existingAddressAddressType -> {
 
                     existingAddressAddressType.setEnabled(addressAddressType.getEnabled());
@@ -71,7 +77,7 @@ public class AddressAddressTypeServiceImpl implements AddressAddressTypeService 
 
     @Override
     @Transactional
-    public void delete(UUID addressAddressTypeId) {
-        findById(addressAddressTypeId).ifPresent(addressAddressTypeRepository::delete);
+    public void delete(UUID addressId, UUID addressTypeId) {
+        findById(addressId, addressTypeId).ifPresent(addressAddressTypeRepository::delete);
     }
 }

@@ -20,4 +20,16 @@ public interface CustomerAddressRepository extends JpaRepository<CustomerAddress
             "INNER JOIN FETCH a.city ci " +
             "WHERE c.customerId = :customerId")
     List<CustomerAddress> findByCustomerId(@Param("customerId") UUID customerId);
+
+    @Query("SELECT ca FROM CustomerAddress ca " +
+            "INNER JOIN FETCH ca.customer c " +
+            "INNER JOIN FETCH ca.address a " +
+            "INNER JOIN FETCH a.country co " +
+            "INNER JOIN FETCH a.state s " +
+            "INNER JOIN FETCH a.city ci " +
+            "INNER JOIN FETCH ca.address.addressTypes ats " +
+            "WHERE c.customerId = :customerId " +
+            "AND ats.addressType.addressTypeName = :addressTypeName")
+    List<CustomerAddress> findByCustomerIdAndAddressTypeName(@Param("customerId") UUID customerId, @Param("addressTypeName") String addressTypeName);
+
 }
