@@ -2,8 +2,10 @@ package br.com.escconsulting.controller;
 
 import br.com.escconsulting.config.CurrentUser;
 import br.com.escconsulting.dto.LocalUser;
+import br.com.escconsulting.dto.customer.vehicle.booking.CustomerVehicleBookingDTO;
 import br.com.escconsulting.dto.customer.vehicle.booking.CustomerVehicleBookingSearchDTO;
 import br.com.escconsulting.entity.CustomerVehicleBooking;
+import br.com.escconsulting.mapper.customer.vehicle.booking.CustomerVehicleBookingMapper;
 import br.com.escconsulting.service.CustomerVehicleBookingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,8 +27,9 @@ public class CustomerVehicleBookingController {
     private final CustomerVehicleBookingService customerVehicleBookingService;
 
     @GetMapping("/{customerVehicleBookingId}")
-    public ResponseEntity<CustomerVehicleBooking> findById(@PathVariable("customerVehicleBookingId") UUID customerVehicleBookingId) {
+    public ResponseEntity<CustomerVehicleBookingDTO> findById(@PathVariable("customerVehicleBookingId") UUID customerVehicleBookingId) {
         return customerVehicleBookingService.findById(customerVehicleBookingId)
+                .map(CustomerVehicleBookingMapper.INSTANCE::toDTO)
                 .map(ResponseEntity::ok)
                 .orElseGet(ResponseEntity.notFound()::build);
     }
@@ -48,7 +51,7 @@ public class CustomerVehicleBookingController {
 
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(sortDir), sortBy));
 
-        Page<CustomerVehicleBooking> customerVehicleBookings = customerVehicleBookingService.searchPage(localUser, customerVehicleBookingSearchDTO, pageable);
+        Page<CustomerVehicleBookingDTO> customerVehicleBookings = customerVehicleBookingService.searchPage(localUser, customerVehicleBookingSearchDTO, pageable);
 
         return ResponseEntity.ok(customerVehicleBookings);
     }
@@ -64,9 +67,9 @@ public class CustomerVehicleBookingController {
 
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(sortDir), sortBy));
 
-        Page<CustomerVehicleBooking> customerVehicleBookings = customerVehicleBookingService.customerVehicleSearchPage(localUser, customerVehicleBookingSearchDTO, pageable);
+        Page<CustomerVehicleBookingDTO> customerVehicleBookingsDTO = customerVehicleBookingService.customerVehicleSearchPage(localUser, customerVehicleBookingSearchDTO, pageable);
 
-        return ResponseEntity.ok(customerVehicleBookings);
+        return ResponseEntity.ok(customerVehicleBookingsDTO);
     }
 
     @PostMapping
@@ -74,6 +77,15 @@ public class CustomerVehicleBookingController {
         return customerVehicleBookingService.save(customerVehicleBooking)
                 .map(ResponseEntity::ok)
                 .orElseThrow(() -> new IllegalStateException("Failed to save customer vehicle booking."));
+    }
+
+    @PutMapping("finalize-booking/{customerVehicleBookingId}")
+    public ResponseEntity<?> finalizeBooking(@PathVariable("customerVehicleBookingId") UUID customerVehicleBookingId,
+                                             @RequestBody CustomerVehicleBooking customerVehicleBooking) {
+        return customerVehicleBookingService.finalizeBooking(customerVehicleBookingId, customerVehicleBooking)
+                .map(CustomerVehicleBookingMapper.INSTANCE::toDTO)
+                .map(updatedCustomerVehicleBooking -> ResponseEntity.ok(updatedCustomerVehicleBooking))
+                .orElseThrow(() -> new IllegalStateException("Failed to update customer vehicle booking."));
     }
 
     @PutMapping("/{customerVehicleBookingId}")

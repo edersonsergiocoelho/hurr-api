@@ -40,6 +40,20 @@ public class CustomerVehicleBooking extends AbstractEntity implements Serializab
     @JoinColumn(name = "customer_id", nullable = false)
     private Customer customer;
 
+    @ManyToOne
+    @JoinColumn(name = "customer_address_delivery_id")
+    private CustomerAddress customerAddressDelivery;
+
+    @Column(name = "customer_address_delivery_value", precision = 13, scale = 2)
+    private BigDecimal customerAddressDeliveryValue;
+
+    @ManyToOne
+    @JoinColumn(name = "customer_address_pickup_id")
+    private CustomerAddress customerAddressPickUp;
+
+    @Column(name = "customer_address_pickup_value", precision = 13, scale = 2)
+    private BigDecimal customerAddressPickUpValue;
+
     @Column(name = "booking", length = 100, nullable = false, unique = true)
     private String booking;
 

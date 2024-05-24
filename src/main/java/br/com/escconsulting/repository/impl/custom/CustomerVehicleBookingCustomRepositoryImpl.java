@@ -1,7 +1,9 @@
 package br.com.escconsulting.repository.impl.custom;
 
+import br.com.escconsulting.dto.customer.vehicle.booking.CustomerVehicleBookingDTO;
 import br.com.escconsulting.dto.customer.vehicle.booking.CustomerVehicleBookingSearchDTO;
 import br.com.escconsulting.entity.*;
+import br.com.escconsulting.mapper.customer.vehicle.booking.CustomerVehicleBookingMapper;
 import br.com.escconsulting.repository.CustomerVehicleBookingRepository;
 import br.com.escconsulting.repository.custom.CustomerVehicleBookingCustomRepository;
 import jakarta.persistence.EntityManager;
@@ -30,7 +32,7 @@ public class CustomerVehicleBookingCustomRepositoryImpl extends SimpleJpaReposit
         this.customerVehicleBookingRepository = customerVehicleBookingRepository;
     }
 
-    public Page<CustomerVehicleBooking> searchPage(CustomerVehicleBookingSearchDTO customerVehicleBookingSearchDTO, Pageable pageable) {
+    public Page<CustomerVehicleBookingDTO> searchPage(CustomerVehicleBookingSearchDTO customerVehicleBookingSearchDTO, Pageable pageable) {
 
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<CustomerVehicleBooking> cq = cb.createQuery(CustomerVehicleBooking.class);
@@ -83,10 +85,15 @@ public class CustomerVehicleBookingCustomRepositoryImpl extends SimpleJpaReposit
         query.setMaxResults(pageable.getPageSize());
 
         List<CustomerVehicleBooking> resultList = query.getResultList();
-        return new PageImpl<>(resultList, pageable, this.countSearchPage(customerVehicleBookingSearchDTO));
+
+        List<CustomerVehicleBookingDTO> dtoList = resultList.stream()
+                .map(CustomerVehicleBookingMapper.INSTANCE::toDTO)
+                .collect(Collectors.toList());
+
+        return new PageImpl<>(dtoList, pageable, this.countSearchPage(customerVehicleBookingSearchDTO));
     }
 
-    public Page<CustomerVehicleBooking> customerVehicleSearchPage(CustomerVehicleBookingSearchDTO customerVehicleBookingSearchDTO, Pageable pageable) {
+    public Page<CustomerVehicleBookingDTO> customerVehicleSearchPage(CustomerVehicleBookingSearchDTO customerVehicleBookingSearchDTO, Pageable pageable) {
 
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<CustomerVehicleBooking> cq = cb.createQuery(CustomerVehicleBooking.class);
@@ -139,7 +146,12 @@ public class CustomerVehicleBookingCustomRepositoryImpl extends SimpleJpaReposit
         query.setMaxResults(pageable.getPageSize());
 
         List<CustomerVehicleBooking> resultList = query.getResultList();
-        return new PageImpl<>(resultList, pageable, this.countSearchPage(customerVehicleBookingSearchDTO));
+
+        List<CustomerVehicleBookingDTO> dtoList = resultList.stream()
+                .map(CustomerVehicleBookingMapper.INSTANCE::toDTO)
+                .collect(Collectors.toList());
+
+        return new PageImpl<>(dtoList, pageable, this.countSearchPage(customerVehicleBookingSearchDTO));
     }
 
     public Long countSearchPage(CustomerVehicleBookingSearchDTO customerVehicleBookingSearchDTO) {

@@ -38,7 +38,7 @@ public class Address extends AbstractEntity implements Serializable {
     private String streetAddress;
 
     @Column(name = "number", nullable = false)
-    private int number;
+    private Integer number;
 
     @Column(name = "complement", length = 100)
     private String complement;

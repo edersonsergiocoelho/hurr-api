@@ -11,5 +11,4 @@ public class HurrAPIApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(HurrAPIApplication.class, args);
 	}
-
 }

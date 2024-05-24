@@ -1,6 +1,6 @@
 package br.com.escconsulting.controller;
 
-import br.com.escconsulting.dto.customer.vehicle.SearchCustomerVehicle;
+import br.com.escconsulting.dto.customer.vehicle.CustomerVehicleSearchDTO;
 import br.com.escconsulting.entity.CustomerVehicle;
 import br.com.escconsulting.service.CustomerVehicleService;
 import lombok.RequiredArgsConstructor;
@@ -34,9 +34,9 @@ public class CustomerVehicleController {
 
     @PostMapping("/search")
     public ResponseEntity<List<CustomerVehicle>> searchCustomerVehicles(
-            @RequestBody SearchCustomerVehicle searchCustomerVehicle
+            @RequestBody CustomerVehicleSearchDTO customerVehicleSearchDTO
     ) {
-        List<CustomerVehicle> customerVehicles = customerVehicleService.search(searchCustomerVehicle);
+        List<CustomerVehicle> customerVehicles = customerVehicleService.search(customerVehicleSearchDTO);
         return ResponseEntity.ok(customerVehicles);
     }
 

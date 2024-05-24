@@ -1,6 +1,6 @@
 package br.com.escconsulting.service.impl;
 
-import br.com.escconsulting.dto.customer.vehicle.SearchCustomerVehicle;
+import br.com.escconsulting.dto.customer.vehicle.CustomerVehicleSearchDTO;
 import br.com.escconsulting.entity.*;
 import br.com.escconsulting.repository.CustomerVehicleRepository;
 import br.com.escconsulting.service.CustomerVehicleService;
@@ -69,7 +69,7 @@ public class CustomerVehicleServiceImpl implements CustomerVehicleService {
 
     @Override
     @Transactional
-    public List<CustomerVehicle> search(SearchCustomerVehicle searchCustomerVehicle) {
+    public List<CustomerVehicle> search(CustomerVehicleSearchDTO customerVehicleSearchDTO) {
 
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<CustomerVehicle> cq = cb.createQuery(CustomerVehicle.class);
@@ -99,44 +99,44 @@ public class CustomerVehicleServiceImpl implements CustomerVehicleService {
 
         spec = cb.and(spec, cb.equal(root.get("addresses").get("address").get("addressTypes").get("addressType").get("addressTypeName"), "VEHICLE"));
 
-        if (searchCustomerVehicle.getVehicleId() != null) {
-            spec = cb.and(spec, cb.equal(root.get("vehicle").get("vehicleId"), searchCustomerVehicle.getVehicleId()));
+        if (customerVehicleSearchDTO.getVehicleId() != null) {
+            spec = cb.and(spec, cb.equal(root.get("vehicle").get("vehicleId"), customerVehicleSearchDTO.getVehicleId()));
         }
 
-        if (searchCustomerVehicle.getVehicleModelId() != null) {
-            spec = cb.and(spec, cb.equal(root.get("vehicleModel").get("vehicleModelId"), searchCustomerVehicle.getVehicleModelId()));
+        if (customerVehicleSearchDTO.getVehicleModelId() != null) {
+            spec = cb.and(spec, cb.equal(root.get("vehicleModel").get("vehicleModelId"), customerVehicleSearchDTO.getVehicleModelId()));
         }
 
-        if (searchCustomerVehicle.getVehicleBrandId() != null) {
-            spec = cb.and(spec, cb.equal(root.get("vehicle").get("vehicleBrand").get("vehicleBrandId"), searchCustomerVehicle.getVehicleBrandId()));
+        if (customerVehicleSearchDTO.getVehicleBrandId() != null) {
+            spec = cb.and(spec, cb.equal(root.get("vehicle").get("vehicleBrand").get("vehicleBrandId"), customerVehicleSearchDTO.getVehicleBrandId()));
         }
 
-        if (searchCustomerVehicle.getVehicleCategoryId() != null) {
-            spec = cb.and(spec, cb.equal(root.get("vehicleModel").get("vehicleCategory").get("vehicleCategoryId"), searchCustomerVehicle.getVehicleCategoryId()));
+        if (customerVehicleSearchDTO.getVehicleCategoryId() != null) {
+            spec = cb.and(spec, cb.equal(root.get("vehicleModel").get("vehicleCategory").get("vehicleCategoryId"), customerVehicleSearchDTO.getVehicleCategoryId()));
         }
 
-        if (searchCustomerVehicle.getVehicleColorId() != null) {
-            spec = cb.and(spec, cb.equal(root.get("vehicleColor").get("vehicleColorId"), searchCustomerVehicle.getVehicleColorId()));
+        if (customerVehicleSearchDTO.getVehicleColorId() != null) {
+            spec = cb.and(spec, cb.equal(root.get("vehicleColor").get("vehicleColorId"), customerVehicleSearchDTO.getVehicleColorId()));
         }
 
-        if (searchCustomerVehicle.getVehicleFuelTypeId() != null) {
-            spec = cb.and(spec, cb.equal(root.get("vehicleFuelType").get("vehicleFuelTypeId"), searchCustomerVehicle.getVehicleFuelTypeId()));
+        if (customerVehicleSearchDTO.getVehicleFuelTypeId() != null) {
+            spec = cb.and(spec, cb.equal(root.get("vehicleFuelType").get("vehicleFuelTypeId"), customerVehicleSearchDTO.getVehicleFuelTypeId()));
         }
 
-        if (searchCustomerVehicle.getVehicleTransmissionId() != null) {
-            spec = cb.and(spec, cb.equal(root.get("vehicleTransmission").get("vehicleTransmissionId"), searchCustomerVehicle.getVehicleTransmissionId()));
+        if (customerVehicleSearchDTO.getVehicleTransmissionId() != null) {
+            spec = cb.and(spec, cb.equal(root.get("vehicleTransmission").get("vehicleTransmissionId"), customerVehicleSearchDTO.getVehicleTransmissionId()));
         }
 
-        if (searchCustomerVehicle.getCountryName() != null && !searchCustomerVehicle.getCountryName().isEmpty()) {
-            spec = cb.and(spec, cb.equal(root.get("addresses").get("address").get("country").get("countryName"), searchCustomerVehicle.getCountryName()));
+        if (customerVehicleSearchDTO.getCountryName() != null && !customerVehicleSearchDTO.getCountryName().isEmpty()) {
+            spec = cb.and(spec, cb.equal(root.get("addresses").get("address").get("country").get("countryName"), customerVehicleSearchDTO.getCountryName()));
         }
 
-        if (searchCustomerVehicle.getStateName() != null && !searchCustomerVehicle.getStateName().isEmpty()) {
-            spec = cb.and(spec, cb.equal(root.get("addresses").get("address").get("state").get("stateName"), searchCustomerVehicle.getStateName()));
+        if (customerVehicleSearchDTO.getStateName() != null && !customerVehicleSearchDTO.getStateName().isEmpty()) {
+            spec = cb.and(spec, cb.equal(root.get("addresses").get("address").get("state").get("stateName"), customerVehicleSearchDTO.getStateName()));
         }
 
-        if (searchCustomerVehicle.getStateName() != null && !searchCustomerVehicle.getStateName().isEmpty()) {
-            spec = cb.and(spec, cb.equal(root.get("addresses").get("address").get("city").get("cityName"), searchCustomerVehicle.getCityName()));
+        if (customerVehicleSearchDTO.getStateName() != null && !customerVehicleSearchDTO.getStateName().isEmpty()) {
+            spec = cb.and(spec, cb.equal(root.get("addresses").get("address").get("city").get("cityName"), customerVehicleSearchDTO.getCityName()));
         }
 
         cq.where(spec);
