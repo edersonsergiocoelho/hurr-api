@@ -1,6 +1,9 @@
 package br.com.escconsulting.controller;
 
+import br.com.escconsulting.dto.customer.vehicle.review.CustomerVehicleReviewDTO;
 import br.com.escconsulting.entity.CustomerVehicleReview;
+import br.com.escconsulting.mapper.customer.vehicle.booking.CustomerVehicleBookingMapper;
+import br.com.escconsulting.mapper.customer.vehicle.review.CustomerVehicleReviewMapper;
 import br.com.escconsulting.service.CustomerVehicleReviewService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -9,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/customer-vehicle-review")
@@ -22,37 +26,60 @@ public class CustomerVehicleReviewController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CustomerVehicleReview> findById(@PathVariable("id") UUID id) {
-        CustomerVehicleReview review = customerVehicleReviewService.findById(id);
-        return ResponseEntity.ok(review);
+    public ResponseEntity<CustomerVehicleReviewDTO> findById(@PathVariable("id") UUID id) {
+        return customerVehicleReviewService.findById(id)
+                .map(CustomerVehicleReviewMapper.INSTANCE::toDTO)
+                .map(ResponseEntity::ok)
+                .orElseGet(ResponseEntity.notFound()::build);
+    }
+
+    @GetMapping("/by/customer-vehicle/{customerVehicleId}/customer/{customerId}")
+    public ResponseEntity<CustomerVehicleReviewDTO> findByCustomerVehicleIdAndCustomerId(@PathVariable("customerVehicleId") UUID customerVehicleId,
+                                                                                         @PathVariable("customerId") UUID customerId) {
+
+        return customerVehicleReviewService.findByCustomerVehicleIdAndCustomerId(customerVehicleId, customerId)
+                .map(CustomerVehicleReviewMapper.INSTANCE::toDTO)
+                .map(ResponseEntity::ok)
+                .orElseGet(ResponseEntity.notFound()::build);
     }
 
     @GetMapping
-    public ResponseEntity<List<CustomerVehicleReview>> findAll() {
-        List<CustomerVehicleReview> reviews = customerVehicleReviewService.findAll();
-        return ResponseEntity.ok(reviews);
+    public ResponseEntity<List<CustomerVehicleReviewDTO>> findAll() {
+        return ResponseEntity.ok(
+                customerVehicleReviewService.findAll()
+                        .stream()
+                        .map(CustomerVehicleReviewMapper.INSTANCE::toDTO)
+                        .collect(Collectors.toList())
+        );
     }
 
-    @GetMapping("/by/customer-vehicle/{customerVehicleId}")
-    public ResponseEntity<List<CustomerVehicleReview>> findAllByCustomerVehicleId(@PathVariable("customerVehicleId") UUID customerVehicleId) {
-        List<CustomerVehicleReview> reviews = customerVehicleReviewService.findAllByCustomerVehicleId(customerVehicleId);
-        return ResponseEntity.ok(reviews);
+    @GetMapping("/all/by/customer-vehicle/{customerVehicleId}")
+    public ResponseEntity<List<CustomerVehicleReviewDTO>> findAllByCustomerVehicleId(@PathVariable("customerVehicleId") UUID customerVehicleId) {
+        return ResponseEntity.ok(
+                customerVehicleReviewService.findAllByCustomerVehicleId(customerVehicleId)
+                        .stream()
+                        .map(CustomerVehicleReviewMapper.INSTANCE::toDTO)
+                        .collect(Collectors.toList())
+        );
     }
 
     @PostMapping
-    public ResponseEntity<CustomerVehicleReview> save(@RequestBody CustomerVehicleReview customerVehicleReview) {
-        CustomerVehicleReview savedReview = customerVehicleReviewService.save(customerVehicleReview);
-        return new ResponseEntity<>(savedReview, HttpStatus.CREATED);
+    public ResponseEntity<CustomerVehicleReviewDTO> save(@RequestBody CustomerVehicleReview customerVehicleReview) {
+        return customerVehicleReviewService.save(customerVehicleReview)
+                .map(savedReview -> ResponseEntity.status(HttpStatus.CREATED)
+                        .body(CustomerVehicleReviewMapper.INSTANCE.toDTO(savedReview)))
+                .orElse(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build());
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<CustomerVehicleReview> update(@PathVariable("id") UUID id, @RequestBody CustomerVehicleReview customerVehicleReview) {
-        CustomerVehicleReview updatedReview = customerVehicleReviewService.update(id, customerVehicleReview);
-        return ResponseEntity.ok(updatedReview);
+    @PutMapping("/{customerVehicleReviewId}")
+    public ResponseEntity<CustomerVehicleReviewDTO> update(@PathVariable("customerVehicleReviewId") UUID id, @RequestBody CustomerVehicleReview customerVehicleReview) {
+        return customerVehicleReviewService.update(id, customerVehicleReview)
+                .map(updatedReview -> ResponseEntity.ok(CustomerVehicleReviewMapper.INSTANCE.toDTO(updatedReview)))
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable("id") UUID id) {
+    @DeleteMapping("/{customerVehicleReviewId}")
+    public ResponseEntity<Void> delete(@PathVariable("customerVehicleReviewId") UUID id) {
         customerVehicleReviewService.delete(id);
         return ResponseEntity.noContent().build();
     }

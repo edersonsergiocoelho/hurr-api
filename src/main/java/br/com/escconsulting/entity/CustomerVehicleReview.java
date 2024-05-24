@@ -6,6 +6,7 @@ import lombok.*;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.time.Instant;
 import java.util.UUID;
 
 @Entity
@@ -29,8 +30,9 @@ public class CustomerVehicleReview extends AbstractEntity implements Serializabl
     @Column(columnDefinition = "uuid", updatable = false)
     private UUID customerVehicleReviewId;
 
-    @Column(columnDefinition = "uuid", nullable = false)
-    private UUID customerVehicleId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "customer_vehicle_booking_id", nullable = false)
+    private CustomerVehicleBooking customerVehicleBooking;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "customer_id", nullable = false)
@@ -41,4 +43,15 @@ public class CustomerVehicleReview extends AbstractEntity implements Serializabl
 
     @Column(nullable = false)
     private Integer rating;
+
+    @PrePersist
+    protected void prePersist() {
+        if (this.getCreatedDate() == null) {
+            this.setCreatedDate(Instant.now());
+        }
+
+        if (this.getEnabled() == null) {
+            this.setEnabled(Boolean.TRUE);
+        }
+    }
 }

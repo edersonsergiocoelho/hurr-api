@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -20,9 +21,13 @@ public class CustomerVehicleReviewServiceImpl implements CustomerVehicleReviewSe
     }
 
     @Override
-    public CustomerVehicleReview findById(UUID id) {
-        return customerVehicleReviewRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Review not found with id: " + id));
+    public Optional<CustomerVehicleReview> findById(UUID id) {
+        return customerVehicleReviewRepository.findById(id);
+    }
+
+    @Override
+    public Optional<CustomerVehicleReview> findByCustomerVehicleIdAndCustomerId(UUID customerVehicleId, UUID customerId) {
+        return customerVehicleReviewRepository.findByCustomerVehicleIdAndCustomerId(customerVehicleId, customerId);
     }
 
     @Override
@@ -36,22 +41,24 @@ public class CustomerVehicleReviewServiceImpl implements CustomerVehicleReviewSe
     }
 
     @Override
-    public CustomerVehicleReview save(CustomerVehicleReview review) {
-        return customerVehicleReviewRepository.save(review);
+    public Optional<CustomerVehicleReview> save(CustomerVehicleReview customerVehicleReview) {
+        return Optional.of(customerVehicleReviewRepository.save(customerVehicleReview));
     }
 
     @Override
-    public CustomerVehicleReview update(UUID id, CustomerVehicleReview review) {
-        CustomerVehicleReview existingReview = findById(id);
-        existingReview.setReview(review.getReview());
-        existingReview.setRating(review.getRating());
+    public Optional<CustomerVehicleReview> update(UUID id, CustomerVehicleReview customerVehicleReview) {
+        return findById(id)
+                .map(existingCustomerVehicleReview -> {
 
-        return customerVehicleReviewRepository.save(existingReview);
+                    existingCustomerVehicleReview.setReview(customerVehicleReview.getReview());
+                    existingCustomerVehicleReview.setRating(customerVehicleReview.getRating());
+
+                    return customerVehicleReviewRepository.save(existingCustomerVehicleReview);
+                });
     }
 
     @Override
-    public void delete(UUID id) {
-        CustomerVehicleReview review = findById(id);
-        customerVehicleReviewRepository.delete(review);
+    public void delete(UUID customerVehicleReviewId) {
+        findById(customerVehicleReviewId).ifPresent(customerVehicleReviewRepository::delete);
     }
 }
