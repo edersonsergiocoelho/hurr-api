@@ -2,7 +2,6 @@ package br.com.escconsulting.controller;
 
 import br.com.escconsulting.dto.customer.vehicle.review.CustomerVehicleReviewDTO;
 import br.com.escconsulting.entity.CustomerVehicleReview;
-import br.com.escconsulting.mapper.customer.vehicle.booking.CustomerVehicleBookingMapper;
 import br.com.escconsulting.mapper.customer.vehicle.review.CustomerVehicleReviewMapper;
 import br.com.escconsulting.service.CustomerVehicleReviewService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,8 +71,8 @@ public class CustomerVehicleReviewController {
     }
 
     @PutMapping("/{customerVehicleReviewId}")
-    public ResponseEntity<CustomerVehicleReviewDTO> update(@PathVariable("customerVehicleReviewId") UUID id, @RequestBody CustomerVehicleReview customerVehicleReview) {
-        return customerVehicleReviewService.update(id, customerVehicleReview)
+    public ResponseEntity<CustomerVehicleReviewDTO> update(@PathVariable("customerVehicleReviewId") UUID customerVehicleReviewId, @RequestBody CustomerVehicleReview customerVehicleReview) {
+        return customerVehicleReviewService.update(customerVehicleReviewId, customerVehicleReview)
                 .map(updatedReview -> ResponseEntity.ok(CustomerVehicleReviewMapper.INSTANCE.toDTO(updatedReview)))
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }

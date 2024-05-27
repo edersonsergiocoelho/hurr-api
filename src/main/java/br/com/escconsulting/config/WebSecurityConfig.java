@@ -104,15 +104,18 @@ public class WebSecurityConfig {
 				new AntPathRequestMatcher("/user/forgotPasswordVerificationCode"),
 				new AntPathRequestMatcher("/user/forgotPasswordValidated"),
 				new AntPathRequestMatcher("/user/forgotPassword"),
+				new AntPathRequestMatcher("/user/by/email/{email}"),
+				new AntPathRequestMatcher("/file/{fileId}"),
 				new AntPathRequestMatcher("/vehicle-brand"),
 				new AntPathRequestMatcher("/vehicle-category"),
 				new AntPathRequestMatcher("/vehicle/vehicle-brand/{vehicleBrandId}"),
 				new AntPathRequestMatcher("/vehicle-model/vehicle/{vehicleId}"),
 				new AntPathRequestMatcher("/customer-vehicle/{customerVehicleId}"),
 				new AntPathRequestMatcher("/customer-vehicle/search"),
-				new AntPathRequestMatcher("/customer-vehicle-review/by/customer-vehicle/{customerVehicleId}"),
+				new AntPathRequestMatcher("/customer-vehicle-review/by/customer-vehicle/{customerVehicleId}/customer/{customerId}"),
+				new AntPathRequestMatcher("/customer-vehicle-review/all/by/customer-vehicle/{customerVehicleId}"),
 				new AntPathRequestMatcher("/customer-vehicle-address/by/customer-vehicle/{customerVehicleId}"),
-				new AntPathRequestMatcher("/customer-vehicle-address/by/customer-vehicle/{customerVehicleId}/address-type/{addressType}")
+				new AntPathRequestMatcher("/customer-vehicle-address/by/customer-vehicle/{customerVehicleId}/address-type/{addressTypeName}")
 		);
 	}
 

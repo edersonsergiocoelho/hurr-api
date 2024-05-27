@@ -13,6 +13,7 @@ public interface CustomerVehicleBookingMapper {
 
     @Mapping(source = "customerVehicleBooking.customer", target = "customer")
     @Mapping(source = "customerVehicleBooking.customerVehicle", target = "customerVehicle")
+    @Mapping(source = "customerVehicleBooking.customerVehicle.customer", target = "customerVehicle.customer")
     @Mapping(source = "customerVehicleBooking.customerVehicle.vehicle", target = "customerVehicle.vehicle")
     @Mapping(source = "customerVehicleBooking.customerVehicle.vehicle.vehicleBrand", target = "customerVehicle.vehicle.vehicleBrand")
     @Mapping(source = "customerVehicleBooking.customerVehicle.vehicleModel", target = "customerVehicle.vehicleModel")

@@ -1,5 +1,6 @@
 package br.com.escconsulting.dto.customer.vehicle;
 
+import br.com.escconsulting.dto.customer.CustomerDTO;
 import br.com.escconsulting.dto.vehicle.VehicleDTO;
 import br.com.escconsulting.dto.vehicle.color.VehicleColorDTO;
 import br.com.escconsulting.dto.vehicle.fuel.type.VehicleFuelTypeDTO;
@@ -19,7 +20,7 @@ import java.util.UUID;
 public class CustomerVehicleDTO {
 
     private UUID customerVehicleId;
-    private UUID customerId;
+    private CustomerDTO customer;
     private VehicleDTO vehicle;
     private VehicleModelDTO vehicleModel;
     private VehicleColorDTO vehicleColor;

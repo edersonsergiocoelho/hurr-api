@@ -8,7 +8,7 @@ import java.util.UUID;
 
 public interface CustomerVehicleReviewService {
 
-    Optional<CustomerVehicleReview> findById(UUID id);
+    Optional<CustomerVehicleReview> findById(UUID customerVehicleReviewId);
 
     Optional<CustomerVehicleReview> findByCustomerVehicleIdAndCustomerId(UUID customerVehicleId, UUID customerId);
 
@@ -16,9 +16,9 @@ public interface CustomerVehicleReviewService {
 
     List<CustomerVehicleReview> findAllByCustomerVehicleId(UUID customerVehicleId);
 
-    Optional<CustomerVehicleReview> save(CustomerVehicleReview review);
+    Optional<CustomerVehicleReview> save(CustomerVehicleReview customerVehicleReview);
 
-    Optional<CustomerVehicleReview> update(UUID id, CustomerVehicleReview review);
+    Optional<CustomerVehicleReview> update(UUID customerVehicleReviewId, CustomerVehicleReview customerVehicleReview);
 
     void delete(UUID id);
 }
