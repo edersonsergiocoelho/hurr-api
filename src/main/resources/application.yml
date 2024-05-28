@@ -2,6 +2,10 @@ application:
   title: "Hurr - API"
   version: "0.0.1"
 
+scripts:
+  enabled: false
+  path: sql
+
 spring:
 
   main:

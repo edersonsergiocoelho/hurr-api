@@ -2,6 +2,7 @@ package br.com.escconsulting.service.mercado.pago.impl;
 
 import br.com.escconsulting.config.MPConfig;
 import br.com.escconsulting.entity.CustomerVehicleBooking;
+import br.com.escconsulting.service.CustomerAddressService;
 import br.com.escconsulting.service.CustomerService;
 import br.com.escconsulting.service.CustomerVehicleBookingService;
 import br.com.escconsulting.service.impl.CustomerVehicleServiceImpl;
@@ -38,6 +39,8 @@ public class MPWebhookServiceImpl implements MPWebhookService {
 
     private final CustomerService customerService;
 
+    private final CustomerAddressService customerAddressService;
+
     private final CustomerVehicleServiceImpl customerVehicleServiceImpl;
 
     private final CustomerVehicleBookingService customerVehicleBookingService;
@@ -62,6 +65,23 @@ public class MPWebhookServiceImpl implements MPWebhookService {
 
             String customerId = (String) payment.getMetadata().get("customer_id");
             String customerVehicleId = (String) payment.getMetadata().get("customer_vehicle_id");
+
+            String customerAddressDeliveryId = (String) payment.getMetadata().get("customer_address_delivery_id");
+
+            Double customerAddressDeliveryValueDouble = (Double) payment.getMetadata().get("customer_address_delivery_value");
+            BigDecimal customerAddressDeliveryValue = null;
+            if (customerAddressDeliveryValueDouble != null) {
+                customerAddressDeliveryValue= BigDecimal.valueOf(customerAddressDeliveryValueDouble);
+            }
+
+            String customerAddressPickUpId = (String) payment.getMetadata().get("customer_address_pickup_id");
+
+            Double customerAddressPickUpValueDouble = (Double) payment.getMetadata().get("customer_address_pickup_value");
+            BigDecimal customerAddressPickUpValue = null;
+            if (customerAddressPickUpValue != null) {
+                customerAddressPickUpValue = BigDecimal.valueOf(customerAddressPickUpValueDouble);
+            }
+
             String preferenceId = (String) payment.getMetadata().get("preference_id");
 
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSX");
@@ -90,6 +110,17 @@ public class MPWebhookServiceImpl implements MPWebhookService {
 
             customerVehicleBooking.setCustomer(customerService.findById(UUID.fromString(customerId)).get());
             customerVehicleBooking.setCustomerVehicle(customerVehicleServiceImpl.findById(UUID.fromString(customerVehicleId)).get());
+
+            if (customerAddressDeliveryId != null) {
+                customerVehicleBooking.setCustomerAddressDelivery(customerAddressService.findById(UUID.fromString(customerAddressDeliveryId)).get());
+                customerVehicleBooking.setCustomerAddressDeliveryValue(customerAddressDeliveryValue);
+            }
+
+            if (customerAddressPickUpId != null) {
+                customerVehicleBooking.setCustomerAddressPickUp(customerAddressService.findById(UUID.fromString(customerAddressPickUpId)).get());
+                customerVehicleBooking.setCustomerAddressPickUpValue(customerAddressPickUpValue);
+            }
+
             customerVehicleBooking.setBookingStartDate(bookingStartDate.toLocalDate());
             customerVehicleBooking.setBookingStartTime(bookingStartTime);
             customerVehicleBooking.setBookingEndDate(bookingEndDate.toLocalDate());

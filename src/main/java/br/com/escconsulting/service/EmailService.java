@@ -21,4 +21,8 @@ public interface EmailService {
     void sendIdentityNumberApproved(FileApproved fileApproved, Customer customer);
 
     void sendIdentityNumberReproved(FileApproved fileApproved, Customer customer);
+
+    void sendProfilePictureApproved(FileApproved fileApproved, User user);
+
+    void sendProfilePictureReproved(FileApproved fileApproved, User user);
 }

@@ -5,7 +5,7 @@ import lombok.Getter;
 import java.util.UUID;
 
 @Getter
-public class SearchCustomerVehicle {
+public class CustomerVehicleSearchDTO {
 
     private UUID vehicleId;
     private UUID vehicleModelId;

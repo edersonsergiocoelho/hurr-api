@@ -22,9 +22,10 @@ public class AddressAddressTypeController {
 
     private final AddressAddressTypeService addressAddressTypeService;
 
-    @GetMapping("/{addressAddressTypeId}")
-    public ResponseEntity<AddressAddressType> findById(@PathVariable("addressAddressTypeId") UUID addressAddressTypeId) {
-        return addressAddressTypeService.findById(addressAddressTypeId)
+    @GetMapping("/{addressId}/{addressTypeId}")
+    public ResponseEntity<AddressAddressType> findById(@PathVariable("addressId") UUID addressId,
+                                                       @PathVariable("addressTypeId") UUID addressTypeId) {
+        return addressAddressTypeService.findById(addressId, addressTypeId)
                 .map(ResponseEntity::ok)
                 .orElseGet(ResponseEntity.notFound()::build);
     }
@@ -57,17 +58,21 @@ public class AddressAddressTypeController {
                 .orElseThrow(() -> new IllegalStateException("Failed to save addressAddressType."));
     }
 
-    @PutMapping("/{addressAddressTypeId}")
-    public ResponseEntity<?> update(@PathVariable("addressAddressTypeId") UUID addressAddressTypeId,
+    @PutMapping("/{addressId}/{addressTypeId}")
+    public ResponseEntity<?> update(@PathVariable("addressId") UUID addressId,
+                                    @PathVariable("addressTypeId") UUID addressTypeId,
                                     @RequestBody AddressAddressType addressAddressType) {
-        return addressAddressTypeService.update(addressAddressTypeId, addressAddressType)
+
+        return addressAddressTypeService.update(addressId, addressTypeId, addressAddressType)
                 .map(updatedAddressAddressType -> ResponseEntity.ok(updatedAddressAddressType))
                 .orElseThrow(() -> new IllegalStateException("Failed to update addressAddressType."));
     }
 
-    @DeleteMapping("/{addressAddressTypeId}")
-    public ResponseEntity<?> delete(@PathVariable("addressAddressTypeId") UUID addressAddressTypeId) {
-        addressAddressTypeService.delete(addressAddressTypeId);
+    @DeleteMapping("/{addressId}/{addressTypeId}")
+    public ResponseEntity<?> delete(@PathVariable("addressId") UUID addressId,
+                                    @PathVariable("addressTypeId") UUID addressTypeId) {
+
+        addressAddressTypeService.delete(addressId, addressTypeId);
         return ResponseEntity.noContent().build();
     }
 }

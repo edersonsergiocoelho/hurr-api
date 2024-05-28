@@ -1,6 +1,7 @@
 package br.com.escconsulting.service.impl;
 
 import br.com.escconsulting.dto.LocalUser;
+import br.com.escconsulting.dto.customer.vehicle.booking.CustomerVehicleBookingDTO;
 import br.com.escconsulting.dto.customer.vehicle.booking.CustomerVehicleBookingSearchDTO;
 import br.com.escconsulting.entity.Customer;
 import br.com.escconsulting.entity.CustomerVehicleBooking;
@@ -16,6 +17,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -52,7 +54,7 @@ public class CustomerVehicleBookingServiceImpl implements CustomerVehicleBooking
 
     @Transactional
     @Override
-    public Page<CustomerVehicleBooking> searchPage(LocalUser localUser, CustomerVehicleBookingSearchDTO customerVehicleBookingSearchDTO, Pageable pageable) {
+    public Page<CustomerVehicleBookingDTO> searchPage(LocalUser localUser, CustomerVehicleBookingSearchDTO customerVehicleBookingSearchDTO, Pageable pageable) {
         Optional<Customer> optionalCustomer = customerService.findByEmail(localUser.getUsername());
 
         return optionalCustomer.map(customer -> {
@@ -63,7 +65,7 @@ public class CustomerVehicleBookingServiceImpl implements CustomerVehicleBooking
 
     @Transactional
     @Override
-    public Page<CustomerVehicleBooking> customerVehicleSearchPage(LocalUser localUser, CustomerVehicleBookingSearchDTO customerVehicleBookingSearchDTO, Pageable pageable) {
+    public Page<CustomerVehicleBookingDTO> customerVehicleSearchPage(LocalUser localUser, CustomerVehicleBookingSearchDTO customerVehicleBookingSearchDTO, Pageable pageable) {
         Optional<Customer> optionalCustomer = customerService.findByEmail(localUser.getUsername());
 
         return optionalCustomer.map(customer -> {
@@ -84,6 +86,27 @@ public class CustomerVehicleBookingServiceImpl implements CustomerVehicleBooking
 
     @Transactional
     @Override
+    public Optional<CustomerVehicleBooking> finalizeBooking(UUID customerVehicleBookingId, CustomerVehicleBooking customerVehicleBooking) {
+        return findById(customerVehicleBookingId)
+                .map(existingCustomerVehicleBooking -> {
+
+                    if (customerVehicleBooking.getBookingStartKM() != null) {
+                        existingCustomerVehicleBooking.setBookingStartKM(customerVehicleBooking.getBookingStartKM());
+                    }
+
+                    if (customerVehicleBooking.getBookingEndKM() != null) {
+                        existingCustomerVehicleBooking.setBookingEndKM(customerVehicleBooking.getBookingEndKM());
+                    }
+
+                    existingCustomerVehicleBooking.setBookingDeliveryDate(LocalDateTime.now());
+                    existingCustomerVehicleBooking.setModifiedDate(Instant.now());
+
+                    return customerVehicleBookingRepository.save(existingCustomerVehicleBooking);
+                });
+    }
+
+    @Transactional
+    @Override
     public Optional<CustomerVehicleBooking> update(UUID customerVehicleBookingId, CustomerVehicleBooking customerVehicleBooking) {
         return findById(customerVehicleBookingId)
                 .map(existingCustomerVehicleBooking -> {
@@ -92,7 +115,6 @@ public class CustomerVehicleBookingServiceImpl implements CustomerVehicleBooking
                     existingCustomerVehicleBooking.setModifiedDate(Instant.now());
 
                     return customerVehicleBookingRepository.save(existingCustomerVehicleBooking);
-
                 });
     }
 

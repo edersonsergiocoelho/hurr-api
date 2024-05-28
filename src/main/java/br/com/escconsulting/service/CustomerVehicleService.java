@@ -1,9 +1,7 @@
 package br.com.escconsulting.service;
 
-import br.com.escconsulting.dto.customer.vehicle.SearchCustomerVehicle;
+import br.com.escconsulting.dto.customer.vehicle.CustomerVehicleSearchDTO;
 import br.com.escconsulting.entity.CustomerVehicle;
-import br.com.escconsulting.entity.CustomerVehicle;
-import br.com.escconsulting.entity.State;
 
 import java.util.List;
 import java.util.Optional;
@@ -15,7 +13,7 @@ public interface CustomerVehicleService {
 
     List<CustomerVehicle> findAll();
     
-    List<CustomerVehicle> search(SearchCustomerVehicle searchCustomerVehicle);
+    List<CustomerVehicle> search(CustomerVehicleSearchDTO customerVehicleSearchDTO);
 
     Optional<CustomerVehicle> save(CustomerVehicle customerVehicle);
 

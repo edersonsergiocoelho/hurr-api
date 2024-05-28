@@ -3,6 +3,10 @@ CREATE TABLE IF NOT EXISTS customer_vehicle_booking
     customer_vehicle_booking_id UUID DEFAULT uuid_generate_v4(),
     customer_vehicle_id UUID NOT NULL,
     customer_id UUID NOT NULL,
+    customer_address_delivery_id UUID,
+    customer_address_delivery_value NUMERIC(13,2),
+    customer_address_pickup_id UUID,
+    customer_address_pickup_value NUMERIC(13,2),
     booking CHARACTER VARYING(100) NOT NULL UNIQUE,
     booking_start_date TIMESTAMP WITHOUT TIME ZONE NOT NULL,
     booking_end_date TIMESTAMP WITHOUT TIME ZONE NOT NULL,
@@ -23,6 +27,14 @@ CREATE TABLE IF NOT EXISTS customer_vehicle_booking
         ON DELETE NO ACTION,
     CONSTRAINT customer_vehicle_booking_to_customer_fk FOREIGN KEY (customer_id)
         REFERENCES customer (customer_id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION,
+    CONSTRAINT customer_address_delivery_to_customer_address_fk FOREIGN KEY (customer_address_delivery_id)
+        REFERENCES customer_address (customer_address_id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION,
+    CONSTRAINT customer_address_pickup_to_customer_address_fk FOREIGN KEY (customer_address_pickup_id)
+        REFERENCES customer_address (customer_address_id) MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE NO ACTION
 );

@@ -1,6 +1,7 @@
 package br.com.escconsulting.entity;
 
 import br.com.escconsulting.entity.generic.AbstractEntity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -33,6 +34,7 @@ public class AddressType extends AbstractEntity implements Serializable {
     @Column(name = "address_type_name", length = 100, nullable = false, unique = true)
     private String addressTypeName;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "addressType")
     private Set<AddressAddressType> addressTypes;
 }

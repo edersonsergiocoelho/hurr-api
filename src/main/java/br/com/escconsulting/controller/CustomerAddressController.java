@@ -1,5 +1,6 @@
 package br.com.escconsulting.controller;
 
+import br.com.escconsulting.dto.customer.address.CustomerAddressSaveAddressDTO;
 import br.com.escconsulting.dto.customer.address.CustomerAddressSearchDTO;
 import br.com.escconsulting.entity.CustomerAddress;
 import br.com.escconsulting.service.CustomerAddressService;
@@ -35,6 +36,13 @@ public class CustomerAddressController {
         return ResponseEntity.ok(listCustomerAddress);
     }
 
+    @GetMapping("/by/customerId/{customerId}/and/addressTypeName/{addressTypeName}")
+    public ResponseEntity<List<CustomerAddress>> findByCustomerIdAndAddressTypeName(@PathVariable("customerId") UUID customerId,
+                                                                                    @PathVariable("addressTypeName") String addressTypeName) {
+        List<CustomerAddress> listCustomerAddress = customerAddressService.findByCustomerIdAndAddressTypeName(customerId, addressTypeName);
+        return ResponseEntity.ok(listCustomerAddress);
+    }
+
     @GetMapping
     public ResponseEntity<List<CustomerAddress>> findAll() {
         List<CustomerAddress> listCustomerAddress = customerAddressService.findAll();
@@ -61,6 +69,13 @@ public class CustomerAddressController {
         return customerAddressService.save(customerAddress)
                 .map(ResponseEntity::ok)
                 .orElseThrow(() -> new IllegalStateException("Failed to save customer address."));
+    }
+
+    @PostMapping("/address")
+    public ResponseEntity<?> saveAddress(@RequestBody CustomerAddressSaveAddressDTO customerAddressSaveAddressDTO) {
+        return customerAddressService.saveAddress(customerAddressSaveAddressDTO)
+                .map(ResponseEntity::ok)
+                .orElseThrow(() -> new IllegalStateException("Failed to save customer address save address."));
     }
 
     @PutMapping("/{customerAddressId}")
