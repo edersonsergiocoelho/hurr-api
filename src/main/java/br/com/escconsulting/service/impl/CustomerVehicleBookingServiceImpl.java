@@ -16,6 +16,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -50,6 +51,17 @@ public class CustomerVehicleBookingServiceImpl implements CustomerVehicleBooking
     @Override
     public List<CustomerVehicleBooking> findAll() {
         return customerVehicleBookingRepository.findAll();
+    }
+
+    @Transactional
+    @Override
+    public Optional<BigDecimal> sumCustomerVehicleTotalBookingValue(LocalUser localUser, CustomerVehicleBookingSearchDTO customerVehicleBookingSearchDTO) {
+        Optional<Customer> optionalCustomer = customerService.findByEmail(localUser.getUsername());
+
+        return optionalCustomer.map(customer -> {
+            customerVehicleBookingSearchDTO.setCustomerId(customer.getCustomerId());
+            return customerVehicleBookingCustomRepository.sumCustomerVehicleTotalBookingValue(customerVehicleBookingSearchDTO);
+        });
     }
 
     @Transactional

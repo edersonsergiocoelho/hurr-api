@@ -16,7 +16,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @RestController
@@ -38,6 +40,14 @@ public class CustomerVehicleBookingController {
     public ResponseEntity<List<CustomerVehicleBooking>> findAll() {
         List<CustomerVehicleBooking> listCustomerVehicleBooking = customerVehicleBookingService.findAll();
         return ResponseEntity.ok(listCustomerVehicleBooking);
+    }
+
+    @PostMapping("/sum/customer-vehicle/total-booking-value")
+    public ResponseEntity<BigDecimal> sumCustomerVehicleTotalBookingValue(@CurrentUser LocalUser localUser,
+                                                                          @RequestBody CustomerVehicleBookingSearchDTO customerVehicleBookingSearchDTO) {
+        return customerVehicleBookingService.sumCustomerVehicleTotalBookingValue(localUser, customerVehicleBookingSearchDTO)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PostMapping("/search/page")
@@ -92,6 +102,7 @@ public class CustomerVehicleBookingController {
     public ResponseEntity<?> update(@PathVariable("customerVehicleBookingId") UUID customerVehicleBookingId,
                                     @RequestBody CustomerVehicleBooking customerVehicleBooking) {
         return customerVehicleBookingService.update(customerVehicleBookingId, customerVehicleBooking)
+                .map(CustomerVehicleBookingMapper.INSTANCE::toDTO)
                 .map(updatedCustomerVehicleBooking -> ResponseEntity.ok(updatedCustomerVehicleBooking))
                 .orElseThrow(() -> new IllegalStateException("Failed to update customer vehicle booking."));
     }

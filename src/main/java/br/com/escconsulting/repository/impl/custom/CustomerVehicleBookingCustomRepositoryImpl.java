@@ -15,6 +15,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -188,5 +189,23 @@ public class CustomerVehicleBookingCustomRepositoryImpl extends SimpleJpaReposit
         cq.where(spec);
 
         return entityManager.createQuery(cq).getSingleResult();
+    }
+
+    public BigDecimal sumCustomerVehicleTotalBookingValue(CustomerVehicleBookingSearchDTO customerVehicleBookingSearchDTO) {
+
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<BigDecimal> cq = cb.createQuery(BigDecimal.class);
+        Root<CustomerVehicleBooking> root = cq.from(CustomerVehicleBooking.class);
+
+        cq.select(cb.sum(root.get("totalBookingValue")));
+
+        Predicate spec = cb.isNotNull(root.get("bookingDeliveryDate"));
+
+        spec = cb.and(spec, cb.equal(root.get("customerVehicle").get("customer").get("customerId"), customerVehicleBookingSearchDTO.getCustomerId()));
+
+        cq.where(spec);
+
+        BigDecimal result = entityManager.createQuery(cq).getSingleResult();
+        return result != null ? result : BigDecimal.ZERO;
     }
 }

@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 public interface CustomerVehicleBookingCustomRepository extends JpaRepository<CustomerVehicleBooking, UUID> {
@@ -18,4 +19,6 @@ public interface CustomerVehicleBookingCustomRepository extends JpaRepository<Cu
     Long countSearchPage(CustomerVehicleBookingSearchDTO customerVehicleBookingSearchDTO);
 
     Long countCustomerVehicleSearchPage(CustomerVehicleBookingSearchDTO customerVehicleBookingSearchDTO);
+
+    BigDecimal sumCustomerVehicleTotalBookingValue(CustomerVehicleBookingSearchDTO customerVehicleBookingSearchDTO);
 }
