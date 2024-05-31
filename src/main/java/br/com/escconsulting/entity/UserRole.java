@@ -27,10 +27,12 @@ public class UserRole extends AbstractEntity implements Serializable {
     private UserRoleId userRoleId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", insertable = false, updatable = false)
+    @MapsId("userId")
+    @JoinColumn(name = "user_id")
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "role_id", insertable = false, updatable = false)
+    @MapsId("roleId")
+    @JoinColumn(name = "role_id")
     private Role role;
 }
