@@ -55,12 +55,34 @@ public class CustomerVehicleBookingServiceImpl implements CustomerVehicleBooking
 
     @Transactional
     @Override
-    public Optional<BigDecimal> sumCustomerVehicleTotalBookingValue(LocalUser localUser, CustomerVehicleBookingSearchDTO customerVehicleBookingSearchDTO) {
+    public Optional<BigDecimal> sumCustomerVehicleTotalEarnings(LocalUser localUser, CustomerVehicleBookingSearchDTO customerVehicleBookingSearchDTO) {
         Optional<Customer> optionalCustomer = customerService.findByEmail(localUser.getUsername());
 
         return optionalCustomer.map(customer -> {
             customerVehicleBookingSearchDTO.setCustomerId(customer.getCustomerId());
-            return customerVehicleBookingCustomRepository.sumCustomerVehicleTotalBookingValue(customerVehicleBookingSearchDTO);
+            return customerVehicleBookingCustomRepository.sumCustomerVehicleTotalEarnings(customerVehicleBookingSearchDTO);
+        });
+    }
+
+    @Transactional
+    @Override
+    public Optional<BigDecimal> sumCustomerVehicleWithdrawableCurrentBalance(LocalUser localUser, CustomerVehicleBookingSearchDTO customerVehicleBookingSearchDTO) {
+        Optional<Customer> optionalCustomer = customerService.findByEmail(localUser.getUsername());
+
+        return optionalCustomer.map(customer -> {
+            customerVehicleBookingSearchDTO.setCustomerId(customer.getCustomerId());
+            return customerVehicleBookingCustomRepository.sumCustomerVehicleWithdrawableCurrentBalance(customerVehicleBookingSearchDTO);
+        });
+    }
+
+    @Transactional
+    @Override
+    public Optional<BigDecimal> sumCustomerVehicleWithdrawableBalance(LocalUser localUser, CustomerVehicleBookingSearchDTO customerVehicleBookingSearchDTO) {
+        Optional<Customer> optionalCustomer = customerService.findByEmail(localUser.getUsername());
+
+        return optionalCustomer.map(customer -> {
+            customerVehicleBookingSearchDTO.setCustomerId(customer.getCustomerId());
+            return customerVehicleBookingCustomRepository.sumCustomerVehicleWithdrawableBalance(customerVehicleBookingSearchDTO);
         });
     }
 
@@ -110,7 +132,7 @@ public class CustomerVehicleBookingServiceImpl implements CustomerVehicleBooking
                         existingCustomerVehicleBooking.setBookingEndKM(customerVehicleBooking.getBookingEndKM());
                     }
 
-                    existingCustomerVehicleBooking.setBookingDeliveryDate(LocalDateTime.now());
+                    existingCustomerVehicleBooking.setBookingEndDate(LocalDateTime.now());
                     existingCustomerVehicleBooking.setModifiedDate(Instant.now());
 
                     return customerVehicleBookingRepository.save(existingCustomerVehicleBooking);

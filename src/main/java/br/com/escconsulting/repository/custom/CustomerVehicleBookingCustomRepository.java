@@ -20,5 +20,9 @@ public interface CustomerVehicleBookingCustomRepository extends JpaRepository<Cu
 
     Long countCustomerVehicleSearchPage(CustomerVehicleBookingSearchDTO customerVehicleBookingSearchDTO);
 
-    BigDecimal sumCustomerVehicleTotalBookingValue(CustomerVehicleBookingSearchDTO customerVehicleBookingSearchDTO);
+    BigDecimal sumCustomerVehicleTotalEarnings(CustomerVehicleBookingSearchDTO customerVehicleBookingSearchDTO);
+
+    BigDecimal sumCustomerVehicleWithdrawableCurrentBalance(CustomerVehicleBookingSearchDTO customerVehicleBookingSearchDTO);
+
+    BigDecimal sumCustomerVehicleWithdrawableBalance(CustomerVehicleBookingSearchDTO customerVehicleBookingSearchDTO);
 }

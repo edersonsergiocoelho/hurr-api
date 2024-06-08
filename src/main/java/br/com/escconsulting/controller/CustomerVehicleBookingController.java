@@ -5,7 +5,7 @@ import br.com.escconsulting.dto.LocalUser;
 import br.com.escconsulting.dto.customer.vehicle.booking.CustomerVehicleBookingDTO;
 import br.com.escconsulting.dto.customer.vehicle.booking.CustomerVehicleBookingSearchDTO;
 import br.com.escconsulting.entity.CustomerVehicleBooking;
-import br.com.escconsulting.mapper.customer.vehicle.booking.CustomerVehicleBookingMapper;
+import br.com.escconsulting.mapper.CustomerVehicleBookingMapper;
 import br.com.escconsulting.service.CustomerVehicleBookingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @RestController
@@ -42,10 +41,26 @@ public class CustomerVehicleBookingController {
         return ResponseEntity.ok(listCustomerVehicleBooking);
     }
 
-    @PostMapping("/sum/customer-vehicle/total-booking-value")
-    public ResponseEntity<BigDecimal> sumCustomerVehicleTotalBookingValue(@CurrentUser LocalUser localUser,
-                                                                          @RequestBody CustomerVehicleBookingSearchDTO customerVehicleBookingSearchDTO) {
-        return customerVehicleBookingService.sumCustomerVehicleTotalBookingValue(localUser, customerVehicleBookingSearchDTO)
+    @PostMapping("/sum/customer-vehicle/total-earnings")
+    public ResponseEntity<BigDecimal> sumCustomerVehicleTotalEarnings(@CurrentUser LocalUser localUser,
+                                                                      @RequestBody CustomerVehicleBookingSearchDTO customerVehicleBookingSearchDTO) {
+        return customerVehicleBookingService.sumCustomerVehicleTotalEarnings(localUser, customerVehicleBookingSearchDTO)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @PostMapping("/sum/customer-vehicle/withdrawable-current-balance")
+    public ResponseEntity<BigDecimal> sumCustomerVehicleWithdrawableCurrentBalance(@CurrentUser LocalUser localUser,
+                                                                                   @RequestBody CustomerVehicleBookingSearchDTO customerVehicleBookingSearchDTO) {
+        return customerVehicleBookingService.sumCustomerVehicleWithdrawableCurrentBalance(localUser, customerVehicleBookingSearchDTO)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @PostMapping("/sum/customer-vehicle/withdrawable-balance")
+    public ResponseEntity<BigDecimal> sumCustomerVehicleWithdrawableBalance(@CurrentUser LocalUser localUser,
+                                                                            @RequestBody CustomerVehicleBookingSearchDTO customerVehicleBookingSearchDTO) {
+        return customerVehicleBookingService.sumCustomerVehicleWithdrawableBalance(localUser, customerVehicleBookingSearchDTO)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }

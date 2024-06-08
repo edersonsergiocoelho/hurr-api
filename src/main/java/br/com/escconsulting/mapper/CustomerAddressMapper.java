@@ -1,4 +1,4 @@
-package br.com.escconsulting.mapper.customer.address;
+package br.com.escconsulting.mapper;
 
 import br.com.escconsulting.dto.customer.address.CustomerAddressDTO;
 import br.com.escconsulting.entity.CustomerAddress;

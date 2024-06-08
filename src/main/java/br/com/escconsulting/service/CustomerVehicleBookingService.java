@@ -20,7 +20,11 @@ public interface CustomerVehicleBookingService {
 
     List<CustomerVehicleBooking> findAll();
 
-    Optional<BigDecimal> sumCustomerVehicleTotalBookingValue(LocalUser localUser, CustomerVehicleBookingSearchDTO customerVehicleBookingSearchDTO);
+    Optional<BigDecimal> sumCustomerVehicleTotalEarnings(LocalUser localUser, CustomerVehicleBookingSearchDTO customerVehicleBookingSearchDTO);
+
+    Optional<BigDecimal> sumCustomerVehicleWithdrawableCurrentBalance(LocalUser localUser, CustomerVehicleBookingSearchDTO customerVehicleBookingSearchDTO);
+
+    Optional<BigDecimal> sumCustomerVehicleWithdrawableBalance(LocalUser localUser, CustomerVehicleBookingSearchDTO customerVehicleBookingSearchDTO);
 
     Page<CustomerVehicleBookingDTO> searchPage(LocalUser localUser, CustomerVehicleBookingSearchDTO customerVehicleBookingSearchDTO, Pageable pageable);
 

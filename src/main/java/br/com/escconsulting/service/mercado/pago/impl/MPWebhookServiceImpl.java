@@ -78,7 +78,7 @@ public class MPWebhookServiceImpl implements MPWebhookService {
 
             Double customerAddressPickUpValueDouble = (Double) payment.getMetadata().get("customer_address_pickup_value");
             BigDecimal customerAddressPickUpValue = null;
-            if (customerAddressPickUpValue != null) {
+            if (customerAddressPickUpValueDouble != null) {
                 customerAddressPickUpValue = BigDecimal.valueOf(customerAddressPickUpValueDouble);
             }
 
@@ -87,14 +87,14 @@ public class MPWebhookServiceImpl implements MPWebhookService {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSX");
 
             String bookingStartDateString = (String) payment.getMetadata().get("booking_start_date");
-            LocalDateTime bookingStartDate = LocalDateTime.parse(bookingStartDateString, formatter);
+            LocalDateTime reservationStartDate = LocalDateTime.parse(bookingStartDateString, formatter);
 
-            String bookingStartTime = (String) payment.getMetadata().get("booking_start_time");
+            String reservationStartTime = (String) payment.getMetadata().get("booking_start_time");
 
             String bookingEndDateString = (String) payment.getMetadata().get("booking_end_date");
-            LocalDateTime bookingEndDate = LocalDateTime.parse(bookingEndDateString, formatter);
+            LocalDateTime reservationEndDate = LocalDateTime.parse(bookingEndDateString, formatter);
 
-            String bookingEndTime = (String) payment.getMetadata().get("booking_end_time");
+            String reservationEndTime = (String) payment.getMetadata().get("booking_end_time");
 
             Double totalBookingValueDouble = (Double) payment.getMetadata().get("total_booking_value");
             BigDecimal totalBookingValue = BigDecimal.valueOf(totalBookingValueDouble);
@@ -121,10 +121,11 @@ public class MPWebhookServiceImpl implements MPWebhookService {
                 customerVehicleBooking.setCustomerAddressPickUpValue(customerAddressPickUpValue);
             }
 
-            customerVehicleBooking.setBookingStartDate(bookingStartDate.toLocalDate());
-            customerVehicleBooking.setBookingStartTime(bookingStartTime);
-            customerVehicleBooking.setBookingEndDate(bookingEndDate.toLocalDate());
-            customerVehicleBooking.setBookingEndTime(bookingEndTime);
+            customerVehicleBooking.setReservationStartDate(reservationStartDate.toLocalDate());
+            customerVehicleBooking.setReservationStartTime(reservationStartTime);
+            customerVehicleBooking.setReservationEndDate(reservationEndDate.toLocalDate());
+            customerVehicleBooking.setReservationEndTime(reservationEndTime);
+            customerVehicleBooking.setWithdrawableBookingValue(totalBookingValue.subtract(new BigDecimal(15)));
             customerVehicleBooking.setTotalBookingValue(totalBookingValue);
             customerVehicleBooking.setMpPaymentId(payment.getId());
 

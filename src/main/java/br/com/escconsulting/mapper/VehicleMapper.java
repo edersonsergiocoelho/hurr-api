@@ -1,4 +1,4 @@
-package br.com.escconsulting.mapper.vehicle;
+package br.com.escconsulting.mapper;
 
 import br.com.escconsulting.dto.vehicle.VehicleDTO;
 import br.com.escconsulting.entity.Vehicle;

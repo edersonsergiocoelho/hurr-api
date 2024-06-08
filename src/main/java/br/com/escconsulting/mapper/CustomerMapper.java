@@ -1,4 +1,4 @@
-package br.com.escconsulting.mapper.customer;
+package br.com.escconsulting.mapper;
 
 import br.com.escconsulting.dto.customer.CustomerDTO;
 import br.com.escconsulting.entity.Customer;

@@ -3,7 +3,7 @@ package br.com.escconsulting.repository.impl.custom;
 import br.com.escconsulting.dto.customer.vehicle.booking.CustomerVehicleBookingDTO;
 import br.com.escconsulting.dto.customer.vehicle.booking.CustomerVehicleBookingSearchDTO;
 import br.com.escconsulting.entity.*;
-import br.com.escconsulting.mapper.customer.vehicle.booking.CustomerVehicleBookingMapper;
+import br.com.escconsulting.mapper.CustomerVehicleBookingMapper;
 import br.com.escconsulting.repository.CustomerVehicleBookingRepository;
 import br.com.escconsulting.repository.custom.CustomerVehicleBookingCustomRepository;
 import jakarta.persistence.EntityManager;
@@ -191,16 +191,55 @@ public class CustomerVehicleBookingCustomRepositoryImpl extends SimpleJpaReposit
         return entityManager.createQuery(cq).getSingleResult();
     }
 
-    public BigDecimal sumCustomerVehicleTotalBookingValue(CustomerVehicleBookingSearchDTO customerVehicleBookingSearchDTO) {
+    public BigDecimal sumCustomerVehicleTotalEarnings(CustomerVehicleBookingSearchDTO customerVehicleBookingSearchDTO) {
 
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<BigDecimal> cq = cb.createQuery(BigDecimal.class);
         Root<CustomerVehicleBooking> root = cq.from(CustomerVehicleBooking.class);
 
-        cq.select(cb.sum(root.get("totalBookingValue")));
+        cq.select(cb.sum(root.get("withdrawableBookingValue")));
 
-        Predicate spec = cb.isNotNull(root.get("bookingDeliveryDate"));
+        Predicate spec = cb.isNull(root.get("bookingCancellationDate"));
 
+        spec = cb.and(spec, cb.equal(root.get("customerVehicle").get("customer").get("customerId"), customerVehicleBookingSearchDTO.getCustomerId()));
+
+        cq.where(spec);
+
+        BigDecimal result = entityManager.createQuery(cq).getSingleResult();
+        return result != null ? result : BigDecimal.ZERO;
+    }
+
+    public BigDecimal sumCustomerVehicleWithdrawableCurrentBalance(CustomerVehicleBookingSearchDTO customerVehicleBookingSearchDTO) {
+
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<BigDecimal> cq = cb.createQuery(BigDecimal.class);
+        Root<CustomerVehicleBooking> root = cq.from(CustomerVehicleBooking.class);
+
+        cq.select(cb.sum(root.get("withdrawableBookingValue")));
+
+        Predicate spec = cb.isNull(root.get("bookingCancellationDate"));
+
+        spec = cb.isNotNull(root.get("bookingStartDate"));
+        spec = cb.and(spec, cb.equal(root.get("customerVehicle").get("customer").get("customerId"), customerVehicleBookingSearchDTO.getCustomerId()));
+
+        cq.where(spec);
+
+        BigDecimal result = entityManager.createQuery(cq).getSingleResult();
+        return result != null ? result : BigDecimal.ZERO;
+    }
+
+    public BigDecimal sumCustomerVehicleWithdrawableBalance(CustomerVehicleBookingSearchDTO customerVehicleBookingSearchDTO) {
+
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<BigDecimal> cq = cb.createQuery(BigDecimal.class);
+        Root<CustomerVehicleBooking> root = cq.from(CustomerVehicleBooking.class);
+
+        cq.select(cb.sum(root.get("withdrawableBookingValue")));
+
+        Predicate spec = cb.isNull(root.get("bookingCancellationDate"));
+
+        spec = cb.isNotNull(root.get("bookingStartDate"));
+        spec = cb.isNotNull(root.get("bookingEndDate"));
         spec = cb.and(spec, cb.equal(root.get("customerVehicle").get("customer").get("customerId"), customerVehicleBookingSearchDTO.getCustomerId()));
 
         cq.where(spec);
