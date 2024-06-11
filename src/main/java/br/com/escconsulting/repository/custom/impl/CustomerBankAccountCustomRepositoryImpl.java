@@ -1,4 +1,4 @@
-package br.com.escconsulting.repository.impl.custom;
+package br.com.escconsulting.repository.custom.impl;
 
 import br.com.escconsulting.dto.customer.bank.account.CustomerBankAccountDTO;
 import br.com.escconsulting.dto.customer.bank.account.CustomerBankAccountSearchDTO;

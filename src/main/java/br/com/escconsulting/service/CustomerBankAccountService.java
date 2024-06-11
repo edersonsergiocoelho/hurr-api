@@ -19,8 +19,6 @@ public interface CustomerBankAccountService {
 
     Page<CustomerBankAccountDTO> searchPage(LocalUser localUser, CustomerBankAccountSearchDTO customerBankAccountSearchDTO, Pageable pageable);
 
-    Page<CustomerBankAccountDTO> customerVehicleSearchPage(LocalUser localUser, CustomerBankAccountSearchDTO customerBankAccountSearchDTO, Pageable pageable);
-
     Optional<CustomerBankAccount> save(CustomerBankAccount customerBankAccount);
 
     Optional<CustomerBankAccount> update(UUID customerBankAccountId, CustomerBankAccount customerBankAccount);

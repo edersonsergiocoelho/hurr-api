@@ -58,17 +58,6 @@ public class CustomerBankAccountServiceImpl implements CustomerBankAccountServic
 
     @Transactional
     @Override
-    public Page<CustomerBankAccountDTO> customerVehicleSearchPage(LocalUser localUser, CustomerBankAccountSearchDTO customerBankAccountSearchDTO, Pageable pageable) {
-        Optional<Customer> optionalCustomer = customerService.findByEmail(localUser.getUsername());
-
-        return optionalCustomer.map(customer -> {
-            customerBankAccountSearchDTO.setCustomerId(customer.getCustomerId());
-            return customerBankAccountCustomRepository.customerVehicleSearchPage(customerBankAccountSearchDTO, pageable);
-        }).orElseThrow(() -> new RuntimeException("Customer not found for email: " + localUser.getUsername()));
-    }
-
-    @Transactional
-    @Override
     public Optional<CustomerBankAccount> save(CustomerBankAccount customerBankAccount) {
 
         customerBankAccount.setCreatedDate(Instant.now());

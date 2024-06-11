@@ -7,16 +7,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.math.BigDecimal;
 import java.util.UUID;
 
 public interface CustomerBankAccountCustomRepository extends JpaRepository<CustomerBankAccount, UUID> {
 
     Page<CustomerBankAccountDTO> searchPage(CustomerBankAccountSearchDTO customerBankAccountSearchDTO, Pageable pageable);
 
-    Page<CustomerBankAccountDTO> customerVehicleSearchPage(CustomerBankAccountSearchDTO customerBankAccountSearchDTO, Pageable pageable);
-
     Long countSearchPage(CustomerBankAccountSearchDTO customerBankAccountSearchDTO);
-
-    Long countCustomerVehicleSearchPage(CustomerBankAccountSearchDTO customerBankAccountSearchDTO);
 }

@@ -56,25 +56,10 @@ public class CustomerBankAccountController {
         return ResponseEntity.ok(customerBankAccounts);
     }
 
-    @PostMapping("/customer-vehicle/search/page")
-    public ResponseEntity<?> customerVehicleSearchPage(
-            @CurrentUser LocalUser localUser,
-            @RequestBody CustomerBankAccountSearchDTO customerBankAccountSearchDTO,
-            @RequestParam(value = "page", defaultValue = "0") int page,
-            @RequestParam(value = "size", defaultValue = "10") int size,
-            @RequestParam(value = "sortDir", defaultValue = "DESC") String sortDir,
-            @RequestParam(value = "sortBy", defaultValue = "createdDate") String sortBy) {
-
-        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(sortDir), sortBy));
-
-        Page<CustomerBankAccountDTO> customerBankAccountsDTO = customerBankAccountService.customerVehicleSearchPage(localUser, customerBankAccountSearchDTO, pageable);
-
-        return ResponseEntity.ok(customerBankAccountsDTO);
-    }
-
     @PostMapping
     public ResponseEntity<?> save(@RequestBody CustomerBankAccount customerBankAccount) {
         return customerBankAccountService.save(customerBankAccount)
+                .map(CustomerBankAccountMapper.INSTANCE::toDTO)
                 .map(ResponseEntity::ok)
                 .orElseThrow(() -> new IllegalStateException("Failed to save customer bank account."));
     }
