@@ -1,9 +1,9 @@
-package br.com.escconsulting.repository.impl.custom;
+package br.com.escconsulting.repository.custom.impl;
 
-import br.com.escconsulting.dto.state.StateSearchDTO;
-import br.com.escconsulting.entity.State;
-import br.com.escconsulting.repository.StateRepository;
-import br.com.escconsulting.repository.custom.StateCustomRepository;
+import br.com.escconsulting.dto.customer.address.CustomerAddressSearchDTO;
+import br.com.escconsulting.entity.CustomerAddress;
+import br.com.escconsulting.repository.custom.CustomerAddressCustomRepository;
+import br.com.escconsulting.repository.CustomerAddressRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.*;
@@ -18,27 +18,27 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Repository
-public class StateCustomRepositoryImpl extends SimpleJpaRepository<State, UUID> implements StateCustomRepository {
+public class CustomerAddressCustomRepositoryImpl extends SimpleJpaRepository<CustomerAddress, UUID> implements CustomerAddressCustomRepository {
 
     private final EntityManager entityManager;
 
-    private final StateRepository stateRepository;
+    private final CustomerAddressRepository customerAddressRepository;
 
-    public StateCustomRepositoryImpl(EntityManager entityManager, StateRepository stateRepository) {
-        super(State.class, entityManager);
+    public CustomerAddressCustomRepositoryImpl(EntityManager entityManager, CustomerAddressRepository customerAddressRepository) {
+        super(CustomerAddress.class, entityManager);
         this.entityManager = entityManager;
-        this.stateRepository = stateRepository;
+        this.customerAddressRepository = customerAddressRepository;
     }
 
-    public Page<State> searchPage(StateSearchDTO stateSearchDTO, Pageable pageable) {
+    public Page<CustomerAddress> searchPage(CustomerAddressSearchDTO fileApprovedSearchDTO, Pageable pageable) {
 
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-        CriteriaQuery<State> cq = cb.createQuery(State.class);
-        Root<State> root = cq.from(State.class);
+        CriteriaQuery<CustomerAddress> cq = cb.createQuery(CustomerAddress.class);
+        Root<CustomerAddress> root = cq.from(CustomerAddress.class);
 
         Predicate spec = cb.conjunction();
 
-        if (stateSearchDTO != null) {
+        if (fileApprovedSearchDTO != null) {
 
         }
 
@@ -55,25 +55,25 @@ public class StateCustomRepositoryImpl extends SimpleJpaRepository<State, UUID> 
             cq.orderBy(orders);
         }
 
-        TypedQuery<State> query = entityManager.createQuery(cq);
+        TypedQuery<CustomerAddress> query = entityManager.createQuery(cq);
 
         query.setFirstResult((int) pageable.getOffset());
         query.setMaxResults(pageable.getPageSize());
 
-        List<State> resultList = query.getResultList();
-        return new PageImpl<>(resultList, pageable, this.countSearchPage(stateSearchDTO));
+        List<CustomerAddress> resultList = query.getResultList();
+        return new PageImpl<>(resultList, pageable, this.countSearchPage(fileApprovedSearchDTO));
     }
 
-    public Long countSearchPage(StateSearchDTO stateSearchDTO) {
+    public Long countSearchPage(CustomerAddressSearchDTO fileApprovedSearchDTO) {
 
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<Long> cq = cb.createQuery(Long.class);
-        Root<State> root = cq.from(State.class);
+        Root<CustomerAddress> root = cq.from(CustomerAddress.class);
         cq.select(cb.count(root));
 
         Predicate spec = cb.conjunction();
 
-        if (stateSearchDTO != null) {
+        if (fileApprovedSearchDTO != null) {
         }
 
         cq.where(spec);

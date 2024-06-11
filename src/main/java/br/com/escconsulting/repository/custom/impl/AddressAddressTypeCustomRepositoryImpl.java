@@ -1,4 +1,4 @@
-package br.com.escconsulting.repository.impl.custom;
+package br.com.escconsulting.repository.custom.impl;
 
 import br.com.escconsulting.dto.address.address.type.AddressAddressTypeSearchDTO;
 import br.com.escconsulting.entity.AddressAddressType;

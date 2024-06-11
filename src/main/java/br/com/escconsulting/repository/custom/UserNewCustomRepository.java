@@ -1,4 +1,4 @@
-package br.com.escconsulting.repository;
+package br.com.escconsulting.repository.custom;
 
 import br.com.escconsulting.dto.user.UserSearchDTO;
 import br.com.escconsulting.entity.User;

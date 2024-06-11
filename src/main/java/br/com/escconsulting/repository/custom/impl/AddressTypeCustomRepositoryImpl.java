@@ -1,9 +1,9 @@
-package br.com.escconsulting.repository.impl.custom;
+package br.com.escconsulting.repository.custom.impl;
 
-import br.com.escconsulting.dto.country.CountrySearchDTO;
-import br.com.escconsulting.entity.Country;
-import br.com.escconsulting.repository.CountryRepository;
-import br.com.escconsulting.repository.custom.CountryCustomRepository;
+import br.com.escconsulting.dto.address.type.AddressTypeSearchDTO;
+import br.com.escconsulting.entity.AddressType;
+import br.com.escconsulting.repository.AddressTypeRepository;
+import br.com.escconsulting.repository.custom.AddressTypeCustomRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.*;
@@ -18,27 +18,27 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Repository
-public class CountryCustomRepositoryImpl extends SimpleJpaRepository<Country, UUID> implements CountryCustomRepository {
+public class AddressTypeCustomRepositoryImpl extends SimpleJpaRepository<AddressType, UUID> implements AddressTypeCustomRepository {
 
     private final EntityManager entityManager;
 
-    private final CountryRepository countryRepository;
+    private final AddressTypeRepository addressTypeRepository;
 
-    public CountryCustomRepositoryImpl(EntityManager entityManager, CountryRepository countryRepository) {
-        super(Country.class, entityManager);
+    public AddressTypeCustomRepositoryImpl(EntityManager entityManager, AddressTypeRepository addressTypeRepository) {
+        super(AddressType.class, entityManager);
         this.entityManager = entityManager;
-        this.countryRepository = countryRepository;
+        this.addressTypeRepository = addressTypeRepository;
     }
 
-    public Page<Country> searchPage(CountrySearchDTO countrySearchDTO, Pageable pageable) {
+    public Page<AddressType> searchPage(AddressTypeSearchDTO addressTypeSearchDTO, Pageable pageable) {
 
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-        CriteriaQuery<Country> cq = cb.createQuery(Country.class);
-        Root<Country> root = cq.from(Country.class);
+        CriteriaQuery<AddressType> cq = cb.createQuery(AddressType.class);
+        Root<AddressType> root = cq.from(AddressType.class);
 
         Predicate spec = cb.conjunction();
 
-        if (countrySearchDTO != null) {
+        if (addressTypeSearchDTO != null) {
 
         }
 
@@ -55,25 +55,25 @@ public class CountryCustomRepositoryImpl extends SimpleJpaRepository<Country, UU
             cq.orderBy(orders);
         }
 
-        TypedQuery<Country> query = entityManager.createQuery(cq);
+        TypedQuery<AddressType> query = entityManager.createQuery(cq);
 
         query.setFirstResult((int) pageable.getOffset());
         query.setMaxResults(pageable.getPageSize());
 
-        List<Country> resultList = query.getResultList();
-        return new PageImpl<>(resultList, pageable, this.countSearchPage(countrySearchDTO));
+        List<AddressType> resultList = query.getResultList();
+        return new PageImpl<>(resultList, pageable, this.countSearchPage(addressTypeSearchDTO));
     }
 
-    public Long countSearchPage(CountrySearchDTO countrySearchDTO) {
+    public Long countSearchPage(AddressTypeSearchDTO addressTypeSearchDTO) {
 
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<Long> cq = cb.createQuery(Long.class);
-        Root<Country> root = cq.from(Country.class);
+        Root<AddressType> root = cq.from(AddressType.class);
         cq.select(cb.count(root));
 
         Predicate spec = cb.conjunction();
 
-        if (countrySearchDTO != null) {
+        if (addressTypeSearchDTO != null) {
         }
 
         cq.where(spec);

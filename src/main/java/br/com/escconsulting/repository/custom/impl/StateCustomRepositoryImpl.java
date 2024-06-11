@@ -1,9 +1,9 @@
-package br.com.escconsulting.repository.impl.custom;
+package br.com.escconsulting.repository.custom.impl;
 
-import br.com.escconsulting.dto.address.AddressSearchDTO;
-import br.com.escconsulting.entity.Address;
-import br.com.escconsulting.repository.AddressRepository;
-import br.com.escconsulting.repository.custom.AddressCustomRepository;
+import br.com.escconsulting.dto.state.StateSearchDTO;
+import br.com.escconsulting.entity.State;
+import br.com.escconsulting.repository.StateRepository;
+import br.com.escconsulting.repository.custom.StateCustomRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.*;
@@ -18,27 +18,27 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Repository
-public class AddressCustomRepositoryImpl extends SimpleJpaRepository<Address, UUID> implements AddressCustomRepository {
+public class StateCustomRepositoryImpl extends SimpleJpaRepository<State, UUID> implements StateCustomRepository {
 
     private final EntityManager entityManager;
 
-    private final AddressRepository addressRepository;
+    private final StateRepository stateRepository;
 
-    public AddressCustomRepositoryImpl(EntityManager entityManager, AddressRepository addressRepository) {
-        super(Address.class, entityManager);
+    public StateCustomRepositoryImpl(EntityManager entityManager, StateRepository stateRepository) {
+        super(State.class, entityManager);
         this.entityManager = entityManager;
-        this.addressRepository = addressRepository;
+        this.stateRepository = stateRepository;
     }
 
-    public Page<Address> searchPage(AddressSearchDTO addressSearchDTO, Pageable pageable) {
+    public Page<State> searchPage(StateSearchDTO stateSearchDTO, Pageable pageable) {
 
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-        CriteriaQuery<Address> cq = cb.createQuery(Address.class);
-        Root<Address> root = cq.from(Address.class);
+        CriteriaQuery<State> cq = cb.createQuery(State.class);
+        Root<State> root = cq.from(State.class);
 
         Predicate spec = cb.conjunction();
 
-        if (addressSearchDTO != null) {
+        if (stateSearchDTO != null) {
 
         }
 
@@ -55,25 +55,25 @@ public class AddressCustomRepositoryImpl extends SimpleJpaRepository<Address, UU
             cq.orderBy(orders);
         }
 
-        TypedQuery<Address> query = entityManager.createQuery(cq);
+        TypedQuery<State> query = entityManager.createQuery(cq);
 
         query.setFirstResult((int) pageable.getOffset());
         query.setMaxResults(pageable.getPageSize());
 
-        List<Address> resultList = query.getResultList();
-        return new PageImpl<>(resultList, pageable, this.countSearchPage(addressSearchDTO));
+        List<State> resultList = query.getResultList();
+        return new PageImpl<>(resultList, pageable, this.countSearchPage(stateSearchDTO));
     }
 
-    public Long countSearchPage(AddressSearchDTO addressSearchDTO) {
+    public Long countSearchPage(StateSearchDTO stateSearchDTO) {
 
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<Long> cq = cb.createQuery(Long.class);
-        Root<Address> root = cq.from(Address.class);
+        Root<State> root = cq.from(State.class);
         cq.select(cb.count(root));
 
         Predicate spec = cb.conjunction();
 
-        if (addressSearchDTO != null) {
+        if (stateSearchDTO != null) {
         }
 
         cq.where(spec);

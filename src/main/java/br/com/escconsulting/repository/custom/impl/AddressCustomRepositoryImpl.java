@@ -1,9 +1,9 @@
-package br.com.escconsulting.repository.impl.custom;
+package br.com.escconsulting.repository.custom.impl;
 
-import br.com.escconsulting.dto.address.type.AddressTypeSearchDTO;
-import br.com.escconsulting.entity.AddressType;
-import br.com.escconsulting.repository.AddressTypeRepository;
-import br.com.escconsulting.repository.custom.AddressTypeCustomRepository;
+import br.com.escconsulting.dto.address.AddressSearchDTO;
+import br.com.escconsulting.entity.Address;
+import br.com.escconsulting.repository.AddressRepository;
+import br.com.escconsulting.repository.custom.AddressCustomRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.*;
@@ -18,27 +18,27 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Repository
-public class AddressTypeCustomRepositoryImpl extends SimpleJpaRepository<AddressType, UUID> implements AddressTypeCustomRepository {
+public class AddressCustomRepositoryImpl extends SimpleJpaRepository<Address, UUID> implements AddressCustomRepository {
 
     private final EntityManager entityManager;
 
-    private final AddressTypeRepository addressTypeRepository;
+    private final AddressRepository addressRepository;
 
-    public AddressTypeCustomRepositoryImpl(EntityManager entityManager, AddressTypeRepository addressTypeRepository) {
-        super(AddressType.class, entityManager);
+    public AddressCustomRepositoryImpl(EntityManager entityManager, AddressRepository addressRepository) {
+        super(Address.class, entityManager);
         this.entityManager = entityManager;
-        this.addressTypeRepository = addressTypeRepository;
+        this.addressRepository = addressRepository;
     }
 
-    public Page<AddressType> searchPage(AddressTypeSearchDTO addressTypeSearchDTO, Pageable pageable) {
+    public Page<Address> searchPage(AddressSearchDTO addressSearchDTO, Pageable pageable) {
 
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-        CriteriaQuery<AddressType> cq = cb.createQuery(AddressType.class);
-        Root<AddressType> root = cq.from(AddressType.class);
+        CriteriaQuery<Address> cq = cb.createQuery(Address.class);
+        Root<Address> root = cq.from(Address.class);
 
         Predicate spec = cb.conjunction();
 
-        if (addressTypeSearchDTO != null) {
+        if (addressSearchDTO != null) {
 
         }
 
@@ -55,25 +55,25 @@ public class AddressTypeCustomRepositoryImpl extends SimpleJpaRepository<Address
             cq.orderBy(orders);
         }
 
-        TypedQuery<AddressType> query = entityManager.createQuery(cq);
+        TypedQuery<Address> query = entityManager.createQuery(cq);
 
         query.setFirstResult((int) pageable.getOffset());
         query.setMaxResults(pageable.getPageSize());
 
-        List<AddressType> resultList = query.getResultList();
-        return new PageImpl<>(resultList, pageable, this.countSearchPage(addressTypeSearchDTO));
+        List<Address> resultList = query.getResultList();
+        return new PageImpl<>(resultList, pageable, this.countSearchPage(addressSearchDTO));
     }
 
-    public Long countSearchPage(AddressTypeSearchDTO addressTypeSearchDTO) {
+    public Long countSearchPage(AddressSearchDTO addressSearchDTO) {
 
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<Long> cq = cb.createQuery(Long.class);
-        Root<AddressType> root = cq.from(AddressType.class);
+        Root<Address> root = cq.from(Address.class);
         cq.select(cb.count(root));
 
         Predicate spec = cb.conjunction();
 
-        if (addressTypeSearchDTO != null) {
+        if (addressSearchDTO != null) {
         }
 
         cq.where(spec);

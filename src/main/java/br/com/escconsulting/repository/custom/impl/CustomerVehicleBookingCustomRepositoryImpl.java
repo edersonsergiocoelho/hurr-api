@@ -1,4 +1,4 @@
-package br.com.escconsulting.repository.impl.custom;
+package br.com.escconsulting.repository.custom.impl;
 
 import br.com.escconsulting.dto.customer.vehicle.booking.CustomerVehicleBookingDTO;
 import br.com.escconsulting.dto.customer.vehicle.booking.CustomerVehicleBookingSearchDTO;

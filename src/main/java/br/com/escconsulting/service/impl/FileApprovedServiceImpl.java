@@ -6,7 +6,7 @@ import br.com.escconsulting.entity.FileApproved;
 import br.com.escconsulting.entity.User;
 import br.com.escconsulting.entity.enumeration.FileTable;
 import br.com.escconsulting.entity.enumeration.FileType;
-import br.com.escconsulting.repository.FileApprovedCustomRepository;
+import br.com.escconsulting.repository.custom.FileApprovedCustomRepository;
 import br.com.escconsulting.repository.FileApprovedRepository;
 import br.com.escconsulting.service.CustomerService;
 import br.com.escconsulting.service.EmailService;

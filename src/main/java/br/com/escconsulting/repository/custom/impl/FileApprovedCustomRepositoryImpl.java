@@ -1,8 +1,8 @@
-package br.com.escconsulting.repository.impl;
+package br.com.escconsulting.repository.custom.impl;
 
 import br.com.escconsulting.dto.file.approved.FileApprovedSearchDTO;
 import br.com.escconsulting.entity.FileApproved;
-import br.com.escconsulting.repository.FileApprovedCustomRepository;
+import br.com.escconsulting.repository.custom.FileApprovedCustomRepository;
 import br.com.escconsulting.repository.FileApprovedRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;

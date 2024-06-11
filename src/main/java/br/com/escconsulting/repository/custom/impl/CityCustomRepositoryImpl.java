@@ -1,4 +1,4 @@
-package br.com.escconsulting.repository.impl.custom;
+package br.com.escconsulting.repository.custom.impl;
 
 import br.com.escconsulting.dto.city.CitySearchDTO;
 import br.com.escconsulting.entity.City;

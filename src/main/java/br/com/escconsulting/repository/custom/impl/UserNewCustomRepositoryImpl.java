@@ -1,8 +1,8 @@
-package br.com.escconsulting.repository.impl;
+package br.com.escconsulting.repository.custom.impl;
 
 import br.com.escconsulting.dto.user.UserSearchDTO;
 import br.com.escconsulting.entity.User;
-import br.com.escconsulting.repository.UserNewCustomRepository;
+import br.com.escconsulting.repository.custom.UserNewCustomRepository;
 import br.com.escconsulting.repository.UserRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
