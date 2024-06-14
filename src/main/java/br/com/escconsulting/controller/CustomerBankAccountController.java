@@ -4,10 +4,13 @@ import br.com.escconsulting.config.CurrentUser;
 import br.com.escconsulting.dto.LocalUser;
 import br.com.escconsulting.dto.customer.bank.account.CustomerBankAccountDTO;
 import br.com.escconsulting.dto.customer.bank.account.CustomerBankAccountSearchDTO;
+import br.com.escconsulting.dto.customer.withdrawal.request.CustomerWithdrawalRequestDTO;
 import br.com.escconsulting.entity.CustomerBankAccount;
 import br.com.escconsulting.mapper.CustomerBankAccountMapper;
+import br.com.escconsulting.mapper.CustomerWithdrawalRequestMapper;
 import br.com.escconsulting.service.CustomerBankAccountService;
 import lombok.RequiredArgsConstructor;
+import org.mapstruct.Mapping;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -18,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/customer-bank-account")
@@ -35,9 +39,12 @@ public class CustomerBankAccountController {
     }
 
     @GetMapping
-    public ResponseEntity<List<CustomerBankAccount>> findAll() {
-        List<CustomerBankAccount> listCustomerBankAccount = customerBankAccountService.findAll();
-        return ResponseEntity.ok(listCustomerBankAccount);
+    public ResponseEntity<List<CustomerBankAccountDTO>> findAll() {
+        return ResponseEntity.ok(
+                customerBankAccountService.findAll().stream()
+                        .map(CustomerBankAccountMapper.INSTANCE::toDTO)
+                        .collect(Collectors.toList())
+        );
     }
 
     @PostMapping("/search/page")

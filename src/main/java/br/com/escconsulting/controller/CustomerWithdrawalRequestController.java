@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/customer-withdrawal-request")
@@ -35,9 +36,12 @@ public class CustomerWithdrawalRequestController {
     }
 
     @GetMapping
-    public ResponseEntity<List<CustomerWithdrawalRequest>> findAll() {
-        List<CustomerWithdrawalRequest> listCustomerWithdrawalRequest = customerWithdrawalRequestService.findAll();
-        return ResponseEntity.ok(listCustomerWithdrawalRequest);
+    public ResponseEntity<List<CustomerWithdrawalRequestDTO>> findAll() {
+        return ResponseEntity.ok(
+                customerWithdrawalRequestService.findAll().stream()
+                        .map(CustomerWithdrawalRequestMapper.INSTANCE::toDTO)
+                        .collect(Collectors.toList())
+        );
     }
 
     @PostMapping("/search/page")
