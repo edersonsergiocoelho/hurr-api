@@ -13,6 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,7 +29,7 @@ public class CustomerWithdrawalRequestController {
     private final CustomerWithdrawalRequestService customerWithdrawalRequestService;
 
     @GetMapping("/{customerWithdrawalRequestId}")
-    public ResponseEntity<CustomerWithdrawalRequestDTO> findById(@PathVariable("customerWithdrawalRequestId") UUID customerWithdrawalRequestId) {
+    public ResponseEntity<?> findById(@PathVariable("customerWithdrawalRequestId") UUID customerWithdrawalRequestId) {
         return customerWithdrawalRequestService.findById(customerWithdrawalRequestId)
                 .map(CustomerWithdrawalRequestMapper.INSTANCE::toDTO)
                 .map(ResponseEntity::ok)
@@ -36,7 +37,7 @@ public class CustomerWithdrawalRequestController {
     }
 
     @GetMapping
-    public ResponseEntity<List<CustomerWithdrawalRequestDTO>> findAll() {
+    public ResponseEntity<?> findAll() {
         return ResponseEntity.ok(
                 customerWithdrawalRequestService.findAll().stream()
                         .map(CustomerWithdrawalRequestMapper.INSTANCE::toDTO)
@@ -64,8 +65,16 @@ public class CustomerWithdrawalRequestController {
     public ResponseEntity<?> save(@RequestBody CustomerWithdrawalRequest customerWithdrawalRequest) {
         return customerWithdrawalRequestService.save(customerWithdrawalRequest)
                 .map(CustomerWithdrawalRequestMapper.INSTANCE::toDTO)
-                .map(ResponseEntity::ok)
-                .orElseThrow(() -> new IllegalStateException("Failed to save customer bank account."));
+                .map(savedCustomerWithdrawalRequest -> ResponseEntity.status(HttpStatus.CREATED).build())
+                .orElseThrow(() -> new IllegalStateException("Failed to save customer withdrawal request."));
+    }
+
+    @PostMapping("/all")
+    public ResponseEntity<?> saveBulk(@RequestBody List<CustomerWithdrawalRequest> customerWithdrawalRequests) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(
+                customerWithdrawalRequestService.saveAll(customerWithdrawalRequests).stream()
+                .map(CustomerWithdrawalRequestMapper.INSTANCE::toDTO)
+                .collect(Collectors.toList()));
     }
 
     @PutMapping("/{customerWithdrawalRequestId}")
@@ -73,8 +82,8 @@ public class CustomerWithdrawalRequestController {
                                     @RequestBody CustomerWithdrawalRequest customerWithdrawalRequest) {
         return customerWithdrawalRequestService.update(customerWithdrawalRequestId, customerWithdrawalRequest)
                 .map(CustomerWithdrawalRequestMapper.INSTANCE::toDTO)
-                .map(updatedCustomerWithdrawalRequest -> ResponseEntity.ok(updatedCustomerWithdrawalRequest))
-                .orElseThrow(() -> new IllegalStateException("Failed to update customer bank account."));
+                .map(ResponseEntity::ok)
+                .orElseThrow(() -> new IllegalStateException("Failed to update customer withdrawal request."));
     }
 
     @DeleteMapping("/{customerWithdrawalRequestId}")

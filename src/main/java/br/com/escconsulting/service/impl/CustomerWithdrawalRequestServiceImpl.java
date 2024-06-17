@@ -68,6 +68,19 @@ public class CustomerWithdrawalRequestServiceImpl implements CustomerWithdrawalR
 
     @Transactional
     @Override
+    public List<CustomerWithdrawalRequest> saveAll(List<CustomerWithdrawalRequest> customerWithdrawalRequests) {
+
+        customerWithdrawalRequests.forEach(customerWithdrawalRequest -> {
+
+            customerWithdrawalRequest.setCreatedDate(Instant.now());
+            customerWithdrawalRequest.setEnabled(Boolean.TRUE);
+        });
+
+        return customerWithdrawalRequestRepository.saveAll(customerWithdrawalRequests);
+    }
+
+    @Transactional
+    @Override
     public Optional<CustomerWithdrawalRequest> update(UUID customerWithdrawalRequestId, CustomerWithdrawalRequest customerWithdrawalRequest) {
         return findById(customerWithdrawalRequestId)
                 .map(existingCustomerWithdrawalRequest -> {

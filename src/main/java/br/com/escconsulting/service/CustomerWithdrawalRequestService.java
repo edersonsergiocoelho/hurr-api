@@ -21,6 +21,8 @@ public interface CustomerWithdrawalRequestService {
 
     Optional<CustomerWithdrawalRequest> save(CustomerWithdrawalRequest customerWithdrawalRequest);
 
+    List<CustomerWithdrawalRequest> saveAll(List<CustomerWithdrawalRequest> customerWithdrawalRequests);
+
     Optional<CustomerWithdrawalRequest> update(UUID customerWithdrawalRequestId, CustomerWithdrawalRequest customerWithdrawalRequest);
 
     void delete(UUID customerWithdrawalRequestId);

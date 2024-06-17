@@ -65,7 +65,7 @@ public class PaymentMehtodController {
         return paymentMethodService.save(paymentMethod)
                 .map(PaymentMethodMapper.INSTANCE::toDTO)
                 .map(ResponseEntity::ok)
-                .orElseThrow(() -> new IllegalStateException("Failed to save customer bank account."));
+                .orElseThrow(() -> new IllegalStateException("Failed to save payment method."));
     }
 
     @PutMapping("/{paymentMethodId}")
@@ -74,7 +74,7 @@ public class PaymentMehtodController {
         return paymentMethodService.update(paymentMethodId, paymentMethod)
                 .map(PaymentMethodMapper.INSTANCE::toDTO)
                 .map(updatedPaymentMethod -> ResponseEntity.ok(updatedPaymentMethod))
-                .orElseThrow(() -> new IllegalStateException("Failed to update customer bank account."));
+                .orElseThrow(() -> new IllegalStateException("Failed to update payment method."));
     }
 
     @DeleteMapping("/{paymentMethodId}")

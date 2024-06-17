@@ -6,7 +6,7 @@ CREATE TABLE IF NOT EXISTS customer_withdrawal_request
     customer_bank_account UUID NOT NULL, -- Identificador da conta bancária do cliente
     payment_method_id UUID NOT NULL, -- Identificador do método de pagamento usado para a retirada
     payment_status_id UUID NOT NULL, -- Identificador do status do pagamento
-    withdrawal_date TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT current_timestamp, -- Data e hora da retirada
+    withdrawal_date TIMESTAMP WITHOUT TIME ZONE DEFAULT current_timestamp, -- Data e hora da retirada
     created_date TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT current_timestamp, -- Data e hora de criação do registro
     modified_date TIMESTAMP WITHOUT TIME ZONE, -- Data e hora da última modificação do registro
     enabled BOOLEAN NOT NULL DEFAULT true, -- Indica se o pedido de retirada está ativo

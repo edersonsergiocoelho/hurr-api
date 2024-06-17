@@ -65,6 +65,6 @@ public class CustomerWithdrawalRequest extends AbstractEntity implements Seriali
     /**
      * Data e hora da retirada.
      */
-    @Column(name = "withdrawal_date", nullable = false)
+    @Column(name = "withdrawal_date")
     private LocalDateTime withdrawalDate;
 }

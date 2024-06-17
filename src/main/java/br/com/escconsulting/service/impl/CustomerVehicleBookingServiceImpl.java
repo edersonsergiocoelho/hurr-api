@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -53,6 +54,15 @@ public class CustomerVehicleBookingServiceImpl implements CustomerVehicleBooking
         return customerVehicleBookingRepository.findAll();
     }
 
+    @Override
+    public List<CustomerVehicleBooking> findByCustomerVehicleWithdrawableBalance(LocalUser localUser) {
+        Optional<Customer> optionalCustomer = customerService.findByEmail(localUser.getUsername());
+
+        return optionalCustomer.map(customer -> {
+            return customerVehicleBookingCustomRepository.findByCustomerVehicleWithdrawableBalance(customer.getCustomerId());
+        }).orElseGet(ArrayList::new);
+    }
+
     @Transactional
     @Override
     public Optional<BigDecimal> sumCustomerVehicleTotalEarnings(LocalUser localUser, CustomerVehicleBookingSearchDTO customerVehicleBookingSearchDTO) {
@@ -82,7 +92,7 @@ public class CustomerVehicleBookingServiceImpl implements CustomerVehicleBooking
 
         return optionalCustomer.map(customer -> {
             customerVehicleBookingSearchDTO.setCustomerId(customer.getCustomerId());
-            return customerVehicleBookingCustomRepository.sumCustomerVehicleWithdrawableBalance(customerVehicleBookingSearchDTO);
+            return customerVehicleBookingCustomRepository.withdrawableBalance(customerVehicleBookingSearchDTO);
         });
     }
 

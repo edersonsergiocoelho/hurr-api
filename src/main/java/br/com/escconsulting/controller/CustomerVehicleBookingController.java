@@ -6,6 +6,7 @@ import br.com.escconsulting.dto.customer.vehicle.booking.CustomerVehicleBookingD
 import br.com.escconsulting.dto.customer.vehicle.booking.CustomerVehicleBookingSearchDTO;
 import br.com.escconsulting.entity.CustomerVehicleBooking;
 import br.com.escconsulting.mapper.CustomerVehicleBookingMapper;
+import br.com.escconsulting.mapper.CustomerWithdrawalRequestMapper;
 import br.com.escconsulting.service.CustomerVehicleBookingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/customer-vehicle-booking")
@@ -36,9 +38,21 @@ public class CustomerVehicleBookingController {
     }
 
     @GetMapping
-    public ResponseEntity<List<CustomerVehicleBooking>> findAll() {
-        List<CustomerVehicleBooking> listCustomerVehicleBooking = customerVehicleBookingService.findAll();
-        return ResponseEntity.ok(listCustomerVehicleBooking);
+    public ResponseEntity<List<CustomerVehicleBookingDTO>> findAll() {
+        return ResponseEntity.ok(
+                customerVehicleBookingService.findAll().stream()
+                        .map(CustomerVehicleBookingMapper.INSTANCE::toDTO)
+                        .collect(Collectors.toList())
+        );
+    }
+
+    @GetMapping("/by/customer-vehicle/withdrawable-balance")
+    public ResponseEntity<List<CustomerVehicleBookingDTO>> findByCustomerVehicleWithdrawableBalance(@CurrentUser LocalUser localUser) {
+        return ResponseEntity.ok(
+                customerVehicleBookingService.findByCustomerVehicleWithdrawableBalance(localUser).stream()
+                        .map(CustomerVehicleBookingMapper.INSTANCE::toDTO)
+                        .collect(Collectors.toList())
+        );
     }
 
     @PostMapping("/sum/customer-vehicle/total-earnings")
