@@ -2,7 +2,7 @@ package br.com.escconsulting.controller;
 
 import br.com.escconsulting.dto.customer.vehicle.review.CustomerVehicleReviewDTO;
 import br.com.escconsulting.entity.CustomerVehicleReview;
-import br.com.escconsulting.mapper.customer.vehicle.review.CustomerVehicleReviewMapper;
+import br.com.escconsulting.mapper.CustomerVehicleReviewMapper;
 import br.com.escconsulting.service.CustomerVehicleReviewService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

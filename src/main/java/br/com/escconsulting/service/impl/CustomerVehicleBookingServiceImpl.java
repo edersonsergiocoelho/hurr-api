@@ -16,8 +16,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -50,6 +52,48 @@ public class CustomerVehicleBookingServiceImpl implements CustomerVehicleBooking
     @Override
     public List<CustomerVehicleBooking> findAll() {
         return customerVehicleBookingRepository.findAll();
+    }
+
+    @Override
+    public List<CustomerVehicleBooking> findByCustomerVehicleWithdrawableBalance(LocalUser localUser) {
+        Optional<Customer> optionalCustomer = customerService.findByEmail(localUser.getUsername());
+
+        return optionalCustomer.map(customer -> {
+            return customerVehicleBookingCustomRepository.findByCustomerVehicleWithdrawableBalance(customer.getCustomerId());
+        }).orElseGet(ArrayList::new);
+    }
+
+    @Transactional
+    @Override
+    public Optional<BigDecimal> sumCustomerVehicleTotalEarnings(LocalUser localUser, CustomerVehicleBookingSearchDTO customerVehicleBookingSearchDTO) {
+        Optional<Customer> optionalCustomer = customerService.findByEmail(localUser.getUsername());
+
+        return optionalCustomer.map(customer -> {
+            customerVehicleBookingSearchDTO.setCustomerId(customer.getCustomerId());
+            return customerVehicleBookingCustomRepository.sumCustomerVehicleTotalEarnings(customerVehicleBookingSearchDTO);
+        });
+    }
+
+    @Transactional
+    @Override
+    public Optional<BigDecimal> sumCustomerVehicleWithdrawableCurrentBalance(LocalUser localUser, CustomerVehicleBookingSearchDTO customerVehicleBookingSearchDTO) {
+        Optional<Customer> optionalCustomer = customerService.findByEmail(localUser.getUsername());
+
+        return optionalCustomer.map(customer -> {
+            customerVehicleBookingSearchDTO.setCustomerId(customer.getCustomerId());
+            return customerVehicleBookingCustomRepository.sumCustomerVehicleWithdrawableCurrentBalance(customerVehicleBookingSearchDTO);
+        });
+    }
+
+    @Transactional
+    @Override
+    public Optional<BigDecimal> sumCustomerVehicleWithdrawableBalance(LocalUser localUser, CustomerVehicleBookingSearchDTO customerVehicleBookingSearchDTO) {
+        Optional<Customer> optionalCustomer = customerService.findByEmail(localUser.getUsername());
+
+        return optionalCustomer.map(customer -> {
+            customerVehicleBookingSearchDTO.setCustomerId(customer.getCustomerId());
+            return customerVehicleBookingCustomRepository.withdrawableBalance(customerVehicleBookingSearchDTO);
+        });
     }
 
     @Transactional
@@ -98,7 +142,7 @@ public class CustomerVehicleBookingServiceImpl implements CustomerVehicleBooking
                         existingCustomerVehicleBooking.setBookingEndKM(customerVehicleBooking.getBookingEndKM());
                     }
 
-                    existingCustomerVehicleBooking.setBookingDeliveryDate(LocalDateTime.now());
+                    existingCustomerVehicleBooking.setBookingEndDate(LocalDateTime.now());
                     existingCustomerVehicleBooking.setModifiedDate(Instant.now());
 
                     return customerVehicleBookingRepository.save(existingCustomerVehicleBooking);

@@ -6,7 +6,6 @@ import lombok.*;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
@@ -27,36 +26,45 @@ public class User extends AbstractEntity implements Serializable {
 	private static final long serialVersionUID = -7136861032484571472L;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "user_id")
+	@GeneratedValue(generator = "UUID")
+	@Column(name = "user_id", updatable = false, nullable = false)
 	private UUID userId;
 
-	@Column(name = "provider_user_id")
+	@Column(name = "provider_user_id", length = 100)
 	private String providerUserId;
 
+	@Column(name = "email", length = 200)
 	private String email;
 
-	@Column(name = "display_name")
+	@Column(name = "display_name", length = 200, nullable = false)
 	private String displayName;
 
+	@Column(name = "password", length = 200, nullable = false)
 	private String password;
 
-	@Column(name = "forgot_password_verification_code")
+	@Column(name = "forgot_password_verification_code", length = 6)
 	private String forgotPasswordVerificationCode;
 
 	@Column(name = "forgot_password_validated", nullable = false)
-	private Boolean forgotPasswordValidated;
+	private Boolean forgotPasswordValidated = false;
 
+	@Column(name = "provider", length = 50, nullable = false)
 	private String provider;
 
 	@Column(name = "photo_file_id")
 	private UUID photoFileId;
 
-	@Column(name = "image_url")
+	@Column(name = "photo_validated", nullable = false)
+	private Boolean photoValidated = false;
+
+	@Column(name = "image_url", columnDefinition = "TEXT")
 	private String imageURL;
 
-	@Column(name = "photo_validated", nullable = false)
-	private Boolean photoValidated;
+	@ManyToMany(fetch = FetchType.LAZY)
+	@JoinTable(name = "user_role",
+			joinColumns = @JoinColumn(name = "user_id"),
+			inverseJoinColumns = @JoinColumn(name = "role_id"))
+	private Set<Role> roles;
 
 	@PrePersist
 	protected void prePersist() {
@@ -68,10 +76,4 @@ public class User extends AbstractEntity implements Serializable {
 			this.forgotPasswordValidated = false;
 		}
 	}
-
-	@Transient
-	private Set<UserRole> userRoles = new HashSet<>();
-
-	@Transient
-	private Set<Role> roles;
 }

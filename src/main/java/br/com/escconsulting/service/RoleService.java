@@ -12,6 +12,8 @@ public interface RoleService {
     
     Optional<Role> findById(UUID id);
 
+    Optional<Role> findByRoleName(String roleName);
+
     List<Role> findAll();
 
     Page<Role> searchPage(String roleName, Boolean enabled, Pageable pageable);

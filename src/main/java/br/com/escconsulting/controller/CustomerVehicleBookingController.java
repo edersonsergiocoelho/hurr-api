@@ -5,7 +5,8 @@ import br.com.escconsulting.dto.LocalUser;
 import br.com.escconsulting.dto.customer.vehicle.booking.CustomerVehicleBookingDTO;
 import br.com.escconsulting.dto.customer.vehicle.booking.CustomerVehicleBookingSearchDTO;
 import br.com.escconsulting.entity.CustomerVehicleBooking;
-import br.com.escconsulting.mapper.customer.vehicle.booking.CustomerVehicleBookingMapper;
+import br.com.escconsulting.mapper.CustomerVehicleBookingMapper;
+import br.com.escconsulting.mapper.CustomerWithdrawalRequestMapper;
 import br.com.escconsulting.service.CustomerVehicleBookingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,8 +17,10 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/customer-vehicle-booking")
@@ -35,9 +38,45 @@ public class CustomerVehicleBookingController {
     }
 
     @GetMapping
-    public ResponseEntity<List<CustomerVehicleBooking>> findAll() {
-        List<CustomerVehicleBooking> listCustomerVehicleBooking = customerVehicleBookingService.findAll();
-        return ResponseEntity.ok(listCustomerVehicleBooking);
+    public ResponseEntity<List<CustomerVehicleBookingDTO>> findAll() {
+        return ResponseEntity.ok(
+                customerVehicleBookingService.findAll().stream()
+                        .map(CustomerVehicleBookingMapper.INSTANCE::toDTO)
+                        .collect(Collectors.toList())
+        );
+    }
+
+    @GetMapping("/by/customer-vehicle/withdrawable-balance")
+    public ResponseEntity<List<CustomerVehicleBookingDTO>> findByCustomerVehicleWithdrawableBalance(@CurrentUser LocalUser localUser) {
+        return ResponseEntity.ok(
+                customerVehicleBookingService.findByCustomerVehicleWithdrawableBalance(localUser).stream()
+                        .map(CustomerVehicleBookingMapper.INSTANCE::toDTO)
+                        .collect(Collectors.toList())
+        );
+    }
+
+    @PostMapping("/sum/customer-vehicle/total-earnings")
+    public ResponseEntity<BigDecimal> sumCustomerVehicleTotalEarnings(@CurrentUser LocalUser localUser,
+                                                                      @RequestBody CustomerVehicleBookingSearchDTO customerVehicleBookingSearchDTO) {
+        return customerVehicleBookingService.sumCustomerVehicleTotalEarnings(localUser, customerVehicleBookingSearchDTO)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @PostMapping("/sum/customer-vehicle/withdrawable-current-balance")
+    public ResponseEntity<BigDecimal> sumCustomerVehicleWithdrawableCurrentBalance(@CurrentUser LocalUser localUser,
+                                                                                   @RequestBody CustomerVehicleBookingSearchDTO customerVehicleBookingSearchDTO) {
+        return customerVehicleBookingService.sumCustomerVehicleWithdrawableCurrentBalance(localUser, customerVehicleBookingSearchDTO)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @PostMapping("/sum/customer-vehicle/withdrawable-balance")
+    public ResponseEntity<BigDecimal> sumCustomerVehicleWithdrawableBalance(@CurrentUser LocalUser localUser,
+                                                                            @RequestBody CustomerVehicleBookingSearchDTO customerVehicleBookingSearchDTO) {
+        return customerVehicleBookingService.sumCustomerVehicleWithdrawableBalance(localUser, customerVehicleBookingSearchDTO)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PostMapping("/search/page")
@@ -92,6 +131,7 @@ public class CustomerVehicleBookingController {
     public ResponseEntity<?> update(@PathVariable("customerVehicleBookingId") UUID customerVehicleBookingId,
                                     @RequestBody CustomerVehicleBooking customerVehicleBooking) {
         return customerVehicleBookingService.update(customerVehicleBookingId, customerVehicleBooking)
+                .map(CustomerVehicleBookingMapper.INSTANCE::toDTO)
                 .map(updatedCustomerVehicleBooking -> ResponseEntity.ok(updatedCustomerVehicleBooking))
                 .orElseThrow(() -> new IllegalStateException("Failed to update customer vehicle booking."));
     }

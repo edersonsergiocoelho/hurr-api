@@ -39,28 +39,12 @@ public class LocalUserDetailService implements UserDetailsService {
 			throw new UsernameNotFoundException("User " + email + " was not found in the database");
 		}
 
-		List<UserRole> all = userRoleService.findAll();
-
-		Set<Role> roleSet = all.stream()
-				.map(UserRole::getRole)
-				.collect(Collectors.toSet());
-
-		user.setRoles(roleSet);
-
 		return createLocalUser(user);
 	}
 
 	@Transactional
 	public LocalUser loadUserById(UUID id) {
 		User user = userService.findUserById(id).orElseThrow(() -> new ResourceNotFoundException("User", "id", id));
-
-		List<UserRole> all = userRoleService.findAll();
-
-		Set<Role> roleSet = all.stream()
-				.map(UserRole::getRole)
-				.collect(Collectors.toSet());
-
-		user.setRoles(roleSet);
 
 		return createLocalUser(user);
 	}

@@ -12,10 +12,7 @@ import br.com.escconsulting.repository.RoleRepository;
 import br.com.escconsulting.repository.UserRepository;
 import br.com.escconsulting.security.oauth2.user.OAuth2UserInfo;
 import br.com.escconsulting.security.oauth2.user.OAuth2UserInfoFactory;
-import br.com.escconsulting.service.FileApprovedService;
-import br.com.escconsulting.service.FileService;
-import br.com.escconsulting.service.UserRoleService;
-import br.com.escconsulting.service.UserService;
+import br.com.escconsulting.service.*;
 import br.com.escconsulting.util.GeneralUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +35,7 @@ public class UserServiceImpl implements UserService {
 
 	private final UserRepository userRepository;
 
-	private final RoleRepository roleRepository;
+	private final RoleService roleService;
 
 	private final UserRoleService userRoleService;
 
@@ -73,24 +70,32 @@ public class UserServiceImpl implements UserService {
 		user.setEmail(formDTO.getEmail());
 		user.setPassword(passwordEncoder.encode(formDTO.getPassword()));
 		user.setCreatedDate(Instant.now());
+		user.setProvider(formDTO.getSocialProvider().getProviderType());
+		user.setEnabled(Boolean.TRUE);
+		user.setProviderUserId(formDTO.getProviderUserId());
+		user.setImageURL(formDTO.getUrlImage());
 
-		Role userRole = roleRepository.findByRoleName(Role.ROLE_USER).get();
+		final HashSet<Role> roles = new HashSet<Role>();
+		roles.add(roleService.findByRoleName("ROLE_USER").orElseThrow(() -> new RuntimeException("User Role not found")));
+		user.setRoles(roles);
+
+		// Save the user first to generate the userId
+		user = userRepository.save(user);
+
+		// Fetch the role and create UserRole association
+		/*
+		Role userRole = roleService.findByRoleName("ROLE_USER").orElseThrow(() -> new RuntimeException("User Role not found"));
 		UserRole userUserRole = new UserRole();
+		userUserRole.setUserRoleId(new UserRoleId(user.getUserId(), userRole.getRoleId()));
 		userUserRole.setUser(user);
 		userUserRole.setRole(userRole);
 		userUserRole.setCreatedDate(Instant.now());
 		userUserRole.setEnabled(true);
 
-		Set<UserRole> userRoles = new HashSet<>();
-		userRoles.add(userUserRole);
+		// Save the UserRole association
+		userRoleService.save(userUserRole);
+		 */
 
-		user.setRoles(Set.of(userRole));
-		user.setUserRoles(userRoles);
-
-		user.setProvider(formDTO.getSocialProvider().getProviderType());
-		user.setEnabled(Boolean.TRUE);
-		user.setProviderUserId(formDTO.getProviderUserId());
-		user.setImageURL(formDTO.getUrlImage());
 		return user;
 	}
 
@@ -117,27 +122,9 @@ public class UserServiceImpl implements UserService {
 						"Looks like you're signed up with " + user.getProvider() + " account. Please use your " + user.getProvider() + " account to login.");
 			}
 
-			List<UserRole> all = userRoleService.findAll();
-
-			Set<Role> roleSet = all.stream()
-					.map(UserRole::getRole)
-					.collect(Collectors.toSet());
-
-			user.setRoles(roleSet);
-
 			user = updateExistingUser(user, oAuth2UserInfo);
 		} else {
 			user = registerNewUser(userDetails);
-
-			for (UserRole userRole: user.getUserRoles().stream().toList()) {
-				UserRoleId id = new UserRoleId();
-				id.setRoleId(userRole.getRole().getRoleId());
-				id.setUserId(userRole.getUser().getUserId());
-
-				userRole.setUserRoleId(id);
-			}
-
-			userRoleService.saveAll(user.getUserRoles().stream().toList());
 		}
 
 		return LocalUser.create(user, attributes, idToken, userInfo);

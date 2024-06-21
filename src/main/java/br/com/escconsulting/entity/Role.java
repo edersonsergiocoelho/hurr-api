@@ -6,6 +6,7 @@ import lombok.*;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -33,10 +34,13 @@ public class Role extends AbstractEntity implements Serializable {
 	public static final String ROLE_MODERATOR = "ROLE_MODERATOR";
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(generator = "UUID")
 	@Column(name = "role_id", updatable = false, nullable = false)
 	private UUID roleId;
 
-	@Column(name = "role_name", nullable = false, unique = true)
+	@Column(name = "role_name", length = 100, nullable = false, unique = true)
 	private String roleName;
+
+	@ManyToMany(mappedBy = "roles")
+	private Set<User> users;
 }

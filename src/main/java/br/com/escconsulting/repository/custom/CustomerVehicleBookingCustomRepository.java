@@ -7,9 +7,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.math.BigDecimal;
+import java.util.List;
 import java.util.UUID;
 
 public interface CustomerVehicleBookingCustomRepository extends JpaRepository<CustomerVehicleBooking, UUID> {
+
+    List<CustomerVehicleBooking> findByCustomerVehicleWithdrawableBalance(UUID customerId);
 
     Page<CustomerVehicleBookingDTO> searchPage(CustomerVehicleBookingSearchDTO customerVehicleBookingSearchDTO, Pageable pageable);
 
@@ -18,4 +22,14 @@ public interface CustomerVehicleBookingCustomRepository extends JpaRepository<Cu
     Long countSearchPage(CustomerVehicleBookingSearchDTO customerVehicleBookingSearchDTO);
 
     Long countCustomerVehicleSearchPage(CustomerVehicleBookingSearchDTO customerVehicleBookingSearchDTO);
+
+    BigDecimal sumCustomerVehicleTotalEarnings(CustomerVehicleBookingSearchDTO customerVehicleBookingSearchDTO);
+
+    BigDecimal sumCustomerVehicleWithdrawableCurrentBalance(CustomerVehicleBookingSearchDTO customerVehicleBookingSearchDTO);
+
+    BigDecimal sumCustomerVehicleWithdrawableBalance(CustomerVehicleBookingSearchDTO customerVehicleBookingSearchDTO);
+
+    BigDecimal sumCustomerVehicleWithdrawableBalanceUnpaid(CustomerVehicleBookingSearchDTO customerVehicleBookingSearchDTO);
+
+    BigDecimal withdrawableBalance(CustomerVehicleBookingSearchDTO customerVehicleBookingSearchDTO);
 }
