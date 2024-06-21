@@ -1,14 +1,14 @@
 package br.com.escconsulting.service.impl;
 
-import br.com.escconsulting.entity.Customer;
-import br.com.escconsulting.entity.FileApproved;
-import br.com.escconsulting.entity.User;
+import br.com.escconsulting.entity.*;
 import br.com.escconsulting.service.EmailService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
+
+import java.time.format.DateTimeFormatter;
 
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
@@ -218,6 +218,32 @@ public class EmailServiceImpl implements EmailService {
         emailBody.append("Se precisar de esclarecimentos adicionais ou se tiver dúvidas, por favor, entre em contato pelos canais apropriados.\n");
         emailBody.append("Agradecemos pela sua compreensão.\n\n");
         emailBody.append("Motivo da reprovação:\n").append(fileApproved.getMessage()).append("\n\n");
+        emailBody.append("Atenciosamente,\n");
+        emailBody.append("Equipe HURR");
+
+        simpleMailMessage.setText(emailBody.toString());
+
+        javaMailSender.send(simpleMailMessage);
+    }
+
+    @Override
+    public void sendCustomerWithdrawalRequestApproval(CustomerWithdrawalRequest customerWithdrawalRequest) {
+
+        SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
+        simpleMailMessage.setTo(customerWithdrawalRequest.getCustomer().getEmail());
+        simpleMailMessage.setSubject("HURR - Seu Pagamento Foi Efetuado");
+
+        StringBuilder emailBody = new StringBuilder();
+        emailBody.append("Olá ").append(customerWithdrawalRequest.getCustomer().getFirstName()).append(",\n\n");
+        emailBody.append("Temos o prazer de informar que seu pagamento foi efetuado com sucesso.\n\n");
+        emailBody.append("Detalhes do pagamento:\n");
+        emailBody.append("Banco: ").append(customerWithdrawalRequest.getCustomerBankAccount().getBank().getBankName()).append("\n");
+        emailBody.append("PIX: ").append(customerWithdrawalRequest.getCustomerBankAccount().getPixKey()).append("\n");
+        emailBody.append("Método de Pagamento: ").append(customerWithdrawalRequest.getPaymentMethod().getPaymentMethodName()).append("\n");
+        emailBody.append("Status do Pagamento: ").append(customerWithdrawalRequest.getPaymentStatus().getPaymentStatusName()).append("\n");
+        emailBody.append("Data da Retirada: ").append(customerWithdrawalRequest.getWithdrawalDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy hh:mm:ss"))).append("\n\n");
+        emailBody.append("Se precisar de esclarecimentos adicionais ou se tiver dúvidas, por favor, entre em contato pelos canais apropriados.\n");
+        emailBody.append("Agradecemos pela sua confiança.\n\n");
         emailBody.append("Atenciosamente,\n");
         emailBody.append("Equipe HURR");
 

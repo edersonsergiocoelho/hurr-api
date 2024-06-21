@@ -25,5 +25,7 @@ public interface CustomerWithdrawalRequestService {
 
     Optional<CustomerWithdrawalRequest> update(UUID customerWithdrawalRequestId, CustomerWithdrawalRequest customerWithdrawalRequest);
 
+    Optional<CustomerWithdrawalRequest> approval(UUID customerWithdrawalRequestId);
+
     void delete(UUID customerWithdrawalRequestId);
 }

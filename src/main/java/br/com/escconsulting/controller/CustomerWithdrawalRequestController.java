@@ -86,6 +86,14 @@ public class CustomerWithdrawalRequestController {
                 .orElseThrow(() -> new IllegalStateException("Failed to update customer withdrawal request."));
     }
 
+    @PutMapping("/approval/{customerWithdrawalRequestId}")
+    public ResponseEntity<?> approval(@PathVariable("customerWithdrawalRequestId") UUID customerWithdrawalRequestId) {
+        return customerWithdrawalRequestService.approval(customerWithdrawalRequestId)
+                .map(CustomerWithdrawalRequestMapper.INSTANCE::toDTONoFile)
+                .map(ResponseEntity::ok)
+                .orElseThrow(() -> new IllegalStateException("Failed to update customer withdrawal request."));
+    }
+
     @DeleteMapping("/{customerWithdrawalRequestId}")
     public ResponseEntity<?> delete(@PathVariable("customerWithdrawalRequestId") UUID customerWithdrawalRequestId) {
         customerWithdrawalRequestService.delete(customerWithdrawalRequestId);

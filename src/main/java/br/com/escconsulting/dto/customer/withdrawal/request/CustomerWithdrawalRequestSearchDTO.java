@@ -8,6 +8,7 @@ import java.util.UUID;
 @Getter
 public class CustomerWithdrawalRequestSearchDTO {
 
-    @Setter
-    private UUID customerId;
+    private String cpf;
+    private UUID paymentMethodId;
+    private UUID paymentStatusId;
 }

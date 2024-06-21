@@ -2,7 +2,7 @@ package br.com.escconsulting.repository.custom.impl;
 
 import br.com.escconsulting.dto.customer.withdrawal.request.CustomerWithdrawalRequestDTO;
 import br.com.escconsulting.dto.customer.withdrawal.request.CustomerWithdrawalRequestSearchDTO;
-import br.com.escconsulting.entity.*;
+import br.com.escconsulting.entity.CustomerWithdrawalRequest;
 import br.com.escconsulting.mapper.CustomerWithdrawalRequestMapper;
 import br.com.escconsulting.repository.CustomerWithdrawalRequestRepository;
 import br.com.escconsulting.repository.custom.CustomerWithdrawalRequestCustomRepository;
@@ -12,6 +12,7 @@ import jakarta.persistence.criteria.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -38,7 +39,6 @@ public class CustomerWithdrawalRequestCustomRepositoryImpl extends SimpleJpaRepo
         CriteriaQuery<CustomerWithdrawalRequest> cq = cb.createQuery(CustomerWithdrawalRequest.class);
         Root<CustomerWithdrawalRequest> root = cq.from(CustomerWithdrawalRequest.class);
 
-        // Definição dos Fetches para buscar as entidades relacionadas
         root.fetch("customerVehicleBooking", JoinType.LEFT);
         root.fetch("customer", JoinType.LEFT);
         root.fetch("customerBankAccount", JoinType.LEFT);
@@ -48,8 +48,16 @@ public class CustomerWithdrawalRequestCustomRepositoryImpl extends SimpleJpaRepo
         Predicate spec = cb.conjunction();
 
         if (customerWithdrawalRequestSearchDTO != null) {
-            if (customerWithdrawalRequestSearchDTO.getCustomerId() != null) {
-                spec = cb.and(spec, cb.equal(root.get("customer").get("customerId"), customerWithdrawalRequestSearchDTO.getCustomerId()));
+            if (customerWithdrawalRequestSearchDTO.getCpf() != null && ! customerWithdrawalRequestSearchDTO.getCpf().isEmpty()) {
+                spec = cb.and(spec, cb.equal(root.get("customer").get("cpf"), customerWithdrawalRequestSearchDTO.getCpf()));
+            }
+
+            if (customerWithdrawalRequestSearchDTO.getPaymentMethodId() != null) {
+                spec = cb.and(spec, cb.equal(root.get("paymentMethod").get("paymentMethodId"), customerWithdrawalRequestSearchDTO.getPaymentMethodId()));
+            }
+
+            if (customerWithdrawalRequestSearchDTO.getPaymentStatusId() != null) {
+                spec = cb.and(spec, cb.equal(root.get("paymentStatus").get("paymentStatusId"), customerWithdrawalRequestSearchDTO.getPaymentStatusId()));
             }
         }
 
@@ -57,12 +65,8 @@ public class CustomerWithdrawalRequestCustomRepositoryImpl extends SimpleJpaRepo
 
         if (pageable.getSort().isSorted()) {
             List<Order> orders = pageable.getSort().stream()
-                    .map(order -> {
-                        String property = order.getProperty();
-                        return order.isAscending() ? cb.asc(root.get(property)) : cb.desc(root.get(property));
-                    })
+                    .map(order -> buildOrder(cb, root, order))
                     .collect(Collectors.toList());
-
             cq.orderBy(orders);
         }
 
@@ -90,11 +94,36 @@ public class CustomerWithdrawalRequestCustomRepositoryImpl extends SimpleJpaRepo
         Predicate spec = cb.conjunction();
 
         if (customerWithdrawalRequestSearchDTO != null) {
-            spec = cb.and(spec, cb.equal(root.get("customer").get("customerId"), customerWithdrawalRequestSearchDTO.getCustomerId()));
+            if (customerWithdrawalRequestSearchDTO.getCpf() != null && ! customerWithdrawalRequestSearchDTO.getCpf().isEmpty()) {
+                spec = cb.and(spec, cb.equal(root.get("customer").get("cpf"), customerWithdrawalRequestSearchDTO.getCpf()));
+            }
+
+            if (customerWithdrawalRequestSearchDTO.getPaymentMethodId() != null) {
+                spec = cb.and(spec, cb.equal(root.get("paymentMethod").get("paymentMethodId"), customerWithdrawalRequestSearchDTO.getPaymentMethodId()));
+            }
+
+            if (customerWithdrawalRequestSearchDTO.getPaymentStatusId() != null) {
+                spec = cb.and(spec, cb.equal(root.get("paymentStatus").get("paymentStatusId"), customerWithdrawalRequestSearchDTO.getPaymentStatusId()));
+            }
         }
 
         cq.where(spec);
 
         return entityManager.createQuery(cq).getSingleResult();
+    }
+
+    private Order buildOrder(CriteriaBuilder cb, Root<CustomerWithdrawalRequest> root, Sort.Order order) {
+        String property = order.getProperty();
+        Path<Object> path = getPath(root, property);
+        return order.isAscending() ? cb.asc(path) : cb.desc(path);
+    }
+
+    private Path<Object> getPath(From<?, ?> root, String property) {
+        String[] properties = property.split("\\.");
+        Path<Object> path = (Path<Object>) root;
+        for (String prop : properties) {
+            path = path.get(prop);
+        }
+        return path;
     }
 }
