@@ -35,4 +35,7 @@ public class State extends AbstractEntity implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "country_id", nullable = false)
     private Country country;
+
+    @Column(name = "service_available", nullable = false)
+    private Boolean serviceAvailable;
 }

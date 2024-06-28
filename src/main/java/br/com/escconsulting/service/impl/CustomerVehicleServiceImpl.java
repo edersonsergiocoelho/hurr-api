@@ -1,14 +1,25 @@
 package br.com.escconsulting.service.impl;
 
+import br.com.escconsulting.dto.LocalUser;
+import br.com.escconsulting.dto.bank.BankDTO;
+import br.com.escconsulting.dto.bank.BankSearchDTO;
+import br.com.escconsulting.dto.customer.vehicle.CustomerVehicleDTO;
 import br.com.escconsulting.dto.customer.vehicle.CustomerVehicleSearchDTO;
+import br.com.escconsulting.dto.customer.withdrawal.request.CustomerWithdrawalRequestDTO;
+import br.com.escconsulting.dto.customer.withdrawal.request.CustomerWithdrawalRequestSearchDTO;
 import br.com.escconsulting.entity.*;
 import br.com.escconsulting.repository.CustomerVehicleRepository;
+import br.com.escconsulting.repository.custom.CustomerVehicleBookingCustomRepository;
+import br.com.escconsulting.repository.custom.CustomerVehicleCustomRepository;
+import br.com.escconsulting.service.CustomerService;
 import br.com.escconsulting.service.CustomerVehicleService;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.criteria.*;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -20,12 +31,16 @@ import java.util.UUID;
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class CustomerVehicleServiceImpl implements CustomerVehicleService {
 
+    private final CustomerService customerService;
+
     private final CustomerVehicleRepository customerVehicleRepository;
+
+    private final CustomerVehicleCustomRepository customerVehicleCustomRepository;
 
     private final EntityManager entityManager;
 
-    @Override
     @Transactional
+    @Override
     public Optional<CustomerVehicle> findById(UUID customerVehicleId) {
 
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
@@ -61,14 +76,14 @@ public class CustomerVehicleServiceImpl implements CustomerVehicleService {
         return Optional.ofNullable(entityManager.createQuery(cq).getSingleResult());
     }
 
-    @Override
     @Transactional
+    @Override
     public List<CustomerVehicle> findAll() {
         return customerVehicleRepository.findAll();
     }
 
-    @Override
     @Transactional
+    @Override
     public List<CustomerVehicle> search(CustomerVehicleSearchDTO customerVehicleSearchDTO) {
 
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
@@ -144,8 +159,19 @@ public class CustomerVehicleServiceImpl implements CustomerVehicleService {
         return entityManager.createQuery(cq).getResultList();
     }
 
-    @Override
     @Transactional
+    @Override
+    public Page<CustomerVehicleDTO> searchPage(LocalUser localUser, CustomerVehicleSearchDTO customerVehicleSearchDTO, Pageable pageable) {
+        Optional<Customer> optionalCustomer = customerService.findByEmail(localUser.getUsername());
+
+        return optionalCustomer.map(customer -> {
+            customerVehicleSearchDTO.setCustomerId(customer.getCustomerId());
+            return customerVehicleCustomRepository.searchPage(customerVehicleSearchDTO, pageable);
+        }).orElseThrow(() -> new RuntimeException("Customer not found for email: " + localUser.getUsername()));
+    }
+
+    @Transactional
+    @Override
     public Optional<CustomerVehicle> save(CustomerVehicle customerVehicle) {
 
         customerVehicle.setCreatedDate(Instant.now());
@@ -154,22 +180,22 @@ public class CustomerVehicleServiceImpl implements CustomerVehicleService {
         return Optional.of(customerVehicleRepository.save(customerVehicle));
     }
 
-    @Override
     @Transactional
+    @Override
     public Optional<CustomerVehicle> update(UUID customerVehicleId, CustomerVehicle customerVehicle) {
         return findById(customerVehicleId)
-                .map(existingState -> {
+                .map(existingCustomerVehicle -> {
 
-                    existingState.setEnabled(customerVehicle.getEnabled());
-                    existingState.setModifiedDate(Instant.now());
+                    existingCustomerVehicle.setEnabled(customerVehicle.getEnabled());
+                    existingCustomerVehicle.setModifiedDate(Instant.now());
 
-                    return customerVehicleRepository.save(existingState);
+                    return customerVehicleRepository.save(existingCustomerVehicle);
                 });
     }
 
-    @Override
     @Transactional
-    public void delete(UUID customerVehicleId) {
-        findById(customerVehicleId).ifPresent(customerVehicleRepository::delete);
+    @Override
+    public void delete(UUID customerWithdrawalRequestId) {
+        findById(customerWithdrawalRequestId).ifPresent(customerVehicleRepository::delete);
     }
 }

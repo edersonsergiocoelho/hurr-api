@@ -31,4 +31,7 @@ public class Country extends AbstractEntity implements Serializable {
 
     @Column(name = "country_name", length = 100, nullable = false, unique = true)
     private String countryName;
+
+    @Column(name = "service_available", nullable = false)
+    private Boolean serviceAvailable;
 }

@@ -3,6 +3,7 @@ CREATE TABLE IF NOT EXISTS city
     city_id UUID DEFAULT uuid_generate_v4(),
     city_name CHARACTER VARYING(100) NOT NULL UNIQUE,
     state_id UUID NOT NULL,
+    service_available boolean NOT NULL DEFAULT false,
     created_date TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT current_timestamp,
     modified_date TIMESTAMP WITHOUT TIME ZONE,
     enabled boolean NOT NULL DEFAULT true,
