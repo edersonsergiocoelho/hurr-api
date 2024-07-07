@@ -10,9 +10,12 @@ CREATE TABLE IF NOT EXISTS customer_vehicle
     description TEXT NOT NULL,
     license_plate CHARACTER VARYING(10) NOT NULL UNIQUE,
     renavam CHARACTER VARYING(20) NOT NULL UNIQUE,
+    renavam_state_id UUID NOT NULL,
     chassis CHARACTER VARYING(20) NOT NULL UNIQUE,
     year_of_manufacture INTEGER NOT NULL,
     year_of_the_car INTEGER NOT NULL,
+    vehicle_value NUMERIC(13,2) NOT NULL,
+    mileage_created INTEGER NOT NULL,
     daily_rate NUMERIC(13,2) NOT NULL,
     cleaning_fee NUMERIC(13,2) NOT NULL,
     unlimited_mileage BOOLEAN NOT NULL,
@@ -49,6 +52,10 @@ CREATE TABLE IF NOT EXISTS customer_vehicle
         ON DELETE NO ACTION,
     CONSTRAINT customer_vehicle_to_vehicle_transmission_fk FOREIGN KEY (vehicle_transmission_id)
         REFERENCES vehicle_transmission (vehicle_transmission_id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION,
+    CONSTRAINT customer_vehicle_to_state_fk FOREIGN KEY (renavam_state_id)
+        REFERENCES state (state_id) MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE NO ACTION
 );
