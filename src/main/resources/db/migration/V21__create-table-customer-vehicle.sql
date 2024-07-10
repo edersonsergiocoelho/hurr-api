@@ -26,6 +26,8 @@ CREATE TABLE IF NOT EXISTS customer_vehicle
     mileage_fee_delivery NUMERIC(13,2),
     pick_up_at_address BOOLEAN NOT NULL DEFAULT false,
     mileage_fee_pick_up NUMERIC(13,2),
+    code CHARACTER VARYING(100) NOT NULL UNIQUE,
+    customer_vehicle_validated BOOLEAN NOT NULL DEFAULT false,
     created_date TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT current_timestamp,
     modified_date TIMESTAMP WITHOUT TIME ZONE,
     enabled BOOLEAN NOT NULL DEFAULT true,

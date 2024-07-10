@@ -159,4 +159,10 @@ public class CustomerVehicleBooking extends AbstractEntity implements Serializab
      */
     @Column(name = "mp_payment_id", nullable = false)
     private Long mpPaymentId;
+
+    /**
+     * Dados de pagamento do gateway de pagamento em formato JSONB.
+     */
+    @Column(name = "mp_payment_data", columnDefinition = "jsonb")
+    private String mpPaymentData;
 }

@@ -1,9 +1,11 @@
 package br.com.escconsulting.service.impl;
 
+import br.com.escconsulting.dto.user.role.UserRoleDTO;
 import br.com.escconsulting.dto.user.role.UserRoleSearchDTO;
 import br.com.escconsulting.entity.UserRole;
 import br.com.escconsulting.entity.UserRoleId;
 import br.com.escconsulting.repository.UserRoleRepository;
+import br.com.escconsulting.repository.custom.UserRoleCustomRepository;
 import br.com.escconsulting.service.UserRoleService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +25,8 @@ public class UserRoleServiceImpl implements UserRoleService {
 
     private final UserRoleRepository userRoleRepository;
 
+    private final UserRoleCustomRepository userRoleCustomRepository;
+
     @Override
     public Optional<UserRole> findById(UUID userId, UUID roleId) {
 
@@ -40,8 +44,8 @@ public class UserRoleServiceImpl implements UserRoleService {
     }
 
     @Override
-    public Page<UserRole> searchPage(UserRoleSearchDTO userRoleSearchDTO, Pageable pageable) {
-        return userRoleRepository.searchPage(userRoleSearchDTO, pageable);
+    public Page<UserRoleDTO> searchPage(UserRoleSearchDTO userRoleSearchDTO, Pageable pageable) {
+        return userRoleCustomRepository.searchPage(userRoleSearchDTO, pageable);
     }
 
     @Override

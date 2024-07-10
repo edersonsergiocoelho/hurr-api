@@ -3,6 +3,7 @@ package br.com.escconsulting.controller;
 import br.com.escconsulting.config.CurrentUser;
 import br.com.escconsulting.dto.LocalUser;
 import br.com.escconsulting.dto.customer.vehicle.CustomerVehicleDTO;
+import br.com.escconsulting.dto.customer.vehicle.CustomerVehicleSaveDTO;
 import br.com.escconsulting.dto.customer.vehicle.CustomerVehicleSearchDTO;
 import br.com.escconsulting.entity.CustomerVehicle;
 import br.com.escconsulting.mapper.CustomerVehicleMapper;
@@ -17,6 +18,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -44,14 +46,21 @@ public class CustomerVehicleController {
         );
     }
 
+    @PostMapping("/search")
+    public ResponseEntity<List<CustomerVehicle>> searchCustomerVehicles(
+            @RequestBody CustomerVehicleSearchDTO customerVehicleSearchDTO
+    ) {
+        List<CustomerVehicle> customerVehicles = customerVehicleService.search(customerVehicleSearchDTO);
+        return ResponseEntity.ok(customerVehicles);
+    }
+
     @PostMapping("/search/page")
-    public ResponseEntity<?> search(
-            @CurrentUser LocalUser localUser,
-            @RequestBody CustomerVehicleSearchDTO customerVehicleSearchDTO,
-            @RequestParam(value = "page", defaultValue = "0") int page,
-            @RequestParam(value = "size", defaultValue = "10") int size,
-            @RequestParam(value = "sortDir", defaultValue = "DESC") String sortDir,
-            @RequestParam(value = "sortBy", defaultValue = "createdDate") String sortBy) {
+    public ResponseEntity<?> search(@CurrentUser LocalUser localUser,
+                                    @RequestBody CustomerVehicleSearchDTO customerVehicleSearchDTO,
+                                    @RequestParam(value = "page", defaultValue = "0") int page,
+                                    @RequestParam(value = "size", defaultValue = "10") int size,
+                                    @RequestParam(value = "sortDir", defaultValue = "DESC") String sortDir,
+                                    @RequestParam(value = "sortBy", defaultValue = "createdDate") String sortBy) {
 
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(sortDir), sortBy));
 
@@ -61,11 +70,12 @@ public class CustomerVehicleController {
     }
 
     @PostMapping
-    public ResponseEntity<?> save(@RequestBody CustomerVehicle customerVehicle) {
-        return customerVehicleService.save(customerVehicle)
+    public ResponseEntity<?> save(@CurrentUser LocalUser localUser,
+                                  @RequestBody CustomerVehicleSaveDTO customerVehicleSaveDTO) {
+        return customerVehicleService.save(localUser, customerVehicleSaveDTO)
                 .map(CustomerVehicleMapper.INSTANCE::toDTO)
                 .map(savedCustomerVehicle -> ResponseEntity.status(HttpStatus.CREATED).build())
-                .orElseThrow(() -> new IllegalStateException("Failed to save customer withdrawal request."));
+                .orElseThrow(() -> new IllegalStateException("Failed to save customer vehicle."));
     }
 
     @PutMapping("/{customerVehicleId}")
@@ -74,7 +84,7 @@ public class CustomerVehicleController {
         return customerVehicleService.update(customerVehicleId, customerVehicle)
                 .map(CustomerVehicleMapper.INSTANCE::toDTO)
                 .map(ResponseEntity::ok)
-                .orElseThrow(() -> new IllegalStateException("Failed to update customer withdrawal request."));
+                .orElseThrow(() -> new IllegalStateException("Failed to update customer vehicle."));
     }
 
     @DeleteMapping("/{customerVehicleId}")

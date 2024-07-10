@@ -1,18 +1,18 @@
 package br.com.escconsulting.service.impl;
 
 import br.com.escconsulting.dto.LocalUser;
-import br.com.escconsulting.dto.bank.BankDTO;
-import br.com.escconsulting.dto.bank.BankSearchDTO;
 import br.com.escconsulting.dto.customer.vehicle.CustomerVehicleDTO;
+import br.com.escconsulting.dto.customer.vehicle.CustomerVehicleSaveDTO;
 import br.com.escconsulting.dto.customer.vehicle.CustomerVehicleSearchDTO;
-import br.com.escconsulting.dto.customer.withdrawal.request.CustomerWithdrawalRequestDTO;
-import br.com.escconsulting.dto.customer.withdrawal.request.CustomerWithdrawalRequestSearchDTO;
 import br.com.escconsulting.entity.*;
+import br.com.escconsulting.repository.CustomerVehicleApprovedRepository;
+import br.com.escconsulting.repository.CustomerVehicleFileInsuranceRepository;
+import br.com.escconsulting.repository.CustomerVehicleFilePhotoRepository;
 import br.com.escconsulting.repository.CustomerVehicleRepository;
-import br.com.escconsulting.repository.custom.CustomerVehicleBookingCustomRepository;
 import br.com.escconsulting.repository.custom.CustomerVehicleCustomRepository;
 import br.com.escconsulting.service.CustomerService;
 import br.com.escconsulting.service.CustomerVehicleService;
+import br.com.escconsulting.service.EmailService;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.criteria.*;
 import jakarta.transaction.Transactional;
@@ -26,16 +26,27 @@ import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class CustomerVehicleServiceImpl implements CustomerVehicleService {
 
+    // Service's
     private final CustomerService customerService;
 
+    private final EmailService emailService;
+
+    // Repository's
     private final CustomerVehicleRepository customerVehicleRepository;
 
     private final CustomerVehicleCustomRepository customerVehicleCustomRepository;
+
+    private final CustomerVehicleFilePhotoRepository customerVehicleFilePhotoRepository;
+
+    private final CustomerVehicleFileInsuranceRepository customerVehicleFileInsuranceRepository;
+
+    private final CustomerVehicleApprovedRepository customerVehicleApprovedRepository;
 
     private final EntityManager entityManager;
 
@@ -74,6 +85,12 @@ public class CustomerVehicleServiceImpl implements CustomerVehicleService {
         cq.where(spec);
 
         return Optional.ofNullable(entityManager.createQuery(cq).getSingleResult());
+    }
+
+    @Transactional
+    @Override
+    public boolean existsByCode(String code) {
+        return customerVehicleRepository.existsByCode(code);
     }
 
     @Transactional
@@ -171,13 +188,58 @@ public class CustomerVehicleServiceImpl implements CustomerVehicleService {
     }
 
     @Transactional
-    @Override
-    public Optional<CustomerVehicle> save(CustomerVehicle customerVehicle) {
+    public Optional<CustomerVehicle> save(LocalUser localUser, CustomerVehicleSaveDTO customerVehicleSaveDTO) {
 
-        customerVehicle.setCreatedDate(Instant.now());
-        customerVehicle.setEnabled(Boolean.TRUE);
+        return Optional.ofNullable(customerService.findByEmail(localUser.getUsername())
+                .flatMap(customer -> {
 
-        return Optional.of(customerVehicleRepository.save(customerVehicle));
+                    // CustomerVehicle
+                    CustomerVehicle customerVehicleSave = customerVehicleSaveDTO.getCustomerVehicle();
+                    customerVehicleSave.setCustomer(customer);
+                    customerVehicleSave.setCreatedDate(Instant.now());
+                    customerVehicleSave.setEnabled(true);
+
+                    final CustomerVehicle customerVehicleSaveFinal = customerVehicleCustomRepository.save(customerVehicleSave);
+
+                    // CustomerVehicleFilePhoto
+                    List<CustomerVehicleFilePhoto> savedPhotos = customerVehicleSaveDTO.getCustomerVehicleFilePhotos().stream()
+                            .peek(photo -> {
+                                photo.setCustomerVehicle(customerVehicleSaveFinal);
+                                photo.setCreatedDate(Instant.now());
+                                photo.setEnabled(true);
+                            })
+                            .collect(Collectors.toList());
+
+                    customerVehicleFilePhotoRepository.saveAll(savedPhotos);
+
+                    // CustomerVehicleFileInsurance
+                    List<CustomerVehicleFileInsurance> savedInsurances = customerVehicleSaveDTO.getCustomerVehicleFileInsurances().stream()
+                            .peek(insurance -> {
+                                insurance.setCustomerVehicle(customerVehicleSaveFinal);
+                                insurance.setCreatedDate(Instant.now());
+                                insurance.setEnabled(true);
+                            })
+                            .collect(Collectors.toList());
+
+                    customerVehicleFileInsuranceRepository.saveAll(savedInsurances);
+
+                    // CustomerVehicleApproved
+                    CustomerVehicleApproved customerVehicleApproved = new CustomerVehicleApproved();
+
+                    customerVehicleApproved.setCustomerVehicle(customerVehicleSave);
+
+                    customerVehicleApproved.setCreatedBy(localUser.getUser().getUserId());
+                    customerVehicleApproved.setCreatedDate(Instant.now());
+                    customerVehicleApproved.setEnabled(Boolean.TRUE);
+
+                    customerVehicleApprovedRepository.save(customerVehicleApproved);
+
+                    //
+                    emailService.sendCustomerVehicleCreated(customerVehicleSave);
+
+                    return Optional.of(customerVehicleSave);
+                })
+                .orElseThrow(() -> new RuntimeException("Customer not found for email: " + localUser.getUsername())));
     }
 
     @Transactional
@@ -195,7 +257,7 @@ public class CustomerVehicleServiceImpl implements CustomerVehicleService {
 
     @Transactional
     @Override
-    public void delete(UUID customerWithdrawalRequestId) {
-        findById(customerWithdrawalRequestId).ifPresent(customerVehicleRepository::delete);
+    public void delete(UUID customerVehicleId) {
+        findById(customerVehicleId).ifPresent(customerVehicleRepository::delete);
     }
 }

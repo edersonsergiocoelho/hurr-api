@@ -2,8 +2,10 @@ package br.com.escconsulting.service;
 
 import br.com.escconsulting.dto.LocalUser;
 import br.com.escconsulting.dto.customer.vehicle.CustomerVehicleDTO;
+import br.com.escconsulting.dto.customer.vehicle.CustomerVehicleSaveDTO;
 import br.com.escconsulting.dto.customer.vehicle.CustomerVehicleSearchDTO;
 import br.com.escconsulting.entity.CustomerVehicle;
+import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -15,13 +17,15 @@ public interface CustomerVehicleService {
 
     Optional<CustomerVehicle> findById(UUID customerVehicleId);
 
+    boolean existsByCode(String code);
+
     List<CustomerVehicle> findAll();
 
     List<CustomerVehicle> search(CustomerVehicleSearchDTO customerVehicleSearchDTO);
 
     Page<CustomerVehicleDTO> searchPage(LocalUser localUser, CustomerVehicleSearchDTO customerVehicleSearchDTO, Pageable pageable);
 
-    Optional<CustomerVehicle> save(CustomerVehicle customerVehicle);
+    Optional<CustomerVehicle> save(LocalUser localUser, CustomerVehicleSaveDTO customerVehicleSaveDTO);
 
     Optional<CustomerVehicle> update(UUID customerVehicleId, CustomerVehicle customerVehicle);
 
