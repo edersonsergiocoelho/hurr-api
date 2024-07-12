@@ -13,6 +13,8 @@ public interface AddressTypeService {
 
     Optional<AddressType> findById(UUID addressTypeId);
 
+    Optional<AddressType> findByAddressTypeName(String addressTypeName);
+
     List<AddressType> findAll();
 
     Page<AddressType> searchPage(AddressTypeSearchDTO addressTypeSearchDTO, Pageable pageable);

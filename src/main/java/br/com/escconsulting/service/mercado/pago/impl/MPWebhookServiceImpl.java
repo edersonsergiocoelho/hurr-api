@@ -113,12 +113,6 @@ public class MPWebhookServiceImpl implements MPWebhookService {
             customerVehicleBooking.setCustomer(customerService.findById(UUID.fromString(customerId)).get());
             customerVehicleBooking.setCustomerVehicle(customerVehicleService.findById(UUID.fromString(customerVehicleId)).get());
 
-            String code;
-            do {
-                String countryName = customerVehicleBooking.getCustomerVehicle().getAddresses().stream().findFirst().get().getAddress().getCountry().getCountryName();
-                code = RandomCodeGenerator.generateCode(10).toUpperCase();
-            } while (customerVehicleBookingService.existsByBooking(booking));
-
             if (customerAddressDeliveryId != null) {
                 customerVehicleBooking.setCustomerAddressDelivery(customerAddressService.findById(UUID.fromString(customerAddressDeliveryId)).get());
                 customerVehicleBooking.setCustomerAddressDeliveryValue(customerAddressDeliveryValue);

@@ -56,4 +56,10 @@ public class CustomerVehicleFilePhoto extends AbstractEntity implements Serializ
      */
     @Column(name = "data_as_byte_array", nullable = false)
     private byte[] dataAsByteArray;
+
+    /**
+     * Indica se a foto é a foto de capa do veículo do cliente.
+     */
+    @Column(name = "cover_photo", nullable = false)
+    private Boolean coverPhoto;
 }

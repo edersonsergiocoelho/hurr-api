@@ -5,14 +5,10 @@ import br.com.escconsulting.dto.customer.vehicle.CustomerVehicleDTO;
 import br.com.escconsulting.dto.customer.vehicle.CustomerVehicleSaveDTO;
 import br.com.escconsulting.dto.customer.vehicle.CustomerVehicleSearchDTO;
 import br.com.escconsulting.entity.*;
-import br.com.escconsulting.repository.CustomerVehicleApprovedRepository;
-import br.com.escconsulting.repository.CustomerVehicleFileInsuranceRepository;
-import br.com.escconsulting.repository.CustomerVehicleFilePhotoRepository;
 import br.com.escconsulting.repository.CustomerVehicleRepository;
 import br.com.escconsulting.repository.custom.CustomerVehicleCustomRepository;
-import br.com.escconsulting.service.CustomerService;
-import br.com.escconsulting.service.CustomerVehicleService;
-import br.com.escconsulting.service.EmailService;
+import br.com.escconsulting.service.*;
+import br.com.escconsulting.util.RandomCodeGenerator;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.criteria.*;
 import jakarta.transaction.Transactional;
@@ -33,7 +29,22 @@ import java.util.stream.Collectors;
 public class CustomerVehicleServiceImpl implements CustomerVehicleService {
 
     // Service's
+
+    private final AddressService addressService;
+
+    private final AddressTypeService addressTypeService;
+
+    private final AddressAddressTypeService addressAddressTypeService;
+
     private final CustomerService customerService;
+
+    private final CustomerVehicleAddressService customerVehicleAddressService;
+
+    private final CustomerVehicleApprovedService customerVehicleApprovedService;
+
+    private final CustomerVehicleFilePhotoService customerVehicleFilePhotoService;
+
+    private final CustomerVehicleFileInsuranceService customerVehicleFileInsuranceService;
 
     private final EmailService emailService;
 
@@ -41,12 +52,6 @@ public class CustomerVehicleServiceImpl implements CustomerVehicleService {
     private final CustomerVehicleRepository customerVehicleRepository;
 
     private final CustomerVehicleCustomRepository customerVehicleCustomRepository;
-
-    private final CustomerVehicleFilePhotoRepository customerVehicleFilePhotoRepository;
-
-    private final CustomerVehicleFileInsuranceRepository customerVehicleFileInsuranceRepository;
-
-    private final CustomerVehicleApprovedRepository customerVehicleApprovedRepository;
 
     private final EntityManager entityManager;
 
@@ -195,33 +200,79 @@ public class CustomerVehicleServiceImpl implements CustomerVehicleService {
 
                     // CustomerVehicle
                     CustomerVehicle customerVehicleSave = customerVehicleSaveDTO.getCustomerVehicle();
+
                     customerVehicleSave.setCustomer(customer);
+
+                    String code;
+                    do {
+                        String countryCode = customerVehicleSaveDTO.getAddress().getCountry().getCountryCode();
+                        Integer yearOfTheCar = customerVehicleSaveDTO.getCustomerVehicle().getYearOfTheCar();
+                        String generateCode = RandomCodeGenerator.generateCode(6).toUpperCase();
+                        code = countryCode + "-" + yearOfTheCar + "-" + generateCode;
+                    } while (customerVehicleRepository.existsByCode(code));
+
+                    customerVehicleSave.setCode(code);
+
                     customerVehicleSave.setCreatedDate(Instant.now());
                     customerVehicleSave.setEnabled(true);
 
                     final CustomerVehicle customerVehicleSaveFinal = customerVehicleCustomRepository.save(customerVehicleSave);
 
+                    // Address
+                    Address address = customerVehicleSaveDTO.getAddress();
+
+                    address.setCreatedDate(Instant.now());
+                    address.setEnabled(true);
+
+                    address = addressService.save(address).get();
+
+                    // AddressAddressType
+                    AddressType addressType = addressTypeService.findByAddressTypeName("VEHICLE").get();
+
+                    AddressAddressType addressAddressType = new AddressAddressType();
+
+                    AddressAddressTypeId id = new AddressAddressTypeId();
+                    id.setAddressId(address.getAddressId());
+                    id.setAddressTypeId(addressType.getAddressTypeId());
+
+                    addressAddressType.setId(id);
+
+                    addressAddressType.setAddress(address);
+                    addressAddressType.setAddressType(addressTypeService.findByAddressTypeName("VEHICLE").get());
+
+                    addressAddressType.setCreatedDate(Instant.now());
+                    addressAddressType.setEnabled(true);
+
+                    addressAddressTypeService.save(addressAddressType);
+
+                    // CustomerVehicleAddress
+                    CustomerVehicleAddress customerVehicleAddress = new CustomerVehicleAddress();
+
+                    customerVehicleAddress.setAddress(address);
+                    customerVehicleAddress.setCustomerVehicle(customerVehicleSave);
+
+                    customerVehicleAddress.setCreatedDate(Instant.now());
+                    customerVehicleAddress.setEnabled(true);
+
+                    customerVehicleAddressService.save(customerVehicleAddress);
+
                     // CustomerVehicleFilePhoto
                     List<CustomerVehicleFilePhoto> savedPhotos = customerVehicleSaveDTO.getCustomerVehicleFilePhotos().stream()
                             .peek(photo -> {
                                 photo.setCustomerVehicle(customerVehicleSaveFinal);
-                                photo.setCreatedDate(Instant.now());
-                                photo.setEnabled(true);
                             })
                             .collect(Collectors.toList());
 
-                    customerVehicleFilePhotoRepository.saveAll(savedPhotos);
+                    customerVehicleFilePhotoService.saveAll(savedPhotos);
 
                     // CustomerVehicleFileInsurance
                     List<CustomerVehicleFileInsurance> savedInsurances = customerVehicleSaveDTO.getCustomerVehicleFileInsurances().stream()
                             .peek(insurance -> {
                                 insurance.setCustomerVehicle(customerVehicleSaveFinal);
-                                insurance.setCreatedDate(Instant.now());
-                                insurance.setEnabled(true);
                             })
                             .collect(Collectors.toList());
 
-                    customerVehicleFileInsuranceRepository.saveAll(savedInsurances);
+                    customerVehicleFileInsuranceService.saveAll(savedInsurances);
 
                     // CustomerVehicleApproved
                     CustomerVehicleApproved customerVehicleApproved = new CustomerVehicleApproved();
@@ -232,9 +283,9 @@ public class CustomerVehicleServiceImpl implements CustomerVehicleService {
                     customerVehicleApproved.setCreatedDate(Instant.now());
                     customerVehicleApproved.setEnabled(Boolean.TRUE);
 
-                    customerVehicleApprovedRepository.save(customerVehicleApproved);
+                    customerVehicleApprovedService.save(customerVehicleApproved);
 
-                    //
+                    // Email
                     emailService.sendCustomerVehicleCreated(customerVehicleSave);
 
                     return Optional.of(customerVehicleSave);

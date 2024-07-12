@@ -44,6 +44,10 @@ public class CustomerVehicleFilePhotoServiceImpl implements CustomerVehicleFileP
                 .orElseThrow(() -> new RuntimeException("CustomerVehicleFilePhoto not found with customerVehicleFilePhotoId: " + customerVehicleFilePhotoId)));
     }
 
+    public Optional<CustomerVehicleFilePhoto> findByCustomerVehicleAndCoverPhoto(UUID customerVehicleId) {
+        return customerVehicleFilePhotoRepository.findByCustomerVehicleAndCoverPhoto(customerVehicleId);
+    }
+
     @Transactional
     @Override
     public List<CustomerVehicleFilePhoto> findAll() {

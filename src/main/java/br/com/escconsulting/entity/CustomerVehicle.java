@@ -1,5 +1,6 @@
 package br.com.escconsulting.entity;
 
+import br.com.escconsulting.entity.enumeration.AdvertisementStatus;
 import br.com.escconsulting.entity.generic.AbstractEntity;
 import jakarta.persistence.*;
 import lombok.*;
@@ -211,6 +212,13 @@ public class CustomerVehicle extends AbstractEntity implements Serializable {
     private Boolean customerVehicleValidated;
 
     /**
+     * Status do anúncio do veículo.
+     */
+    @Enumerated(EnumType.STRING)
+    @Column(name = "advertisement_status", nullable = false,  length = 20)
+    private AdvertisementStatus advertisementStatus;
+
+    /**
      * Método de callback que é executado antes de persistir a entidade no banco de dados.
      * Define valores padrão para certos campos se eles não foram preenchidos.
      */
@@ -244,6 +252,16 @@ public class CustomerVehicle extends AbstractEntity implements Serializable {
         // Define a retirada no endereço do cliente como falsa se não for especificada
         if (this.getPickUpAtAddress() == null) {
             this.setPickUpAtAddress(Boolean.FALSE);
+        }
+
+        // Define o campo de validação do veículo do cliente como falso se não for especificado
+        if (this.getCustomerVehicleValidated() == null) {
+            this.setCustomerVehicleValidated(Boolean.FALSE);
+        }
+
+        // Define o status do anúncio como rascunho se não for especificado
+        if (this.getAdvertisementStatus() == null) {
+            this.setAdvertisementStatus(AdvertisementStatus.DRAFT);
         }
 
         // Define a data de criação se não for especificada

@@ -1,5 +1,6 @@
 package br.com.escconsulting.dto.customer.vehicle;
 
+import br.com.escconsulting.entity.Address;
 import br.com.escconsulting.entity.CustomerVehicle;
 import br.com.escconsulting.entity.CustomerVehicleFileInsurance;
 import br.com.escconsulting.entity.CustomerVehicleFilePhoto;
@@ -15,6 +16,7 @@ import java.util.List;
 public class CustomerVehicleSaveDTO {
 
     private CustomerVehicle customerVehicle;
+    private Address address;
     private List<CustomerVehicleFilePhoto> CustomerVehicleFilePhotos;
     private List<CustomerVehicleFileInsurance> CustomerVehicleFileInsurances;
 }

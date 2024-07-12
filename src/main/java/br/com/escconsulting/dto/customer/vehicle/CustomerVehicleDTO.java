@@ -43,6 +43,8 @@ public class CustomerVehicleDTO {
     private BigDecimal mileageFeeDelivery;
     private Boolean pickUpAtAddress;
     private BigDecimal mileageFeePickUp;
+    private String code;
+    private Boolean customerVehicleValidated;
     private Instant createdDate;
     private Instant modifiedDate;
     private Boolean enabled;
