@@ -34,6 +34,11 @@ public class AddressTypeServiceImpl implements AddressTypeService {
     }
 
     @Override
+    public Optional<AddressType> findByAddressTypeName(String addressTypeName) {
+        return addressTypeRepository.findByAddressTypeName(addressTypeName);
+    }
+
+    @Override
     @Transactional
     public List<AddressType> findAll() {
         return addressTypeRepository.findAll();

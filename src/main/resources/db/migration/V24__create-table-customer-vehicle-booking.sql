@@ -20,6 +20,7 @@ CREATE TABLE IF NOT EXISTS customer_vehicle_booking
     withdrawable_booking_value NUMERIC(13,2) NOT NULL,
     total_booking_value NUMERIC(13,2) NOT NULL,
     mp_payment_id NUMERIC NOT NULL,
+    mp_payment_data JSONB NOT NULL,
     created_date TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT current_timestamp,
     modified_date TIMESTAMP WITHOUT TIME ZONE,
     enabled BOOLEAN NOT NULL DEFAULT true,

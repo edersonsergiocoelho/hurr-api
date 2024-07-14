@@ -1,9 +1,6 @@
 package br.com.escconsulting.service;
 
-import br.com.escconsulting.entity.Customer;
-import br.com.escconsulting.entity.CustomerWithdrawalRequest;
-import br.com.escconsulting.entity.FileApproved;
-import br.com.escconsulting.entity.User;
+import br.com.escconsulting.entity.*;
 
 public interface EmailService {
 
@@ -28,4 +25,6 @@ public interface EmailService {
     void sendProfilePictureReproved(FileApproved fileApproved, User user);
 
     void sendCustomerWithdrawalRequestApproval(CustomerWithdrawalRequest customerWithdrawalRequest);
+
+    void sendCustomerVehicleCreated(CustomerVehicle customerVehicle);
 }

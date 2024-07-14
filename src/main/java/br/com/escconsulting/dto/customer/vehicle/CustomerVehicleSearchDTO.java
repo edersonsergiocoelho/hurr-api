@@ -1,11 +1,15 @@
 package br.com.escconsulting.dto.customer.vehicle;
 
 import lombok.Getter;
+import lombok.Setter;
 
 import java.util.UUID;
 
 @Getter
 public class CustomerVehicleSearchDTO {
+
+    @Setter
+    private UUID customerId;
 
     private UUID vehicleId;
     private UUID vehicleModelId;

@@ -5,6 +5,7 @@ import br.com.escconsulting.entity.CustomerVehicleBooking;
 import br.com.escconsulting.service.CustomerAddressService;
 import br.com.escconsulting.service.CustomerService;
 import br.com.escconsulting.service.CustomerVehicleBookingService;
+import br.com.escconsulting.service.CustomerVehicleService;
 import br.com.escconsulting.service.impl.CustomerVehicleServiceImpl;
 import br.com.escconsulting.service.mercado.pago.MPWebhookService;
 import br.com.escconsulting.util.RandomCodeGenerator;
@@ -37,11 +38,12 @@ public class MPWebhookServiceImpl implements MPWebhookService {
 
     private final MPConfig mpConfig;
 
+    // Service's
     private final CustomerService customerService;
 
     private final CustomerAddressService customerAddressService;
 
-    private final CustomerVehicleServiceImpl customerVehicleServiceImpl;
+    private final CustomerVehicleService customerVehicleService;
 
     private final CustomerVehicleBookingService customerVehicleBookingService;
 
@@ -109,7 +111,7 @@ public class MPWebhookServiceImpl implements MPWebhookService {
             customerVehicleBooking.setBooking(booking);
 
             customerVehicleBooking.setCustomer(customerService.findById(UUID.fromString(customerId)).get());
-            customerVehicleBooking.setCustomerVehicle(customerVehicleServiceImpl.findById(UUID.fromString(customerVehicleId)).get());
+            customerVehicleBooking.setCustomerVehicle(customerVehicleService.findById(UUID.fromString(customerVehicleId)).get());
 
             if (customerAddressDeliveryId != null) {
                 customerVehicleBooking.setCustomerAddressDelivery(customerAddressService.findById(UUID.fromString(customerAddressDeliveryId)).get());
@@ -128,6 +130,9 @@ public class MPWebhookServiceImpl implements MPWebhookService {
             customerVehicleBooking.setWithdrawableBookingValue(totalBookingValue.subtract(new BigDecimal(15)));
             customerVehicleBooking.setTotalBookingValue(totalBookingValue);
             customerVehicleBooking.setMpPaymentId(payment.getId());
+
+            ObjectMapper objectMapper = new ObjectMapper();
+            customerVehicleBooking.setMpPaymentData(objectMapper.writeValueAsString(payment));
 
             Optional<CustomerVehicleBooking> optionalCustomerVehicleBookingSaved = customerVehicleBookingService.save(customerVehicleBooking);
 

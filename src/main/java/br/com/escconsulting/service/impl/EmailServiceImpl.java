@@ -251,4 +251,32 @@ public class EmailServiceImpl implements EmailService {
 
         javaMailSender.send(simpleMailMessage);
     }
+
+    @Override
+    public void sendCustomerVehicleCreated(CustomerVehicle customerVehicle) {
+
+        SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
+        simpleMailMessage.setTo(customerVehicle.getCustomer().getEmail());
+        simpleMailMessage.setSubject("HURR - Cadastro De Veículo Efetuado Com Sucesso");
+
+        StringBuilder emailBody = new StringBuilder();
+        emailBody.append("Olá ").append(customerVehicle.getCustomer().getFirstName()).append(",\n\n");
+        emailBody.append("Seu cadastro de veículo foi efetuado com sucesso!\n\n");
+        emailBody.append("Detalhes do veículo:\n");
+        emailBody.append("Modelo: ").append(customerVehicle.getVehicleModel().getVehicleModelName()).append("\n");
+        emailBody.append("Cor: ").append(customerVehicle.getVehicleColor().getVehicleColorName()).append("\n");
+        emailBody.append("Placa: ").append(customerVehicle.getLicensePlate()).append("\n\n");
+        emailBody.append("Seu cadastro passará por uma aprovação que pode demorar até 3 dias, durante a qual verificaremos os documentos do veículo.\n");
+        emailBody.append("Você receberá um e-mail informando se o cadastro foi aprovado ou não. Caso seja aprovado, você poderá continuar o cadastro para poder alugar o carro na nossa plataforma.\n");
+        emailBody.append("Se o cadastro for reprovado, você receberá um e-mail com a justificativa e terá que enviar o cadastro novamente.\n\n");
+        emailBody.append("Se precisar de esclarecimentos adicionais ou se tiver dúvidas, por favor, entre em contato pelos canais apropriados.\n");
+        emailBody.append("Agradecemos pela sua confiança.\n\n");
+        emailBody.append("Atenciosamente,\n");
+        emailBody.append("Equipe HURR");
+
+        simpleMailMessage.setText(emailBody.toString());
+
+        javaMailSender.send(simpleMailMessage);
+    }
+
 }

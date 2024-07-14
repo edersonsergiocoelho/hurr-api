@@ -1,31 +1,62 @@
 package br.com.escconsulting.service.impl;
 
+import br.com.escconsulting.dto.LocalUser;
+import br.com.escconsulting.dto.customer.vehicle.CustomerVehicleDTO;
+import br.com.escconsulting.dto.customer.vehicle.CustomerVehicleSaveDTO;
 import br.com.escconsulting.dto.customer.vehicle.CustomerVehicleSearchDTO;
 import br.com.escconsulting.entity.*;
 import br.com.escconsulting.repository.CustomerVehicleRepository;
-import br.com.escconsulting.service.CustomerVehicleService;
+import br.com.escconsulting.repository.custom.CustomerVehicleCustomRepository;
+import br.com.escconsulting.service.*;
+import br.com.escconsulting.util.RandomCodeGenerator;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.criteria.*;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class CustomerVehicleServiceImpl implements CustomerVehicleService {
 
+    // Service's
+
+    private final AddressService addressService;
+
+    private final AddressTypeService addressTypeService;
+
+    private final AddressAddressTypeService addressAddressTypeService;
+
+    private final CustomerService customerService;
+
+    private final CustomerVehicleAddressService customerVehicleAddressService;
+
+    private final CustomerVehicleApprovedService customerVehicleApprovedService;
+
+    private final CustomerVehicleFilePhotoService customerVehicleFilePhotoService;
+
+    private final CustomerVehicleFileInsuranceService customerVehicleFileInsuranceService;
+
+    private final EmailService emailService;
+
+    // Repository's
     private final CustomerVehicleRepository customerVehicleRepository;
+
+    private final CustomerVehicleCustomRepository customerVehicleCustomRepository;
 
     private final EntityManager entityManager;
 
-    @Override
     @Transactional
+    @Override
     public Optional<CustomerVehicle> findById(UUID customerVehicleId) {
 
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
@@ -61,14 +92,20 @@ public class CustomerVehicleServiceImpl implements CustomerVehicleService {
         return Optional.ofNullable(entityManager.createQuery(cq).getSingleResult());
     }
 
-    @Override
     @Transactional
+    @Override
+    public boolean existsByCode(String code) {
+        return customerVehicleRepository.existsByCode(code);
+    }
+
+    @Transactional
+    @Override
     public List<CustomerVehicle> findAll() {
         return customerVehicleRepository.findAll();
     }
 
-    @Override
     @Transactional
+    @Override
     public List<CustomerVehicle> search(CustomerVehicleSearchDTO customerVehicleSearchDTO) {
 
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
@@ -144,31 +181,133 @@ public class CustomerVehicleServiceImpl implements CustomerVehicleService {
         return entityManager.createQuery(cq).getResultList();
     }
 
-    @Override
     @Transactional
-    public Optional<CustomerVehicle> save(CustomerVehicle customerVehicle) {
+    @Override
+    public Page<CustomerVehicleDTO> searchPage(LocalUser localUser, CustomerVehicleSearchDTO customerVehicleSearchDTO, Pageable pageable) {
+        Optional<Customer> optionalCustomer = customerService.findByEmail(localUser.getUsername());
 
-        customerVehicle.setCreatedDate(Instant.now());
-        customerVehicle.setEnabled(Boolean.TRUE);
-
-        return Optional.of(customerVehicleRepository.save(customerVehicle));
+        return optionalCustomer.map(customer -> {
+            customerVehicleSearchDTO.setCustomerId(customer.getCustomerId());
+            return customerVehicleCustomRepository.searchPage(customerVehicleSearchDTO, pageable);
+        }).orElseThrow(() -> new RuntimeException("Customer not found for email: " + localUser.getUsername()));
     }
 
-    @Override
     @Transactional
+    public Optional<CustomerVehicle> save(LocalUser localUser, CustomerVehicleSaveDTO customerVehicleSaveDTO) {
+
+        return Optional.ofNullable(customerService.findByEmail(localUser.getUsername())
+                .flatMap(customer -> {
+
+                    // CustomerVehicle
+                    CustomerVehicle customerVehicleSave = customerVehicleSaveDTO.getCustomerVehicle();
+
+                    customerVehicleSave.setCustomer(customer);
+
+                    String code;
+                    do {
+                        String countryCode = customerVehicleSaveDTO.getAddress().getCountry().getCountryCode();
+                        Integer yearOfTheCar = customerVehicleSaveDTO.getCustomerVehicle().getYearOfTheCar();
+                        String generateCode = RandomCodeGenerator.generateCode(6).toUpperCase();
+                        code = countryCode + "-" + yearOfTheCar + "-" + generateCode;
+                    } while (customerVehicleRepository.existsByCode(code));
+
+                    customerVehicleSave.setCode(code);
+
+                    customerVehicleSave.setCreatedDate(Instant.now());
+                    customerVehicleSave.setEnabled(true);
+
+                    final CustomerVehicle customerVehicleSaveFinal = customerVehicleCustomRepository.save(customerVehicleSave);
+
+                    // Address
+                    Address address = customerVehicleSaveDTO.getAddress();
+
+                    address.setCreatedDate(Instant.now());
+                    address.setEnabled(true);
+
+                    address = addressService.save(address).get();
+
+                    // AddressAddressType
+                    AddressType addressType = addressTypeService.findByAddressTypeName("VEHICLE").get();
+
+                    AddressAddressType addressAddressType = new AddressAddressType();
+
+                    AddressAddressTypeId id = new AddressAddressTypeId();
+                    id.setAddressId(address.getAddressId());
+                    id.setAddressTypeId(addressType.getAddressTypeId());
+
+                    addressAddressType.setId(id);
+
+                    addressAddressType.setAddress(address);
+                    addressAddressType.setAddressType(addressTypeService.findByAddressTypeName("VEHICLE").get());
+
+                    addressAddressType.setCreatedDate(Instant.now());
+                    addressAddressType.setEnabled(true);
+
+                    addressAddressTypeService.save(addressAddressType);
+
+                    // CustomerVehicleAddress
+                    CustomerVehicleAddress customerVehicleAddress = new CustomerVehicleAddress();
+
+                    customerVehicleAddress.setAddress(address);
+                    customerVehicleAddress.setCustomerVehicle(customerVehicleSave);
+
+                    customerVehicleAddress.setCreatedDate(Instant.now());
+                    customerVehicleAddress.setEnabled(true);
+
+                    customerVehicleAddressService.save(customerVehicleAddress);
+
+                    // CustomerVehicleFilePhoto
+                    List<CustomerVehicleFilePhoto> savedPhotos = customerVehicleSaveDTO.getCustomerVehicleFilePhotos().stream()
+                            .peek(photo -> {
+                                photo.setCustomerVehicle(customerVehicleSaveFinal);
+                            })
+                            .collect(Collectors.toList());
+
+                    customerVehicleFilePhotoService.saveAll(savedPhotos);
+
+                    // CustomerVehicleFileInsurance
+                    List<CustomerVehicleFileInsurance> savedInsurances = customerVehicleSaveDTO.getCustomerVehicleFileInsurances().stream()
+                            .peek(insurance -> {
+                                insurance.setCustomerVehicle(customerVehicleSaveFinal);
+                            })
+                            .collect(Collectors.toList());
+
+                    customerVehicleFileInsuranceService.saveAll(savedInsurances);
+
+                    // CustomerVehicleApproved
+                    CustomerVehicleApproved customerVehicleApproved = new CustomerVehicleApproved();
+
+                    customerVehicleApproved.setCustomerVehicle(customerVehicleSave);
+
+                    customerVehicleApproved.setCreatedBy(localUser.getUser().getUserId());
+                    customerVehicleApproved.setCreatedDate(Instant.now());
+                    customerVehicleApproved.setEnabled(Boolean.TRUE);
+
+                    customerVehicleApprovedService.save(customerVehicleApproved);
+
+                    // Email
+                    emailService.sendCustomerVehicleCreated(customerVehicleSave);
+
+                    return Optional.of(customerVehicleSave);
+                })
+                .orElseThrow(() -> new RuntimeException("Customer not found for email: " + localUser.getUsername())));
+    }
+
+    @Transactional
+    @Override
     public Optional<CustomerVehicle> update(UUID customerVehicleId, CustomerVehicle customerVehicle) {
         return findById(customerVehicleId)
-                .map(existingState -> {
+                .map(existingCustomerVehicle -> {
 
-                    existingState.setEnabled(customerVehicle.getEnabled());
-                    existingState.setModifiedDate(Instant.now());
+                    existingCustomerVehicle.setEnabled(customerVehicle.getEnabled());
+                    existingCustomerVehicle.setModifiedDate(Instant.now());
 
-                    return customerVehicleRepository.save(existingState);
+                    return customerVehicleRepository.save(existingCustomerVehicle);
                 });
     }
 
-    @Override
     @Transactional
+    @Override
     public void delete(UUID customerVehicleId) {
         findById(customerVehicleId).ifPresent(customerVehicleRepository::delete);
     }
