@@ -2,7 +2,7 @@ package br.com.escconsulting.repository.custom.impl;
 
 import br.com.escconsulting.dto.customer.vehicle.approved.CustomerVehicleApprovedDTO;
 import br.com.escconsulting.dto.customer.vehicle.approved.CustomerVehicleApprovedSearchDTO;
-import br.com.escconsulting.entity.CustomerVehicleApproved;
+import br.com.escconsulting.entity.*;
 import br.com.escconsulting.mapper.CustomerVehicleApprovedMapper;
 import br.com.escconsulting.repository.CustomerVehicleApprovedRepository;
 import br.com.escconsulting.repository.custom.CustomerVehicleApprovedCustomRepository;
@@ -39,11 +39,22 @@ public class CustomerVehicleApprovedCustomRepositoryImpl extends SimpleJpaReposi
         CriteriaQuery<CustomerVehicleApproved> cq = cb.createQuery(CustomerVehicleApproved.class);
         Root<CustomerVehicleApproved> root = cq.from(CustomerVehicleApproved.class);
 
-        root.fetch("customerVehicleBooking", JoinType.LEFT);
-        root.fetch("customer", JoinType.LEFT);
-        root.fetch("customerBankAccount", JoinType.LEFT);
-        root.fetch("paymentMethod", JoinType.LEFT);
-        root.fetch("paymentStatus", JoinType.LEFT);
+        Fetch<CustomerVehicleApproved, CustomerVehicle> customerVehicleFetch = root.fetch("customerVehicle", JoinType.LEFT);
+        customerVehicleFetch.fetch("customer", JoinType.LEFT);
+
+        Fetch<CustomerVehicle, Vehicle> customerVehicleVehicleFetch = customerVehicleFetch.fetch("vehicle", JoinType.LEFT);
+        customerVehicleVehicleFetch.fetch("vehicleBrand", JoinType.LEFT);
+
+        customerVehicleFetch.fetch("vehicleModel", JoinType.LEFT).fetch("vehicleCategory", JoinType.LEFT);
+        customerVehicleFetch.fetch("vehicleColor", JoinType.LEFT);
+        customerVehicleFetch.fetch("vehicleFuelType", JoinType.LEFT);
+        customerVehicleFetch.fetch("vehicleTransmission", JoinType.LEFT);
+
+        Fetch<CustomerVehicle, CustomerVehicleAddress> customerVehicleCustomerVehicleAddressFetch = customerVehicleFetch.fetch("addresses", JoinType.LEFT);
+        Fetch<CustomerVehicleAddress, Address> customerVehicleAddressAddressFetch = customerVehicleCustomerVehicleAddressFetch.fetch("address", JoinType.LEFT);
+        customerVehicleAddressAddressFetch.fetch("country", JoinType.LEFT);
+        customerVehicleAddressAddressFetch.fetch("state", JoinType.LEFT);
+        customerVehicleAddressAddressFetch.fetch("city", JoinType.LEFT);
 
         Predicate spec = cb.conjunction();
 
