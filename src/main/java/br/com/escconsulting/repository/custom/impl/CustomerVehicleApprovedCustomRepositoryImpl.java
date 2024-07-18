@@ -56,23 +56,7 @@ public class CustomerVehicleApprovedCustomRepositoryImpl extends SimpleJpaReposi
         customerVehicleAddressAddressFetch.fetch("state", JoinType.LEFT);
         customerVehicleAddressAddressFetch.fetch("city", JoinType.LEFT);
 
-        Predicate spec = cb.conjunction();
-
-        if (customerVehicleApprovedSearchDTO != null) {
-            /*
-            if (customerVehicleApprovedSearchDTO.getCpf() != null && ! customerVehicleApprovedSearchDTO.getCpf().isEmpty()) {
-                spec = cb.and(spec, cb.equal(root.get("customer").get("cpf"), customerVehicleApprovedSearchDTO.getCpf()));
-            }
-
-            if (customerVehicleApprovedSearchDTO.getPaymentMethodId() != null) {
-                spec = cb.and(spec, cb.equal(root.get("paymentMethod").get("paymentMethodId"), customerVehicleApprovedSearchDTO.getPaymentMethodId()));
-            }
-
-            if (customerVehicleApprovedSearchDTO.getPaymentStatusId() != null) {
-                spec = cb.and(spec, cb.equal(root.get("paymentStatus").get("paymentStatusId"), customerVehicleApprovedSearchDTO.getPaymentStatusId()));
-            }
-            */
-        }
+        Predicate spec = buildSearchPredicates(customerVehicleApprovedSearchDTO, cb, root);
 
         cq.where(spec);
 
@@ -104,27 +88,45 @@ public class CustomerVehicleApprovedCustomRepositoryImpl extends SimpleJpaReposi
         Root<CustomerVehicleApproved> root = cq.from(CustomerVehicleApproved.class);
         cq.select(cb.count(root));
 
-        Predicate spec = cb.conjunction();
-
-        if (customerVehicleApprovedSearchDTO != null) {
-            /*
-            if (customerVehicleApprovedSearchDTO.getCpf() != null && ! customerVehicleApprovedSearchDTO.getCpf().isEmpty()) {
-                spec = cb.and(spec, cb.equal(root.get("customer").get("cpf"), customerVehicleApprovedSearchDTO.getCpf()));
-            }
-
-            if (customerVehicleApprovedSearchDTO.getPaymentMethodId() != null) {
-                spec = cb.and(spec, cb.equal(root.get("paymentMethod").get("paymentMethodId"), customerVehicleApprovedSearchDTO.getPaymentMethodId()));
-            }
-
-            if (customerVehicleApprovedSearchDTO.getPaymentStatusId() != null) {
-                spec = cb.and(spec, cb.equal(root.get("paymentStatus").get("paymentStatusId"), customerVehicleApprovedSearchDTO.getPaymentStatusId()));
-            }
-            */
-        }
+        Predicate spec = buildSearchPredicates(customerVehicleApprovedSearchDTO, cb, root);
 
         cq.where(spec);
 
         return entityManager.createQuery(cq).getSingleResult();
+    }
+
+    private Predicate buildSearchPredicates(CustomerVehicleApprovedSearchDTO searchDTO, CriteriaBuilder cb, Root<CustomerVehicleApproved> root) {
+
+        Predicate spec = cb.conjunction();
+
+        if (searchDTO != null) {
+
+            if (searchDTO.getVehicleBrandId() != null) {
+                spec = cb.and(spec, cb.equal(root.get("customerVehicle").get("vehicle").get("vehicleBrand").get("vehicleBrandId"), searchDTO.getVehicleBrandId()));
+            }
+
+            if (searchDTO.getVehicleId() != null) {
+                spec = cb.and(spec, cb.equal(root.get("customerVehicle").get("vehicle").get("vehicleId"), searchDTO.getVehicleId()));
+            }
+
+            if (searchDTO.getVehicleModelId() != null) {
+                spec = cb.and(spec, cb.equal(root.get("customerVehicle").get("vehicleModel").get("vehicleModelId"), searchDTO.getVehicleModelId()));
+            }
+
+            if (searchDTO.getFirstName() != null && !searchDTO.getFirstName().isEmpty()) {
+                spec = cb.and(spec, cb.like(cb.lower(root.get("customerVehicle").get("customer").get("firstName")), "%" + searchDTO.getFirstName().toLowerCase() + "%"));
+            }
+
+            if (searchDTO.getLastName() != null && !searchDTO.getLastName().isEmpty()) {
+                spec = cb.and(spec, cb.like(cb.lower(root.get("customerVehicle").get("customer").get("lastName")), "%" + searchDTO.getLastName().toLowerCase() + "%"));
+            }
+
+            if (searchDTO.getCpf() != null && ! searchDTO.getCpf().isEmpty()) {
+                spec = cb.and(spec, cb.equal(root.get("customerVehicle").get("customer").get("cpf"), searchDTO.getCpf()));
+            }
+        }
+
+        return spec;
     }
 
     private Order buildOrder(CriteriaBuilder cb, Root<CustomerVehicleApproved> root, Sort.Order order) {
