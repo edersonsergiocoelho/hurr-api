@@ -12,13 +12,22 @@ import java.util.UUID;
 public interface CustomerVehicleApprovedRepository extends JpaRepository<CustomerVehicleApproved, UUID> {
 
     @EntityGraph(attributePaths = {
-            "customer",
-            "customerVehicleBooking",
-            "customerBankAccount",
-            "customerBankAccount.customer",
-            "customerBankAccount.bank",
-            "paymentMethod",
-            "paymentStatus"
+            "customerVehicle",
+            "customerVehicle.vehicle",
+            "customerVehicle.vehicle.vehicleBrand",
+            "customerVehicle.customer",
+            "customerVehicle.vehicle",
+            "customerVehicle.vehicleModel",
+            "customerVehicle.vehicleModel.vehicleCategory",
+            "customerVehicle.vehicleColor",
+            "customerVehicle.vehicleFuelType",
+            "customerVehicle.vehicleTransmission",
+            "customerVehicle.addresses",
+            "customerVehicle.addresses.address",
+            "customerVehicle.addresses.address.country",
+            "customerVehicle.addresses.address.state",
+            "customerVehicle.addresses.address.city",
+            "customerVehicle.addresses.address.addressTypes"
     })
     Optional<CustomerVehicleApproved> findById(UUID customerVehicleApprovedId);
 }
