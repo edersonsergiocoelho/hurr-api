@@ -1,5 +1,6 @@
 package br.com.escconsulting.dto.customer.vehicle.approved;
 
+import br.com.escconsulting.dto.customer.vehicle.CustomerVehicleDTO;
 import br.com.escconsulting.entity.CustomerVehicle;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -14,7 +15,7 @@ import java.util.UUID;
 public class CustomerVehicleApprovedDTO {
 
     private UUID customerVehicleApprovedId;
-    private CustomerVehicle customerVehicle;
+    private CustomerVehicleDTO customerVehicle;
     private UUID approvedBy;
     private UUID reprovedBy;
     private String message;

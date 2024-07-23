@@ -15,6 +15,8 @@ public interface CustomerVehicleFileInsuranceService {
 
     Optional<CustomerVehicleFileInsurance> findById(UUID customerVehicleFileInsuranceId);
 
+    List<CustomerVehicleFileInsurance> findByCustomerVehicle(UUID customerVehicleId);
+
     List<CustomerVehicleFileInsurance> findAll();
 
     Page<CustomerVehicleFileInsuranceDTO> searchPage(LocalUser localUser, CustomerVehicleFileInsuranceSearchDTO customerVehicleFileInsuranceSearchDTO, Pageable pageable);

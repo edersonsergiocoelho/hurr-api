@@ -27,7 +27,8 @@ public interface CustomerVehicleApprovedRepository extends JpaRepository<Custome
             "customerVehicle.addresses.address.country",
             "customerVehicle.addresses.address.state",
             "customerVehicle.addresses.address.city",
-            "customerVehicle.addresses.address.addressTypes"
+            "customerVehicle.addresses.address.addressTypes",
+            "customerVehicle.renavamState"
     })
     Optional<CustomerVehicleApproved> findById(UUID customerVehicleApprovedId);
 }

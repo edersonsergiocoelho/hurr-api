@@ -46,6 +46,12 @@ public class CustomerVehicleFileInsuranceServiceImpl implements CustomerVehicleF
 
     @Transactional
     @Override
+    public List<CustomerVehicleFileInsurance> findByCustomerVehicle(UUID customerVehicleId) {
+        return customerVehicleFileInsuranceRepository.findByCustomerVehicle(customerVehicleId);
+    }
+
+    @Transactional
+    @Override
     public List<CustomerVehicleFileInsurance> findAll() {
         return customerVehicleFileInsuranceRepository.findAll();
     }

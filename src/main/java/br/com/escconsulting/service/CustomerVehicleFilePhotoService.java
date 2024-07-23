@@ -16,6 +16,8 @@ public interface CustomerVehicleFilePhotoService {
 
     Optional<CustomerVehicleFilePhoto> findById(UUID customerVehicleFilePhotoId);
 
+    List<CustomerVehicleFilePhoto> findByCustomerVehicle(UUID customerVehicleId);
+
     Optional<CustomerVehicleFilePhoto> findByCustomerVehicleAndCoverPhoto(UUID customerVehicleId);
 
     List<CustomerVehicleFilePhoto> findAll();

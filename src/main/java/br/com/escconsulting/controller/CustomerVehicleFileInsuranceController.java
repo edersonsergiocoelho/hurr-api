@@ -36,6 +36,15 @@ public class CustomerVehicleFileInsuranceController {
                 .orElseGet(ResponseEntity.notFound()::build);
     }
 
+    @GetMapping("/by/customer-vehicle/{customerVehicleId}")
+    public ResponseEntity<?> findByCustomerVehicle(@PathVariable("customerVehicleId") UUID customerVehicleId) {
+        return ResponseEntity.ok(
+                customerVehicleFileInsuranceService.findByCustomerVehicle(customerVehicleId).stream()
+                        .map(CustomerVehicleFileInsuranceMapper.INSTANCE::toDTO)
+                        .collect(Collectors.toList())
+        );
+    }
+
     @GetMapping
     public ResponseEntity<?> findAll() {
         return ResponseEntity.ok(
