@@ -43,25 +43,6 @@ public class CustomerVehicleApproved extends AbstractEntity implements Serializa
     @Column(name = "created_by", nullable = false)
     private UUID createdBy;
 
-    @Column(name = "created_date", nullable = false)
-    private Instant createdDate = Instant.now();
-
-    @Column(name = "modified_date")
-    private Instant modifiedDate;
-
     @Column(name = "modified_by")
     private UUID modifiedBy;
-
-    @Column(name = "enabled", nullable = false)
-    private Boolean enabled = true;
-
-    @PrePersist
-    protected void prePersist() {
-        if (this.createdDate == null) {
-            this.createdDate = Instant.now();
-        }
-        if (this.enabled == null) {
-            this.enabled = true;
-        }
-    }
 }

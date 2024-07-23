@@ -11,6 +11,4 @@ public interface CustomerVehicleFileInsuranceMapper {
     CustomerVehicleFileInsuranceMapper INSTANCE = Mappers.getMapper(CustomerVehicleFileInsuranceMapper.class);
 
     CustomerVehicleFileInsuranceDTO toDTO(CustomerVehicleFileInsurance customerVehicleFileInsurance);
-
-    CustomerVehicleFileInsuranceDTO toDTONoFile(CustomerVehicleFileInsurance customerVehicleFileInsurance);
 }

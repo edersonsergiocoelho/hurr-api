@@ -5,6 +5,7 @@ import br.com.escconsulting.dto.customer.vehicle.CustomerVehicleDTO;
 import br.com.escconsulting.dto.customer.vehicle.CustomerVehicleSaveDTO;
 import br.com.escconsulting.dto.customer.vehicle.CustomerVehicleSearchDTO;
 import br.com.escconsulting.entity.*;
+import br.com.escconsulting.mapper.CustomerVehicleMapper;
 import br.com.escconsulting.repository.CustomerVehicleRepository;
 import br.com.escconsulting.repository.custom.CustomerVehicleCustomRepository;
 import br.com.escconsulting.service.*;
@@ -299,7 +300,8 @@ public class CustomerVehicleServiceImpl implements CustomerVehicleService {
         return findById(customerVehicleId)
                 .map(existingCustomerVehicle -> {
 
-                    existingCustomerVehicle.setEnabled(customerVehicle.getEnabled());
+                    CustomerVehicleMapper.INSTANCE.update(customerVehicle, existingCustomerVehicle);
+
                     existingCustomerVehicle.setModifiedDate(Instant.now());
 
                     return customerVehicleRepository.save(existingCustomerVehicle);

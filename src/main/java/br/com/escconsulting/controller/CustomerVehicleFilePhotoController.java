@@ -36,6 +36,15 @@ public class CustomerVehicleFilePhotoController {
                 .orElseGet(ResponseEntity.notFound()::build);
     }
 
+    @GetMapping("/by/customer-vehicle/{customerVehicleId}")
+    public ResponseEntity<?> findByCustomerVehicle(@PathVariable("customerVehicleId") UUID customerVehicleId) {
+        return ResponseEntity.ok(
+                customerVehicleFilePhotoService.findByCustomerVehicle(customerVehicleId).stream()
+                        .map(CustomerVehicleFilePhotoMapper.INSTANCE::toDTO)
+                        .collect(Collectors.toList())
+        );
+    }
+
     @GetMapping("/by/customer-vehicle/{customerVehicleId}/and/cover-photo")
     public ResponseEntity<CustomerVehicleFilePhotoDTO> findByCustomerVehicleAndCoverPhoto(@PathVariable("customerVehicleId") UUID customerVehicleId) {
         return customerVehicleFilePhotoService.findByCustomerVehicleAndCoverPhoto(customerVehicleId)
