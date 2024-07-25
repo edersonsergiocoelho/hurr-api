@@ -109,4 +109,10 @@ public class CustomerVehicleFilePhotoServiceImpl implements CustomerVehicleFileP
     public void delete(UUID customerVehicleFilePhotoId) {
         findById(customerVehicleFilePhotoId).ifPresent(customerVehicleFilePhotoRepository::delete);
     }
+
+    @Transactional
+    @Override
+    public void deleteByCustomerVehicle(UUID customerVehicleId) {
+        customerVehicleFilePhotoRepository.deleteByCustomerVehicleId(customerVehicleId);
+    }
 }
