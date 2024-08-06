@@ -46,6 +46,12 @@ public class AddressAddressTypeServiceImpl implements AddressAddressTypeService 
 
     @Override
     @Transactional
+    public List<AddressAddressType> findAllByAddressId(UUID addressId) {
+        return addressAddressTypeRepository.findAllByAddressId(addressId);
+    }
+
+    @Override
+    @Transactional
     public Page<AddressAddressType> searchPage(AddressAddressTypeSearchDTO addressAddressTypeSearchDTO, Pageable pageable) {
         return addressAddressTypeCustomRepository.searchPage(addressAddressTypeSearchDTO, pageable);
     }

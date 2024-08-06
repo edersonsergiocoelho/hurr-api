@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -16,6 +17,8 @@ public interface AddressAddressTypeService {
     Optional<AddressAddressType> findById(UUID addressId, UUID addressTypeId);
 
     List<AddressAddressType> findAll();
+
+    List<AddressAddressType> findAllByAddressId(UUID addressId);
 
     Page<AddressAddressType> searchPage(AddressAddressTypeSearchDTO addressAddressTypeSearchDTO, Pageable pageable);
 
