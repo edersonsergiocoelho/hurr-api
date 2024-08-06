@@ -1,12 +1,8 @@
 package br.com.escconsulting.controller;
 
-import br.com.escconsulting.config.CurrentUser;
-import br.com.escconsulting.dto.LocalUser;
-import br.com.escconsulting.dto.customer.address.CustomerAddressSaveAddressDTO;
 import br.com.escconsulting.dto.customer.vehicle.address.CustomerVehicleAddressDTO;
 import br.com.escconsulting.dto.customer.vehicle.address.CustomerVehicleAddressSaveAddressDTO;
 import br.com.escconsulting.dto.customer.vehicle.address.CustomerVehicleAddressSearchDTO;
-import br.com.escconsulting.dto.customer.vehicle.file.photo.CustomerVehicleFilePhotoDTO;
 import br.com.escconsulting.entity.CustomerVehicleAddress;
 import br.com.escconsulting.service.CustomerVehicleAddressService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -84,9 +80,15 @@ public class CustomerVehicleAddressController {
                 .orElseThrow(() -> new IllegalStateException("Failed to save customer vehicle address save address."));
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<CustomerVehicleAddress> update(@PathVariable("id") UUID id, @RequestBody CustomerVehicleAddress customerVehicleAddress) {
-        CustomerVehicleAddress updateCustomerVehicleAddress = customerVehicleAddressService.update(id, customerVehicleAddress);
+    @PutMapping("/{customerVehicleAddressId}")
+    public ResponseEntity<CustomerVehicleAddress> update(@PathVariable("customerVehicleAddressId") UUID customerVehicleAddressId, @RequestBody CustomerVehicleAddress customerVehicleAddress) {
+        CustomerVehicleAddress updateCustomerVehicleAddress = customerVehicleAddressService.update(customerVehicleAddressId, customerVehicleAddress);
+        return ResponseEntity.ok(updateCustomerVehicleAddress);
+    }
+
+    @PutMapping("/{customerVehicleAddressId}/address")
+    public ResponseEntity<CustomerVehicleAddress> updateAddress(@PathVariable("customerVehicleAddressId") UUID customerVehicleAddressId, @RequestBody CustomerVehicleAddressSaveAddressDTO customerVehicleAddressSaveAddressDTO) {
+        CustomerVehicleAddress updateCustomerVehicleAddress = customerVehicleAddressService.updateAddress(customerVehicleAddressId, customerVehicleAddressSaveAddressDTO);
         return ResponseEntity.ok(updateCustomerVehicleAddress);
     }
 

@@ -86,4 +86,10 @@ public class AddressAddressTypeServiceImpl implements AddressAddressTypeService 
     public void delete(UUID addressId, UUID addressTypeId) {
         findById(addressId, addressTypeId).ifPresent(addressAddressTypeRepository::delete);
     }
+
+    @Override
+    @Transactional
+    public void deleteAllByAddressId(UUID addressId) {
+        addressAddressTypeRepository.deleteAllByAddressId(addressId);
+    }
 }

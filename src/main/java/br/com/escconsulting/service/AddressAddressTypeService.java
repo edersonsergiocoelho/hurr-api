@@ -27,4 +27,6 @@ public interface AddressAddressTypeService {
     Optional<AddressAddressType> update(UUID addressId, UUID addressTypeId, AddressAddressType addressAddressType);
 
     void delete(UUID addressId, UUID addressTypeId);
+
+    void deleteAllByAddressId(UUID addressId);
 }

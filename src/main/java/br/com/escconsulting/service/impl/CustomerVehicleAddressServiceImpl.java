@@ -9,6 +9,7 @@ import br.com.escconsulting.repository.custom.CustomerVehicleAddressCustomReposi
 import br.com.escconsulting.service.AddressAddressTypeService;
 import br.com.escconsulting.service.AddressService;
 import br.com.escconsulting.service.CustomerVehicleAddressService;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -38,7 +40,7 @@ public class CustomerVehicleAddressServiceImpl implements CustomerVehicleAddress
     @Override
     public CustomerVehicleAddress findById(UUID id) {
         return customerVehicleAddressRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Review not found with id: " + id));
+                .orElseThrow(() -> new RuntimeException("Customer Vehicle Address not found with id: " + id));
     }
 
     @Transactional
@@ -75,41 +77,35 @@ public class CustomerVehicleAddressServiceImpl implements CustomerVehicleAddress
     @Override
     public Optional<CustomerVehicleAddress> saveAddress(CustomerVehicleAddressSaveAddressDTO customerVehicleAddressSaveAddressDTO) {
 
-        try {
+        Optional<Address> optionalAddress = addressService.save(customerVehicleAddressSaveAddressDTO.getAddress());
 
-            Optional<Address> optionalAddress = addressService.save(customerVehicleAddressSaveAddressDTO.getAddress());
+        if (optionalAddress.isPresent()) {
 
-            if (optionalAddress.isPresent()) {
+            Address savedAddress = optionalAddress.get();
 
-                Address savedAddress = optionalAddress.get();
+            for (AddressType addressType : customerVehicleAddressSaveAddressDTO.getAddressTypes()) {
 
-                for (AddressType addressType : customerVehicleAddressSaveAddressDTO.getAddressTypes()) {
+                AddressAddressType addressAddressType = new AddressAddressType();
 
-                    AddressAddressType addressAddressType = new AddressAddressType();
+                addressAddressType.setAddress(savedAddress);
+                addressAddressType.setAddressType(addressType);
 
-                    addressAddressType.setAddress(savedAddress);
-                    addressAddressType.setAddressType(addressType);
+                AddressAddressTypeId addressAddressTypeId = new AddressAddressTypeId();
+                addressAddressTypeId.setAddressId(savedAddress.getAddressId());
+                addressAddressTypeId.setAddressTypeId(addressType.getAddressTypeId());
 
-                    AddressAddressTypeId addressAddressTypeId = new AddressAddressTypeId();
-                    addressAddressTypeId.setAddressId(savedAddress.getAddressId());
-                    addressAddressTypeId.setAddressTypeId(addressType.getAddressTypeId());
+                addressAddressType.setId(addressAddressTypeId);
 
-                    addressAddressType.setId(addressAddressTypeId);
-
-                    addressAddressTypeService.save(addressAddressType);
-                }
-
-                CustomerVehicleAddress customerVehicleAddress = new CustomerVehicleAddress();
-                customerVehicleAddress.setAddress(savedAddress);
-                customerVehicleAddress.setCustomerVehicle(customerVehicleAddressSaveAddressDTO.getCustomerVehicle());
-
-                return this.save(customerVehicleAddress);
-
-            } else {
-                return Optional.empty();
+                addressAddressTypeService.save(addressAddressType);
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+
+            CustomerVehicleAddress customerVehicleAddress = new CustomerVehicleAddress();
+            customerVehicleAddress.setAddress(savedAddress);
+            customerVehicleAddress.setCustomerVehicle(customerVehicleAddressSaveAddressDTO.getCustomerVehicle());
+
+            return this.save(customerVehicleAddress);
+
+        } else {
             return Optional.empty();
         }
     }
@@ -117,9 +113,52 @@ public class CustomerVehicleAddressServiceImpl implements CustomerVehicleAddress
     @Transactional
     @Override
     public CustomerVehicleAddress update(UUID id, CustomerVehicleAddress customerVehicleAddress) {
-        CustomerVehicleAddress existingReview = findById(id);
+        CustomerVehicleAddress existingCustomerVehicleAddress = findById(id);
 
-        return customerVehicleAddressRepository.save(existingReview);
+        return customerVehicleAddressRepository.save(existingCustomerVehicleAddress);
+    }
+
+    @Transactional
+    @Override
+    public CustomerVehicleAddress updateAddress(UUID customerVehicleAddressId, CustomerVehicleAddressSaveAddressDTO customerVehicleAddressSaveAddressDTO) {
+
+        CustomerVehicleAddress existingCustomerVehicleAddress = findById(customerVehicleAddressId);
+
+        if (existingCustomerVehicleAddress != null) {
+
+            existingCustomerVehicleAddress.setCustomerVehicle(customerVehicleAddressSaveAddressDTO.getCustomerVehicle());
+
+            Address updatedAddress = customerVehicleAddressSaveAddressDTO.getAddress();
+
+            if (updatedAddress != null) {
+
+                existingCustomerVehicleAddress.setAddress(updatedAddress);
+
+                addressService.save(updatedAddress);
+
+                addressAddressTypeService.deleteAllByAddressId(updatedAddress.getAddressId());
+
+                for (AddressType addressType : customerVehicleAddressSaveAddressDTO.getAddressTypes()) {
+                    AddressAddressType addressAddressType = new AddressAddressType();
+                    addressAddressType.setAddress(updatedAddress);
+                    addressAddressType.setAddressType(addressType);
+
+                    AddressAddressTypeId addressAddressTypeId = new AddressAddressTypeId();
+                    addressAddressTypeId.setAddressId(updatedAddress.getAddressId());
+                    addressAddressTypeId.setAddressTypeId(addressType.getAddressTypeId());
+
+                    addressAddressType.setId(addressAddressTypeId);
+
+                    addressAddressTypeService.save(addressAddressType);
+                }
+            }
+
+            existingCustomerVehicleAddress.setModifiedDate(Instant.now());
+
+            return customerVehicleAddressRepository.save(existingCustomerVehicleAddress);
+        } else {
+            throw new EntityNotFoundException("CustomerVehicleAddress not found with customerVehicleAddressId: " + customerVehicleAddressId);
+        }
     }
 
     @Transactional

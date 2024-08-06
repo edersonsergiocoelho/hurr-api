@@ -29,7 +29,9 @@ public interface CustomerVehicleAddressService {
 
     Optional<CustomerVehicleAddress> saveAddress(CustomerVehicleAddressSaveAddressDTO customerVehicleAddressSaveAddressDTO);
 
-    CustomerVehicleAddress update(UUID id, CustomerVehicleAddress customerVehicleAddress);
+    CustomerVehicleAddress update(UUID customerVehicleAddressId, CustomerVehicleAddress customerVehicleAddress);
+
+    CustomerVehicleAddress updateAddress(UUID customerVehicleAddressId, CustomerVehicleAddressSaveAddressDTO customerVehicleAddressSaveAddressDTO);
 
     void delete(UUID id);
 }
