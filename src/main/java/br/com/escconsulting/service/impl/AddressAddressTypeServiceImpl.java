@@ -46,6 +46,12 @@ public class AddressAddressTypeServiceImpl implements AddressAddressTypeService 
 
     @Override
     @Transactional
+    public List<AddressAddressType> findAllByAddressId(UUID addressId) {
+        return addressAddressTypeRepository.findAllByAddressId(addressId);
+    }
+
+    @Override
+    @Transactional
     public Page<AddressAddressType> searchPage(AddressAddressTypeSearchDTO addressAddressTypeSearchDTO, Pageable pageable) {
         return addressAddressTypeCustomRepository.searchPage(addressAddressTypeSearchDTO, pageable);
     }
@@ -79,5 +85,11 @@ public class AddressAddressTypeServiceImpl implements AddressAddressTypeService 
     @Transactional
     public void delete(UUID addressId, UUID addressTypeId) {
         findById(addressId, addressTypeId).ifPresent(addressAddressTypeRepository::delete);
+    }
+
+    @Override
+    @Transactional
+    public void deleteAllByAddressId(UUID addressId) {
+        addressAddressTypeRepository.deleteAllByAddressId(addressId);
     }
 }

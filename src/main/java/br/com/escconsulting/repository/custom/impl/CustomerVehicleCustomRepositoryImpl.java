@@ -2,7 +2,7 @@ package br.com.escconsulting.repository.custom.impl;
 
 import br.com.escconsulting.dto.customer.vehicle.CustomerVehicleDTO;
 import br.com.escconsulting.dto.customer.vehicle.CustomerVehicleSearchDTO;
-import br.com.escconsulting.entity.CustomerVehicle;
+import br.com.escconsulting.entity.*;
 import br.com.escconsulting.mapper.CustomerVehicleMapper;
 import br.com.escconsulting.repository.CustomerVehicleRepository;
 import br.com.escconsulting.repository.custom.CustomerVehicleCustomRepository;
@@ -39,13 +39,18 @@ public class CustomerVehicleCustomRepositoryImpl extends SimpleJpaRepository<Cus
         CriteriaQuery<CustomerVehicle> cq = cb.createQuery(CustomerVehicle.class);
         Root<CustomerVehicle> root = cq.from(CustomerVehicle.class);
 
-        root.fetch("customer", JoinType.LEFT);
         root.fetch("vehicle", JoinType.LEFT);
         root.fetch("vehicleModel", JoinType.LEFT);
         root.fetch("vehicleColor", JoinType.LEFT);
         root.fetch("vehicleFuelType", JoinType.LEFT);
         root.fetch("vehicleTransmission", JoinType.LEFT);
-        root.fetch("addresses", JoinType.LEFT);
+        root.fetch("renavamState", JoinType.LEFT);
+
+        Fetch<CustomerVehicle, CustomerVehicleAddress> customerVehicleAddressFetch = root.fetch("addresses", JoinType.LEFT);
+        Fetch<CustomerVehicleAddress, Address> addressFetch = customerVehicleAddressFetch.fetch("address", JoinType.LEFT);
+        addressFetch.fetch("country", JoinType.LEFT);
+        addressFetch.fetch("city", JoinType.LEFT);
+        addressFetch.fetch("state", JoinType.LEFT);
 
         Predicate spec = cb.conjunction();
 

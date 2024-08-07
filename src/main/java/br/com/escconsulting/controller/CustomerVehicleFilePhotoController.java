@@ -86,7 +86,7 @@ public class CustomerVehicleFilePhotoController {
     }
 
     @PostMapping("/all")
-    public ResponseEntity<?> saveBulk(@RequestBody List<CustomerVehicleFilePhoto> customerVehicleFilePhotos) {
+    public ResponseEntity<?> saveAll(@RequestBody List<CustomerVehicleFilePhoto> customerVehicleFilePhotos) {
         return ResponseEntity.status(HttpStatus.CREATED).body(
                 customerVehicleFilePhotoService.saveAll(customerVehicleFilePhotos).stream()
                 .map(CustomerVehicleFilePhotoMapper.INSTANCE::toDTO)
@@ -99,12 +99,18 @@ public class CustomerVehicleFilePhotoController {
         return customerVehicleFilePhotoService.update(customerVehicleFilePhotoId, customerVehicleFilePhoto)
                 .map(CustomerVehicleFilePhotoMapper.INSTANCE::toDTO)
                 .map(ResponseEntity::ok)
-                .orElseThrow(() -> new IllegalStateException("Failed to update customer withdrawal request."));
+                .orElseThrow(() -> new IllegalStateException("Failed to update customer vehicle file photo."));
     }
 
     @DeleteMapping("/{customerVehicleFilePhotoId}")
     public ResponseEntity<?> delete(@PathVariable("customerVehicleFilePhotoId") UUID customerVehicleFilePhotoId) {
         customerVehicleFilePhotoService.delete(customerVehicleFilePhotoId);
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/by/customer-vehicle/{customerVehicleId}")
+    public ResponseEntity<?> deleteByCustomerVehicle(@PathVariable("customerVehicleId") UUID customerVehicleId) {
+        customerVehicleFilePhotoService.deleteByCustomerVehicle(customerVehicleId);
         return ResponseEntity.noContent().build();
     }
 }

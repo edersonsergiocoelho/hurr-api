@@ -7,6 +7,7 @@ import lombok.*;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.time.Instant;
 import java.util.UUID;
 
 @Entity
@@ -28,7 +29,7 @@ public class CustomerVehicleAddress extends AbstractEntity implements Serializab
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "customer_vehicle_address_id")
-    private UUID id;
+    private UUID customerVehicleAddressId;
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
@@ -38,4 +39,22 @@ public class CustomerVehicleAddress extends AbstractEntity implements Serializab
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "address_id")
     private Address address;
+
+    @PrePersist
+    protected void prePersist() {
+        if (this.getCreatedDate() == null) {
+            this.setCreatedDate(Instant.now());
+        }
+
+        if (this.getEnabled() == null) {
+            this.setEnabled(Boolean.TRUE);
+        }
+    }
+
+    @PreUpdate
+    protected void preUpdate() {
+        if (this.getModifiedDate() == null) {
+            this.setModifiedDate(Instant.now());
+        }
+    }
 }

@@ -1,6 +1,6 @@
-package br.com.escconsulting.dto.state;
+package br.com.escconsulting.dto.city;
 
-import br.com.escconsulting.dto.country.CountryDTO;
+import br.com.escconsulting.dto.state.StateDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -11,11 +11,11 @@ import java.util.UUID;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class StateDTO {
+public class CityDTO {
 
-    private UUID stateId;
-    private String stateName;
-    private CountryDTO country;
+    private UUID id;
+    private String cityName;
+    private StateDTO state;
     private Boolean serviceAvailable;
     private Instant createdDate;
     private Instant modifiedDate;

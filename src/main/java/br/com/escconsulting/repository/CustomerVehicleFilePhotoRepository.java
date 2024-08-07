@@ -2,6 +2,7 @@ package br.com.escconsulting.repository;
 
 import br.com.escconsulting.entity.CustomerVehicleFilePhoto;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -23,4 +24,8 @@ public interface CustomerVehicleFilePhotoRepository extends JpaRepository<Custom
            "WHERE cvfp.customerVehicle.customerVehicleId = :customerVehicleId " +
            "AND cvfp.coverPhoto = true")
     Optional<CustomerVehicleFilePhoto> findByCustomerVehicleAndCoverPhoto(@Param("customerVehicleId") UUID customerVehicleId);
+
+    @Modifying
+    @Query("DELETE FROM CustomerVehicleFilePhoto c WHERE c.customerVehicle.id = :customerVehicleId")
+    void deleteByCustomerVehicleId(@Param("customerVehicleId") UUID customerVehicleId);
 }

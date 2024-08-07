@@ -30,7 +30,6 @@ import java.util.stream.Collectors;
 public class CustomerVehicleServiceImpl implements CustomerVehicleService {
 
     // Service's
-
     private final AddressService addressService;
 
     private final AddressTypeService addressTypeService;

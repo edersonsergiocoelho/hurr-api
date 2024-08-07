@@ -31,4 +31,6 @@ public interface CustomerVehicleFilePhotoService {
     Optional<CustomerVehicleFilePhoto> update(UUID customerVehicleFilePhotoId, CustomerVehicleFilePhoto customerVehicleFilePhoto);
 
     void delete(UUID customerVehicleFilePhotoId);
+
+    void deleteByCustomerVehicle(UUID customerVehicleId);
 }

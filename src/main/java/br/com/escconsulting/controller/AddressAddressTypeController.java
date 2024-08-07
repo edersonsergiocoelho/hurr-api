@@ -1,7 +1,9 @@
 package br.com.escconsulting.controller;
 
+import br.com.escconsulting.dto.address.address.type.AddressAddressTypeDTO;
 import br.com.escconsulting.dto.address.address.type.AddressAddressTypeSearchDTO;
 import br.com.escconsulting.entity.AddressAddressType;
+import br.com.escconsulting.mapper.AddressAddressTypeMapper;
 import br.com.escconsulting.service.AddressAddressTypeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/address-address-type")
@@ -34,6 +37,16 @@ public class AddressAddressTypeController {
     public ResponseEntity<List<AddressAddressType>> findAll() {
         List<AddressAddressType> listAddressAddressType = addressAddressTypeService.findAll();
         return ResponseEntity.ok(listAddressAddressType);
+    }
+
+    @GetMapping("/all/by/address/{addressId}")
+    public ResponseEntity<List<AddressAddressTypeDTO>> findAllByAddressId(@PathVariable("addressId") UUID addressId) {
+        return ResponseEntity.ok(
+                addressAddressTypeService.findAllByAddressId(addressId)
+                        .stream()
+                        .map(AddressAddressTypeMapper.INSTANCE::toDTO)
+                        .collect(Collectors.toList())
+        );
     }
 
     @PostMapping("/search/page")
