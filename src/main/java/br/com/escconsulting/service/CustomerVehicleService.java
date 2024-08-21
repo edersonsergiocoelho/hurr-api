@@ -5,7 +5,6 @@ import br.com.escconsulting.dto.customer.vehicle.CustomerVehicleDTO;
 import br.com.escconsulting.dto.customer.vehicle.CustomerVehicleSaveDTO;
 import br.com.escconsulting.dto.customer.vehicle.CustomerVehicleSearchDTO;
 import br.com.escconsulting.entity.CustomerVehicle;
-import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -20,8 +19,6 @@ public interface CustomerVehicleService {
     boolean existsByCode(String code);
 
     List<CustomerVehicle> findAll();
-
-    List<CustomerVehicle> search(CustomerVehicleSearchDTO customerVehicleSearchDTO);
 
     Page<CustomerVehicleDTO> searchPage(LocalUser localUser, CustomerVehicleSearchDTO customerVehicleSearchDTO, Pageable pageable);
 

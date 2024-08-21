@@ -18,7 +18,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -44,14 +43,6 @@ public class CustomerVehicleController {
                         .map(CustomerVehicleMapper.INSTANCE::toDTO)
                         .collect(Collectors.toList())
         );
-    }
-
-    @PostMapping("/search")
-    public ResponseEntity<List<CustomerVehicle>> searchCustomerVehicles(
-            @RequestBody CustomerVehicleSearchDTO customerVehicleSearchDTO
-    ) {
-        List<CustomerVehicle> customerVehicles = customerVehicleService.search(customerVehicleSearchDTO);
-        return ResponseEntity.ok(customerVehicles);
     }
 
     @PostMapping("/search/page")

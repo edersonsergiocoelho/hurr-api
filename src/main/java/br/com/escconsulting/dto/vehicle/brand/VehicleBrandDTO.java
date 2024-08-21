@@ -14,6 +14,7 @@ public class VehicleBrandDTO {
 
     private UUID vehicleBrandId;
     private String vehicleBrandName;
+    private UUID fileId;
     private Instant createdDate;
     private Instant modifiedDate;
     private Boolean enabled;

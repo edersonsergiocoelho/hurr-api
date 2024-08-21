@@ -31,4 +31,7 @@ public class VehicleTransmission extends AbstractEntity implements Serializable 
 
     @Column(name = "vehicle_transmission_name", length = 100, nullable = false, unique = true)
     private String vehicleTransmissionName;
+
+    @Column(name = "file_id")
+    private UUID fileId;
 }
