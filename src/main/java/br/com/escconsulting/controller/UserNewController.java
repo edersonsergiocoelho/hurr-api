@@ -6,8 +6,8 @@ import br.com.escconsulting.dto.user.UserForgotPasswordDTO;
 import br.com.escconsulting.dto.user.UserPasswordValidateCodeDTO;
 import br.com.escconsulting.dto.user.UserPasswordVerificationCodeDTO;
 import br.com.escconsulting.dto.user.UserSearchDTO;
-import br.com.escconsulting.entity.Customer;
 import br.com.escconsulting.entity.User;
+import br.com.escconsulting.mapper.UserMapper;
 import br.com.escconsulting.service.UserNewService;
 import br.com.escconsulting.util.GeneralUtils;
 import lombok.RequiredArgsConstructor;
@@ -33,15 +33,17 @@ public class UserNewController {
     private final UserNewService userNewService;
 
     @GetMapping("/{userId}")
-    public ResponseEntity<User> findById(@PathVariable("userId") UUID userId) {
+    public ResponseEntity<?> findById(@PathVariable("userId") UUID userId) {
         return userNewService.findById(userId)
+                .map(UserMapper.INSTANCE::toDTO)
                 .map(ResponseEntity::ok)
                 .orElseGet(ResponseEntity.notFound()::build);
     }
 
     @GetMapping("/by/email/{email}")
-    public ResponseEntity<User> findByEmail(@PathVariable("email") String email) {
+    public ResponseEntity<?> findByEmail(@PathVariable("email") String email) {
         return userNewService.findByEmail(email)
+                .map(UserMapper.INSTANCE::toSimpleDTO)
                 .map(ResponseEntity::ok)
                 .orElseGet(ResponseEntity.notFound()::build);
     }

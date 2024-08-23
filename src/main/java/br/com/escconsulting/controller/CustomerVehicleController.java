@@ -46,8 +46,7 @@ public class CustomerVehicleController {
     }
 
     @PostMapping("/search/page")
-    public ResponseEntity<?> search(@CurrentUser LocalUser localUser,
-                                    @RequestBody CustomerVehicleSearchDTO customerVehicleSearchDTO,
+    public ResponseEntity<?> search(@RequestBody CustomerVehicleSearchDTO customerVehicleSearchDTO,
                                     @RequestParam(value = "page", defaultValue = "0") int page,
                                     @RequestParam(value = "size", defaultValue = "10") int size,
                                     @RequestParam(value = "sortDir", defaultValue = "DESC") String sortDir,
@@ -55,7 +54,7 @@ public class CustomerVehicleController {
 
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(sortDir), sortBy));
 
-        Page<CustomerVehicleDTO> customerVehicles = customerVehicleService.searchPage(localUser, customerVehicleSearchDTO, pageable);
+        Page<CustomerVehicleDTO> customerVehicles = customerVehicleService.searchPage(customerVehicleSearchDTO, pageable);
 
         return ResponseEntity.ok(customerVehicles);
     }

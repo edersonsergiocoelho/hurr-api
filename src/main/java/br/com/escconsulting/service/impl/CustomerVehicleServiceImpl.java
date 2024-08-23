@@ -11,7 +11,6 @@ import br.com.escconsulting.repository.custom.CustomerVehicleCustomRepository;
 import br.com.escconsulting.service.*;
 import br.com.escconsulting.util.RandomCodeGenerator;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.criteria.*;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -76,13 +75,8 @@ public class CustomerVehicleServiceImpl implements CustomerVehicleService {
 
     @Transactional
     @Override
-    public Page<CustomerVehicleDTO> searchPage(LocalUser localUser, CustomerVehicleSearchDTO customerVehicleSearchDTO, Pageable pageable) {
-        Optional<Customer> optionalCustomer = customerService.findByEmail(localUser.getUsername());
-
-        return optionalCustomer.map(customer -> {
-            customerVehicleSearchDTO.setCustomerId(customer.getCustomerId());
-            return customerVehicleCustomRepository.searchPage(customerVehicleSearchDTO, pageable);
-        }).orElseThrow(() -> new RuntimeException("Customer not found for email: " + localUser.getUsername()));
+    public Page<CustomerVehicleDTO> searchPage(CustomerVehicleSearchDTO customerVehicleSearchDTO, Pageable pageable) {
+        return customerVehicleCustomRepository.searchPage(customerVehicleSearchDTO, pageable);
     }
 
     @Transactional

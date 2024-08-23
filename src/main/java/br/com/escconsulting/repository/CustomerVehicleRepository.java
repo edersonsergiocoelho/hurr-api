@@ -10,6 +10,7 @@ import java.util.UUID;
 public interface CustomerVehicleRepository extends JpaRepository<CustomerVehicle, UUID> {
 
     @EntityGraph(attributePaths = {
+            "customer",
             "vehicle",
             "vehicle.vehicleBrand",
             "vehicleModel",
