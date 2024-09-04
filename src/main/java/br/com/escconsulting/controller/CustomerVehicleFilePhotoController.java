@@ -50,7 +50,7 @@ public class CustomerVehicleFilePhotoController {
         return customerVehicleFilePhotoService.findByCustomerVehicleAndCoverPhoto(customerVehicleId)
                 .map(CustomerVehicleFilePhotoMapper.INSTANCE::toDTO)
                 .map(ResponseEntity::ok)
-                .orElseGet(ResponseEntity.notFound()::build);
+                .orElseGet(ResponseEntity.noContent()::build);
     }
 
     @GetMapping
