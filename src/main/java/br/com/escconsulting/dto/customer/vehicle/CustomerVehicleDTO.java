@@ -1,11 +1,13 @@
 package br.com.escconsulting.dto.customer.vehicle;
 
 import br.com.escconsulting.dto.customer.CustomerDTO;
+import br.com.escconsulting.dto.customer.vehicle.address.CustomerVehicleAddressDTO;
 import br.com.escconsulting.dto.vehicle.VehicleDTO;
 import br.com.escconsulting.dto.vehicle.color.VehicleColorDTO;
 import br.com.escconsulting.dto.vehicle.fuel.type.VehicleFuelTypeDTO;
 import br.com.escconsulting.dto.vehicle.model.VehicleModelDTO;
 import br.com.escconsulting.dto.vehicle.transmission.VehicleTransmissionDTO;
+import br.com.escconsulting.entity.CustomerVehicleAddress;
 import br.com.escconsulting.entity.State;
 import br.com.escconsulting.entity.enumeration.AdvertisementStatus;
 import jakarta.persistence.Column;
@@ -15,6 +17,7 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.util.List;
 import java.util.UUID;
 
 @Data
@@ -29,6 +32,7 @@ public class CustomerVehicleDTO {
     private VehicleColorDTO vehicleColor;
     private VehicleFuelTypeDTO vehicleFuelType;
     private VehicleTransmissionDTO vehicleTransmission;
+    private List<CustomerVehicleAddressDTO> addresses;
     private String description;
     private String licensePlate;
     private String renavam;

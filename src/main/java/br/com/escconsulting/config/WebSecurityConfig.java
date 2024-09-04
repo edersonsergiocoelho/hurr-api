@@ -111,11 +111,13 @@ public class WebSecurityConfig {
 				new AntPathRequestMatcher("/vehicle/vehicle-brand/{vehicleBrandId}"),
 				new AntPathRequestMatcher("/vehicle-model/vehicle/{vehicleId}"),
 				new AntPathRequestMatcher("/customer-vehicle/{customerVehicleId}"),
-				new AntPathRequestMatcher("/customer-vehicle/search"),
+				new AntPathRequestMatcher("/customer-vehicle/search/page"),
 				new AntPathRequestMatcher("/customer-vehicle-review/by/customer-vehicle/{customerVehicleId}/customer/{customerId}"),
 				new AntPathRequestMatcher("/customer-vehicle-review/all/by/customer-vehicle/{customerVehicleId}"),
 				new AntPathRequestMatcher("/customer-vehicle-address/by/customer-vehicle/{customerVehicleId}"),
-				new AntPathRequestMatcher("/customer-vehicle-address/by/customer-vehicle/{customerVehicleId}/address-type/{addressTypeName}")
+				new AntPathRequestMatcher("/customer-vehicle-address/by/customer-vehicle/{customerVehicleId}/address-type/{addressTypeName}"),
+				new AntPathRequestMatcher("/customer-vehicle-file-photo/by/customer-vehicle/{customerVehicleId}"),
+				new AntPathRequestMatcher("/customer-vehicle-file-photo/by/customer-vehicle/{customerVehicleId}/and/cover-photo")
 		);
 	}
 

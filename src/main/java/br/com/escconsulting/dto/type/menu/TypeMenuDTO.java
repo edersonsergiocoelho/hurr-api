@@ -1,4 +1,4 @@
-package br.com.escconsulting.dto.vehicle.brand;
+package br.com.escconsulting.dto.type.menu;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -10,11 +10,11 @@ import java.util.UUID;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class VehicleBrandDTO {
+public class TypeMenuDTO {
 
-    private UUID vehicleBrandId;
-    private String vehicleBrandName;
-    private UUID fileId;
+    private UUID typeMenuId;
+    private String typeMenuName;
+    private String description;
     private Instant createdDate;
     private Instant modifiedDate;
     private Boolean enabled;

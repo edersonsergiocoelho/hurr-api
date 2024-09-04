@@ -14,6 +14,7 @@ public class VehicleFuelTypeDTO {
 
     private UUID vehicleFuelTypeId;
     private String vehicleFuelTypeName;
+    private UUID fileId;
     private Instant createdDate;
     private Instant modifiedDate;
     private Boolean enabled;

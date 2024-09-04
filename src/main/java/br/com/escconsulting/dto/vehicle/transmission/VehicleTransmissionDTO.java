@@ -14,6 +14,7 @@ public class VehicleTransmissionDTO {
 
     private UUID vehicleTransmissionId;
     private String vehicleTransmissionName;
+    private UUID fileId;
     private Instant createdDate;
     private Instant modifiedDate;
     private Boolean enabled;
