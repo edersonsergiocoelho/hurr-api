@@ -41,7 +41,6 @@ public class PaymentStatusCustomRepositoryImpl extends SimpleJpaRepository<Payme
         Predicate spec = cb.conjunction();
 
         if (paymentStatusSearchDTO != null) {
-            spec = cb.and(spec, cb.equal(root.get("customer").get("customerId"), paymentStatusSearchDTO.getCustomerId()));
         }
 
         cq.where(spec);
@@ -81,7 +80,6 @@ public class PaymentStatusCustomRepositoryImpl extends SimpleJpaRepository<Payme
         Predicate spec = cb.conjunction();
 
         if (paymentStatusSearchDTO != null) {
-            spec = cb.and(spec, cb.equal(root.get("customer").get("customerId"), paymentStatusSearchDTO.getCustomerId()));
         }
 
         cq.where(spec);

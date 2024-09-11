@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import java.io.Serial;
 import java.io.Serializable;
+import java.time.Instant;
 import java.util.UUID;
 
 @Getter
@@ -38,4 +39,15 @@ public class PaymentStatus extends AbstractEntity implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "file_id")
     private File file;
+
+    @PrePersist
+    protected void prePersist() {
+        if (this.getCreatedDate() == null) {
+            this.setCreatedDate(Instant.now());
+        }
+
+        if (this.getEnabled() == null) {
+            this.setEnabled(Boolean.TRUE);
+        }
+    }
 }

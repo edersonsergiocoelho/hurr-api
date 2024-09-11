@@ -1,7 +1,5 @@
 package br.com.escconsulting.controller;
 
-import br.com.escconsulting.config.CurrentUser;
-import br.com.escconsulting.dto.LocalUser;
 import br.com.escconsulting.dto.payment.status.PaymentStatusDTO;
 import br.com.escconsulting.dto.payment.status.PaymentStatusSearchDTO;
 import br.com.escconsulting.entity.PaymentStatus;
@@ -13,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -53,7 +52,6 @@ public class PaymentStatusController {
 
     @PostMapping("/search/page")
     public ResponseEntity<?> search(
-            @CurrentUser LocalUser localUser,
             @RequestBody PaymentStatusSearchDTO paymentStatusSearchDTO,
             @RequestParam(value = "page", defaultValue = "0") int page,
             @RequestParam(value = "size", defaultValue = "10") int size,
@@ -62,16 +60,16 @@ public class PaymentStatusController {
 
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(sortDir), sortBy));
 
-        Page<PaymentStatusDTO> paymentStatuss = paymentStatusService.searchPage(localUser, paymentStatusSearchDTO, pageable);
+        Page<PaymentStatusDTO> paymentStatuses = paymentStatusService.searchPage(paymentStatusSearchDTO, pageable);
 
-        return ResponseEntity.ok(paymentStatuss);
+        return ResponseEntity.ok(paymentStatuses);
     }
 
     @PostMapping
     public ResponseEntity<?> save(@RequestBody PaymentStatus paymentStatus) {
         return paymentStatusService.save(paymentStatus)
                 .map(PaymentStatusMapper.INSTANCE::toDTO)
-                .map(ResponseEntity::ok)
+                .map(dto -> ResponseEntity.status(HttpStatus.CREATED).body(dto))
                 .orElseThrow(() -> new IllegalStateException("Failed to save payment method."));
     }
 
