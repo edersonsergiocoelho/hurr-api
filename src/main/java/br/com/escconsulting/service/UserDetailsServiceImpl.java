@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
  *
  */
 @Service("localUserDetailService")
-public class LocalUserDetailService implements UserDetailsService {
+public class UserDetailsServiceImpl implements UserDetailsService {
 
 	@Autowired
 	private UserService userService;

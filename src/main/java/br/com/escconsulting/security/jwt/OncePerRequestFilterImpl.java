@@ -1,6 +1,6 @@
 package br.com.escconsulting.security.jwt;
 
-import br.com.escconsulting.service.LocalUserDetailService;
+import br.com.escconsulting.service.UserDetailsServiceImpl;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -18,15 +18,15 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 import java.util.UUID;
 
-public class TokenAuthenticationFilter extends OncePerRequestFilter {
+public class OncePerRequestFilterImpl extends OncePerRequestFilter {
 
 	@Autowired
 	private TokenProvider tokenProvider;
 
 	@Autowired
-	private LocalUserDetailService customUserDetailsService;
+	private UserDetailsServiceImpl customUserDetailsService;
 
-	private static final Logger logger = LoggerFactory.getLogger(TokenAuthenticationFilter.class);
+	private static final Logger logger = LoggerFactory.getLogger(OncePerRequestFilterImpl.class);
 
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {

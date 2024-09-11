@@ -50,11 +50,4 @@ public class CustomerVehicleAddress extends AbstractEntity implements Serializab
             this.setEnabled(Boolean.TRUE);
         }
     }
-
-    @PreUpdate
-    protected void preUpdate() {
-        if (this.getModifiedDate() == null) {
-            this.setModifiedDate(Instant.now());
-        }
-    }
 }

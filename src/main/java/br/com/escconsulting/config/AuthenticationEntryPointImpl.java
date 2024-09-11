@@ -10,9 +10,9 @@ import org.springframework.security.web.AuthenticationEntryPoint;
 
 import java.io.IOException;
 
-public class RestAuthenticationEntryPoint implements AuthenticationEntryPoint {
+public class AuthenticationEntryPointImpl implements AuthenticationEntryPoint {
 
-	private static final Logger logger = LoggerFactory.getLogger(RestAuthenticationEntryPoint.class);
+	private static final Logger logger = LoggerFactory.getLogger(AuthenticationEntryPointImpl.class);
 
 	@Override
 	public void commence(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, AuthenticationException e) throws IOException, ServletException {
