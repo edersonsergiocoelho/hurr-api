@@ -30,14 +30,17 @@ public class ResponseEntityExceptionHandlerImpl extends ResponseEntityExceptionH
 	protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
 		logger.error("400 Status Code", ex);
 		final BindingResult result = ex.getBindingResult();
+		Locale locale = request.getLocale(); // Pega o Locale da requisição
 
 		String error = result.getAllErrors().stream().map(e -> {
+			String errorMessage = messageSource.getMessage(e, locale); // Traduz a mensagem de erro com base no Locale
 			if (e instanceof FieldError) {
-				return ((FieldError) e).getField() + " : " + e.getDefaultMessage();
+				return ((FieldError) e).getField() + ": " + errorMessage; // Campo específico
 			} else {
-				return e.getObjectName() + " : " + e.getDefaultMessage();
+				return e.getObjectName() + ": " + errorMessage; // Objeto de erro
 			}
 		}).collect(Collectors.joining(", "));
+
 		return handleExceptionInternal(ex, new ErrorRespondeDTO(error), new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
 	}
 
