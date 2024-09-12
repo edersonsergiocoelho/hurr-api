@@ -80,4 +80,10 @@ public class PaymentStatusServiceImpl implements PaymentStatusService {
     public void delete(UUID paymentStatusId) {
         findById(paymentStatusId).ifPresent(paymentStatusRepository::delete);
     }
+
+    @Transactional
+    @Override
+    public void deleteAll(List<UUID> paymentStatusIds) {
+        paymentStatusRepository.deleteAllById(paymentStatusIds);
+    }
 }

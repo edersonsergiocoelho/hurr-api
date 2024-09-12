@@ -15,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -85,6 +86,12 @@ public class PaymentStatusController {
     @DeleteMapping("/{paymentStatusId}")
     public ResponseEntity<?> delete(@PathVariable("paymentStatusId") UUID paymentStatusId) {
         paymentStatusService.delete(paymentStatusId);
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/all")
+    public ResponseEntity<?> deleteAll(@RequestBody List<UUID> paymentStatusIds) {
+        paymentStatusService.deleteAll(paymentStatusIds);
         return ResponseEntity.noContent().build();
     }
 }

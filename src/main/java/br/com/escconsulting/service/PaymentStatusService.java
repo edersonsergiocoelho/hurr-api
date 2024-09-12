@@ -25,4 +25,6 @@ public interface PaymentStatusService {
     Optional<PaymentStatus> update(UUID paymentStatusId, PaymentStatus paymentStatus);
 
     void delete(UUID paymentStatusId);
+
+    void deleteAll(List<UUID> paymentStatusIds);
 }
