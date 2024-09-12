@@ -8,7 +8,7 @@ import java.util.UUID;
 @Getter
 public class PaymentStatusSearchDTO {
 
-    @Setter
-    @Getter
-    private UUID customerId;
+    private String globalFilter;
+    private String paymentStatusName;
+    private Boolean enabled;
 }
