@@ -6,7 +6,8 @@ CREATE TABLE IF NOT EXISTS address_address_type
     modified_date TIMESTAMP WITHOUT TIME ZONE,
     enabled boolean NOT NULL DEFAULT true,
     CONSTRAINT address_address_type_pkey PRIMARY KEY (address_type_id, address_id),
-        CONSTRAINT address_address_type_to_address_fk FOREIGN KEY (address_id)
+    CONSTRAINT address_address_type_key UNIQUE (address_id, address_type_id),
+    CONSTRAINT address_address_type_to_address_fk FOREIGN KEY (address_id)
         REFERENCES address (address_id) MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE NO ACTION,

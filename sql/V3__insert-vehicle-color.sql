@@ -1,31 +1,31 @@
 SET search_path TO hurr;
 
 INSERT INTO vehicle_color (vehicle_color_name)
-VALUES ('Preto');
+VALUES ('Preto') ON CONFLICT (vehicle_color_name) DO NOTHING;
 
 INSERT INTO vehicle_color (vehicle_color_name)
-VALUES ('Branco');
+VALUES ('Branco') ON CONFLICT (vehicle_color_name) DO NOTHING;
 
 INSERT INTO vehicle_color (vehicle_color_name)
-VALUES ('Prata');
+VALUES ('Prata') ON CONFLICT (vehicle_color_name) DO NOTHING;
 
 INSERT INTO vehicle_color (vehicle_color_name)
-VALUES ('Cinza');
+VALUES ('Cinza') ON CONFLICT (vehicle_color_name) DO NOTHING;
 
 INSERT INTO vehicle_color (vehicle_color_name)
-VALUES ('Vermelho');
+VALUES ('Vermelho') ON CONFLICT (vehicle_color_name) DO NOTHING;
 
 INSERT INTO vehicle_color (vehicle_color_name)
-VALUES ('Azul');
+VALUES ('Azul') ON CONFLICT (vehicle_color_name) DO NOTHING;
 
 INSERT INTO vehicle_color (vehicle_color_name)
-VALUES ('Amarelo');
+VALUES ('Amarelo') ON CONFLICT (vehicle_color_name) DO NOTHING;
 
 INSERT INTO vehicle_color (vehicle_color_name)
-VALUES ('Verde');
+VALUES ('Verde') ON CONFLICT (vehicle_color_name) DO NOTHING;
 
 INSERT INTO vehicle_color (vehicle_color_name)
-VALUES ('Marrom');
+VALUES ('Marrom') ON CONFLICT (vehicle_color_name) DO NOTHING;
 
 INSERT INTO vehicle_color (vehicle_color_name)
-VALUES ('Bege');
+VALUES ('Bege') ON CONFLICT (vehicle_color_name) DO NOTHING;

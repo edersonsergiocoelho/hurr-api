@@ -44,6 +44,8 @@ public class AuthController {
 
 	private final UserService userService;
 
+	private final ErrorResponseFactory errorResponseFactory;
+
 	@PostMapping("/signin")
 	public ResponseEntity<?> signIn(@Valid @RequestBody LoginRequest loginRequest) {
 
@@ -82,9 +84,10 @@ public class AuthController {
 		try {
 			userService.registerNewUser(signUpRequest);
 		} catch (UserAlreadyExistAuthenticationException e) {
-			log.error("Exception Ocurred", e);
-			// Usa a chave da mensagem para o ErrorResponse
-			return new ResponseEntity<>(new ErrorResponse("auth.error.email.already.in.use"), HttpStatus.BAD_REQUEST);
+			log.error("Exception Occurred", e);
+			// Usa a fábrica para criar o ErrorResponse
+			ErrorResponse errorResponse = errorResponseFactory.createErrorResponse("auth.error.email.already.in.use");
+			return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
 		}
 		// Usa a chave da mensagem para o APIResponse
 		return ResponseEntity.ok().body(new APIResponse(true, "auth.success.user.registered"));

@@ -2,7 +2,7 @@ CREATE TABLE IF NOT EXISTS "user"
 (
     user_id UUID DEFAULT uuid_generate_v4(),
     provider_user_id CHARACTER VARYING(100),
-    email CHARACTER VARYING(200),
+    email CHARACTER VARYING(200) UNIQUE,
     display_name CHARACTER VARYING(200) NOT NULL,
     password CHARACTER VARYING(200) NOT NULL,
     forgot_password_verification_code CHARACTER VARYING(6),

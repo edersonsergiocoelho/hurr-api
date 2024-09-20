@@ -3,7 +3,10 @@ application:
   version: "0.0.1"
 
 scripts:
-  enabled: false
+  generic:
+    enabled: true
+  test:
+    enabled: true
   path: sql
 
 spring:

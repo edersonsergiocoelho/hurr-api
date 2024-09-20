@@ -1,7 +1,7 @@
 CREATE TABLE IF NOT EXISTS state
 (
     state_id UUID DEFAULT uuid_generate_v4(),
-    state_name CHARACTER VARYING(100) NOT NULL UNIQUE,
+    state_name CHARACTER VARYING(100) NOT NULL,
     country_id UUID NOT NULL,
     service_available boolean NOT NULL DEFAULT false,
     created_date TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT current_timestamp,
@@ -11,5 +11,6 @@ CREATE TABLE IF NOT EXISTS state
     CONSTRAINT state_to_country_fk FOREIGN KEY (country_id)
         REFERENCES country (country_id) MATCH SIMPLE
         ON UPDATE NO ACTION
-        ON DELETE NO ACTION
+        ON DELETE NO ACTION,
+    CONSTRAINT state_state_name_key UNIQUE (state_name, country_id)
 );

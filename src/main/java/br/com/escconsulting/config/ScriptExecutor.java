@@ -1,5 +1,6 @@
 package br.com.escconsulting.config;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationListener;
@@ -12,22 +13,27 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 @Component
+@Slf4j
 public class ScriptExecutor implements ApplicationListener<ContextRefreshedEvent> {
 
-    private final boolean scriptsEnabled;
+    private final boolean scriptsGenericEnabled;
+    private final boolean scriptsTestEnabled;
     private final String scriptsPath;
     private final JdbcTemplate jdbcTemplate;
 
     @Autowired
     public ScriptExecutor(
-            @Value("${scripts.enabled}") boolean scriptsEnabled,
+            @Value("${scripts.generic.enabled}") boolean scriptsGenericEnabled,
+            @Value("${scripts.test.enabled}") boolean scriptsTestEnabled,
             @Value("${scripts.path}") String scriptsPath,
             JdbcTemplate jdbcTemplate) {
-        this.scriptsEnabled = scriptsEnabled;
+        this.scriptsGenericEnabled = scriptsGenericEnabled;
+        this.scriptsTestEnabled = scriptsTestEnabled;
         this.scriptsPath = scriptsPath;
         this.jdbcTemplate = jdbcTemplate;
     }
@@ -35,16 +41,71 @@ public class ScriptExecutor implements ApplicationListener<ContextRefreshedEvent
     @Override
     @Transactional
     public void onApplicationEvent(final ContextRefreshedEvent event) {
-        if (!scriptsEnabled) {
+        if (!scriptsGenericEnabled) {
             return;
         }
 
         // Defina a lista de scripts na sequência desejada
-        List<String> scripts = Arrays.asList(
+        List<String> scripts = new ArrayList<>(Arrays.asList(
                 "V1__insert-vehicle-brand.sql",
-                "V2__insert-vehicle-category.sql"
-                // Adicione mais scripts conforme necessário
-        );
+                "V2__insert-vehicle-category.sql",
+                "V3__insert-vehicle-color.sql",
+                "V4__insert-vehicle-fuel-type.sql",
+                "V5__insert-vehicle-transmission.sql",
+                "V6__insert-address-type.sql",
+                "V7__insert-country.sql",
+                "V8__insert-payment-method.sql",
+                "V9__insert-payment-status.sql",
+
+                // State's
+                "state/V1__insert-state-country-brasil.sql",
+
+                // City's
+                "city/V1__insert-city-state-sao-paulo-brasil.sql",
+
+                // Vehicle's
+                "vehicle/V1__insert-vehicle-chevrolet.sql",
+                "vehicle/V1__insert-vehicle-fiat.sql",
+                "vehicle/V1__insert-vehicle-honda.sql",
+                "vehicle/V1__insert-vehicle-hyundai.sql",
+                "vehicle/V1__insert-vehicle-nissan.sql",
+                "vehicle/V1__insert-vehicle-toyota.sql",
+                "vehicle/V1__insert-vehicle-volkswagen.sql",
+
+                // Vehicle Model's - Chevrolet
+                "vehicle-model/chevrolet/onix/V1__insert-vehicle-model-onix.sql",
+                "vehicle-model/chevrolet/s10/V1__insert-vehicle-model-s10.sql",
+
+                // Vehicle Model's - Fiat
+                "vehicle-model/fiat/palio/V1__insert-vehicle-model-palio.sql",
+
+                // Vehicle Model's - Honda
+                "vehicle-model/honda/accord/V1__insert-vehicle-model-accord.sql",
+                "vehicle-model/honda/civic/V1__insert-vehicle-model-civic.sql",
+                "vehicle-model/honda/hrv/V1__insert-vehicle-model-hrv.sql",
+
+                // Vehicle Model's - Hyundai
+                "vehicle-model/hyundai/hb20/V1__insert-vehicle-model-hb20.sql",
+
+                // Vehicle Model's - Fiat
+                "vehicle-model/nissan/kicks/V1__insert-vehicle-model-kicks.sql",
+
+                // Vehicle Model's - Toyota
+                "vehicle-model/toyota/corolla/V1__insert-vehicle-model-corolla.sql",
+                "vehicle-model/toyota/corolla-cross/V1__insert-vehicle-model-corolla-cross.sql",
+
+                // Vehicle Model's - Volkswagen
+                "vehicle-model/volkswagen/fusca/V1__insert-vehicle-model-fusca.sql",
+                "vehicle-model/volkswagen/jetta/V1__insert-vehicle-model-jetta.sql"
+        ));
+
+        if (scriptsTestEnabled) {
+            scripts.add("test/customer/V1__insert-customer.sql");
+            scripts.add("test/customer-vehicle/V1__insert-customer-vehicle.sql");
+            scripts.add("test/address/V1__insert-address.sql");
+            scripts.add("test/customer-vehicle-address/V1__insert-customer-vehicle-address.sql");
+            scripts.add("test/address-address-type/V1__insert-address-address-type.sql");
+        }
 
         // Execute os scripts
         scripts.forEach(this::executeScript);

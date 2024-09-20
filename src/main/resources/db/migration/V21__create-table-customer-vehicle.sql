@@ -8,10 +8,10 @@ CREATE TABLE IF NOT EXISTS customer_vehicle
     vehicle_fuel_type_id UUID NOT NULL, -- Identificador único do tipo de combustível do veículo associado
     vehicle_transmission_id UUID NOT NULL, -- Identificador único da transmissão do veículo associado
     description TEXT NOT NULL, -- Descrição do veículo
-    license_plate CHARACTER VARYING(10) NOT NULL UNIQUE, -- Placa do veículo
-    renavam CHARACTER VARYING(20) NOT NULL UNIQUE, -- RENAVAM do veículo
+    license_plate CHARACTER VARYING(10) NOT NULL, -- Placa do veículo
+    renavam CHARACTER VARYING(20) NOT NULL, -- RENAVAM do veículo
     renavam_state_id UUID NOT NULL, -- Identificador único do estado do RENAVAM
-    chassis CHARACTER VARYING(20) NOT NULL UNIQUE, -- Chassi do veículo
+    chassis CHARACTER VARYING(20) NOT NULL, -- Chassi do veículo
     year_of_manufacture INTEGER NOT NULL, -- Ano de fabricação do veículo
     year_of_the_car INTEGER NOT NULL, -- Ano do veículo
     vehicle_value NUMERIC(13,2) NOT NULL, -- Valor do veículo
@@ -26,13 +26,14 @@ CREATE TABLE IF NOT EXISTS customer_vehicle
     mileage_fee_delivery NUMERIC(13,2), -- Taxa de quilometragem para entrega
     pick_up_at_address BOOLEAN NOT NULL DEFAULT false, -- Indica se o veículo pode ser retirado no endereço
     mileage_fee_pick_up NUMERIC(13,2), -- Taxa de quilometragem para retirada
-    code CHARACTER VARYING(100) NOT NULL UNIQUE, -- Código do veículo do cliente
+    code CHARACTER VARYING(100) NOT NULL, -- Código do veículo do cliente
     customer_vehicle_validated BOOLEAN NOT NULL DEFAULT false, -- Indica se o veículo do cliente foi validado
     advertisement_status CHARACTER VARYING(20) NOT NULL DEFAULT 'DRAFT', -- Status do anúncio do veículo
     created_date TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT current_timestamp, -- Data de criação do registro
     modified_date TIMESTAMP WITHOUT TIME ZONE, -- Data de modificação do registro
     enabled BOOLEAN NOT NULL DEFAULT true, -- Indica se o registro está ativo
     CONSTRAINT customer_vehicle_id_pkey PRIMARY KEY (customer_vehicle_id),
+    CONSTRAINT customer_vehicle_key UNIQUE (chassis, renavam, license_plate, code), -- Restrição de unicidade composta
     CONSTRAINT customer_vehicle_to_customer_fk FOREIGN KEY (customer_id)
         REFERENCES customer (customer_id) MATCH SIMPLE
         ON UPDATE NO ACTION

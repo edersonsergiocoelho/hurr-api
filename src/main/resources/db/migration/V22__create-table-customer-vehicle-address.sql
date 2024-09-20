@@ -7,6 +7,7 @@ CREATE TABLE IF NOT EXISTS customer_vehicle_address
     modified_date TIMESTAMP WITHOUT TIME ZONE,
     enabled BOOLEAN NOT NULL DEFAULT true,
     CONSTRAINT customer_vehicle_address_pkey PRIMARY KEY (customer_vehicle_address_id),
+    CONSTRAINT customer_vehicle_address_key UNIQUE (customer_vehicle_id, address_id),
     CONSTRAINT customer_vehicle_address_to_customer_vehicle_fk FOREIGN KEY (customer_vehicle_id)
         REFERENCES customer_vehicle (customer_vehicle_id) MATCH SIMPLE
         ON UPDATE NO ACTION
