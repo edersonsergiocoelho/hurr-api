@@ -48,6 +48,9 @@ public class MPPreferenceServiceImpl implements MPPreferenceService {
 
         PreferenceRequest preferenceRequest = PreferenceRequest.builder()
                 .payer(PreferencePayerRequest.builder()
+                        .name(preferenceRequestDTO.getPayer().getName())
+                        .surname(preferenceRequestDTO.getPayer().getSurname())
+                        .email(preferenceRequestDTO.getPayer().getEmail())
                         .address(AddressRequest.builder()
                                 .streetName(preferenceRequestDTO.getPayer().getAddress().getStreetName())
                                 .streetNumber(preferenceRequestDTO.getPayer().getAddress().getStreetNumber())

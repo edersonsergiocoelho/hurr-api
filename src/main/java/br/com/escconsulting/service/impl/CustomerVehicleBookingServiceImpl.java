@@ -38,7 +38,7 @@ public class CustomerVehicleBookingServiceImpl implements CustomerVehicleBooking
     @Override
     public Optional<CustomerVehicleBooking> findById(UUID customerVehicleBookingId) {
 
-        return Optional.ofNullable(customerVehicleBookingRepository.findById(customerVehicleBookingId)
+        return Optional.ofNullable(customerVehicleBookingCustomRepository.findById(customerVehicleBookingId)
                 .orElseThrow(() -> new RuntimeException("CustomerVehicleBooking not found with customerVehicleBookingId: " + customerVehicleBookingId)));
     }
 

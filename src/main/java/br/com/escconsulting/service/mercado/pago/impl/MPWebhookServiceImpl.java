@@ -6,11 +6,13 @@ import br.com.escconsulting.service.CustomerAddressService;
 import br.com.escconsulting.service.CustomerService;
 import br.com.escconsulting.service.CustomerVehicleBookingService;
 import br.com.escconsulting.service.CustomerVehicleService;
-import br.com.escconsulting.service.impl.CustomerVehicleServiceImpl;
 import br.com.escconsulting.service.mercado.pago.MPWebhookService;
 import br.com.escconsulting.util.RandomCodeGenerator;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.mercadopago.MercadoPagoConfig;
 import com.mercadopago.client.payment.PaymentClient;
 import com.mercadopago.client.preference.PreferenceClient;
@@ -50,7 +52,7 @@ public class MPWebhookServiceImpl implements MPWebhookService {
     @Override
     public ResponseEntity<String> webhook(String notification) throws JsonProcessingException, MPException, MPApiException {
 
-        Map<String, Object> notificationObjectMapper = new ObjectMapper().readValue(notification, Map.class);
+        Map<String, Object> notificationObjectMapper = new ObjectMapper().registerModule(new JavaTimeModule()).readValue(notification, Map.class);
 
         String action = (String) notificationObjectMapper.get("action");
 
@@ -131,8 +133,9 @@ public class MPWebhookServiceImpl implements MPWebhookService {
             customerVehicleBooking.setTotalBookingValue(totalBookingValue);
             customerVehicleBooking.setMpPaymentId(payment.getId());
 
-            ObjectMapper objectMapper = new ObjectMapper();
-            customerVehicleBooking.setMpPaymentData(objectMapper.writeValueAsString(payment));
+            ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
+            JsonNode jsonNode = objectMapper.valueToTree(payment);
+            customerVehicleBooking.setMpPaymentData(jsonNode);
 
             Optional<CustomerVehicleBooking> optionalCustomerVehicleBookingSaved = customerVehicleBookingService.save(customerVehicleBooking);
 

@@ -1,8 +1,11 @@
 package br.com.escconsulting.entity;
 
 import br.com.escconsulting.entity.generic.AbstractEntity;
+import br.com.escconsulting.repository.converter.JsonNodeConverter;
+import com.fasterxml.jackson.databind.JsonNode;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.ColumnTransformer;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -163,6 +166,8 @@ public class CustomerVehicleBooking extends AbstractEntity implements Serializab
     /**
      * Dados de pagamento do gateway de pagamento em formato JSONB.
      */
+    @ColumnTransformer(write = "?::jsonb")
     @Column(name = "mp_payment_data", columnDefinition = "jsonb")
-    private String mpPaymentData;
+    @Convert(converter = JsonNodeConverter.class)
+    private JsonNode mpPaymentData;
 }

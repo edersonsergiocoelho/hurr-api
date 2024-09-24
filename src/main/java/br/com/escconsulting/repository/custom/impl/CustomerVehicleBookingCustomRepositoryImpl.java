@@ -16,8 +16,8 @@ import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -32,6 +32,45 @@ public class CustomerVehicleBookingCustomRepositoryImpl extends SimpleJpaReposit
         super(CustomerVehicleBooking.class, entityManager);
         this.entityManager = entityManager;
         this.customerVehicleBookingRepository = customerVehicleBookingRepository;
+    }
+
+    @Override
+    public Optional<CustomerVehicleBooking> findById(UUID customerVehicleBookingId) {
+
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<CustomerVehicleBooking> cq = cb.createQuery(CustomerVehicleBooking.class);
+        Root<CustomerVehicleBooking> root = cq.from(CustomerVehicleBooking.class);
+
+        // Realize o fetch de customerVehicle uma única vez e reutilize-o
+        Fetch<CustomerVehicleBooking, CustomerVehicle> customerVehicleFetch = root.fetch("customerVehicle", JoinType.LEFT);
+
+        customerVehicleFetch.fetch("customer", JoinType.LEFT);
+        customerVehicleFetch.fetch("vehicle", JoinType.LEFT)
+                .fetch("vehicleBrand", JoinType.LEFT);
+
+        customerVehicleFetch.fetch("vehicleModel", JoinType.LEFT)
+                .fetch("vehicleCategory", JoinType.LEFT);
+
+        customerVehicleFetch.fetch("vehicleColor", JoinType.LEFT);
+        customerVehicleFetch.fetch("vehicleFuelType", JoinType.LEFT);
+        customerVehicleFetch.fetch("vehicleTransmission", JoinType.LEFT);
+
+        // Fetch de endereços e detalhes associados
+        Fetch<CustomerVehicle, CustomerVehicleAddress> addressesFetch = customerVehicleFetch.fetch("addresses", JoinType.LEFT);
+        Fetch<CustomerVehicleAddress, Address> addressFetch = addressesFetch.fetch("address", JoinType.LEFT);
+
+        addressFetch.fetch("country", JoinType.LEFT);
+        addressFetch.fetch("state", JoinType.LEFT);
+        addressFetch.fetch("city", JoinType.LEFT);
+
+        // Fetch do customer diretamente no root
+        root.fetch("customer", JoinType.LEFT);
+
+        // Defina a condição para o ID
+        cq.select(root).where(cb.equal(root.get("customerVehicleBookingId"), customerVehicleBookingId));
+
+        // Execute a consulta e retorne o resultado
+        return Optional.ofNullable(entityManager.createQuery(cq).getSingleResult());
     }
 
     @Override

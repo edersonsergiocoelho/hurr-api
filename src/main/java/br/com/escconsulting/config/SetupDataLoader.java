@@ -86,6 +86,11 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
 			user.setCreatedDate(Instant.now());
 			user.setModifiedDate(Instant.now());
 
+			if (! email.equalsIgnoreCase("admin@hurr.com.br") &&
+				! email.equalsIgnoreCase("renata.mendes@example.com")) {
+				user.setPhotoValidated(Boolean.TRUE);
+			}
+
 			user = userRepository.save(user);
 
 			for (Role role : roles) {
