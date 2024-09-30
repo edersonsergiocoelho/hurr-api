@@ -70,6 +70,8 @@ public class MPWebhookServiceImpl implements MPWebhookService {
             String customerId = (String) payment.getMetadata().get("customer_id");
             String customerVehicleId = (String) payment.getMetadata().get("customer_vehicle_id");
 
+            String customerAddressBillingId = (String) payment.getMetadata().get("customer_address_billing_id");
+
             String customerAddressDeliveryId = (String) payment.getMetadata().get("customer_address_delivery_id");
 
             Double customerAddressDeliveryValueDouble = (Double) payment.getMetadata().get("customer_address_delivery_value");
@@ -115,6 +117,10 @@ public class MPWebhookServiceImpl implements MPWebhookService {
             customerVehicleBooking.setCustomer(customerService.findById(UUID.fromString(customerId)).get());
             customerVehicleBooking.setCustomerVehicle(customerVehicleService.findById(UUID.fromString(customerVehicleId)).get());
 
+            if (customerAddressBillingId != null) {
+                customerVehicleBooking.setCustomerAddressBilling(customerAddressService.findById(UUID.fromString(customerAddressBillingId)).get());
+            }
+
             if (customerAddressDeliveryId != null) {
                 customerVehicleBooking.setCustomerAddressDelivery(customerAddressService.findById(UUID.fromString(customerAddressDeliveryId)).get());
                 customerVehicleBooking.setCustomerAddressDeliveryValue(customerAddressDeliveryValue);
@@ -131,11 +137,11 @@ public class MPWebhookServiceImpl implements MPWebhookService {
             customerVehicleBooking.setReservationEndTime(reservationEndTime);
             customerVehicleBooking.setWithdrawableBookingValue(totalBookingValue.subtract(new BigDecimal(15)));
             customerVehicleBooking.setTotalBookingValue(totalBookingValue);
-            customerVehicleBooking.setMpPaymentId(payment.getId());
+            customerVehicleBooking.setMercadoPagoPaymentId(payment.getId());
 
             ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
             JsonNode jsonNode = objectMapper.valueToTree(payment);
-            customerVehicleBooking.setMpPaymentData(jsonNode);
+            //customerVehicleBooking.setMercadoPagoPaymentData(jsonNode);
 
             Optional<CustomerVehicleBooking> optionalCustomerVehicleBookingSaved = customerVehicleBookingService.save(customerVehicleBooking);
 

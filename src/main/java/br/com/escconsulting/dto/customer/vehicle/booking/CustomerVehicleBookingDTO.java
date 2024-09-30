@@ -3,6 +3,7 @@ package br.com.escconsulting.dto.customer.vehicle.booking;
 import br.com.escconsulting.dto.customer.CustomerDTO;
 import br.com.escconsulting.dto.customer.address.CustomerAddressDTO;
 import br.com.escconsulting.dto.customer.vehicle.CustomerVehicleDTO;
+import br.com.escconsulting.entity.mercado.pago.MercadoPagoPayment;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -21,6 +22,7 @@ public class CustomerVehicleBookingDTO {
     private UUID customerVehicleBookingId;
     private CustomerVehicleDTO customerVehicle;
     private CustomerDTO customer;
+    private CustomerAddressDTO customerAddressBilling;
     private CustomerAddressDTO customerAddressDelivery;
     private BigDecimal customerAddressDeliveryValue;
     private CustomerAddressDTO customerAddressPickUp;
@@ -37,7 +39,8 @@ public class CustomerVehicleBookingDTO {
     private LocalDateTime bookingCancellationDate;
     private BigDecimal withdrawableBookingValue;
     private BigDecimal totalBookingValue;
-    private Long mpPaymentId;
+    private Long mercadoPagoPaymentId;
+    private MercadoPagoPayment mercadoPagoPaymentData;
     private Instant createdDate;
     private Instant modifiedDate;
     private Boolean enabled;

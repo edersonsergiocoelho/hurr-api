@@ -16,6 +16,8 @@ public interface CustomerVehicleBookingService {
 
     Optional<CustomerVehicleBooking> findById(UUID customerVehicleBookingId);
 
+    Optional<CustomerVehicleBooking> findByPaymentId(Long customerVehicleBookingId);
+
     boolean existsByBooking(String booking);
 
     List<CustomerVehicleBooking> findAll();

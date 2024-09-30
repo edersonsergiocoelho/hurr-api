@@ -1,8 +1,9 @@
 package br.com.escconsulting.entity;
 
 import br.com.escconsulting.entity.generic.AbstractEntity;
+import br.com.escconsulting.entity.mercado.pago.MercadoPagoPayment;
 import br.com.escconsulting.repository.converter.JsonNodeConverter;
-import com.fasterxml.jackson.databind.JsonNode;
+import com.mercadopago.resources.payment.Payment;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.ColumnTransformer;
@@ -58,6 +59,13 @@ public class CustomerVehicleBooking extends AbstractEntity implements Serializab
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "customer_id", nullable = false)
     private Customer customer;
+
+    /**
+     * O endereço de cobrança do cliente.
+     */
+    @ManyToOne
+    @JoinColumn(name = "customer_address_billing_id")
+    private CustomerAddress customerAddressBilling;
 
     /**
      * O endereço de entrega do cliente, se aplicável.
@@ -161,7 +169,7 @@ public class CustomerVehicleBooking extends AbstractEntity implements Serializab
      * O identificador do pagamento do gateway de pagamento.
      */
     @Column(name = "mp_payment_id", nullable = false)
-    private Long mpPaymentId;
+    private Long mercadoPagoPaymentId;
 
     /**
      * Dados de pagamento do gateway de pagamento em formato JSONB.
@@ -169,5 +177,5 @@ public class CustomerVehicleBooking extends AbstractEntity implements Serializab
     @ColumnTransformer(write = "?::jsonb")
     @Column(name = "mp_payment_data", columnDefinition = "jsonb")
     @Convert(converter = JsonNodeConverter.class)
-    private JsonNode mpPaymentData;
+    private MercadoPagoPayment mercadoPagoPaymentData;
 }

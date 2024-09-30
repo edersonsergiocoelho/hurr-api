@@ -44,6 +44,14 @@ public class CustomerVehicleBookingServiceImpl implements CustomerVehicleBooking
 
     @Transactional
     @Override
+    public Optional<CustomerVehicleBooking> findByPaymentId(Long paymentId) {
+
+        return Optional.ofNullable(customerVehicleBookingCustomRepository.findByPaymentId(paymentId)
+                .orElseThrow(() -> new RuntimeException("CustomerVehicleBooking not found with paymentId: " + paymentId)));
+    }
+
+    @Transactional
+    @Override
     public boolean existsByBooking(String booking) {
         return customerVehicleBookingRepository.existsByBooking(booking);
     }

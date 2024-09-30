@@ -37,6 +37,14 @@ public class CustomerVehicleBookingController {
                 .orElseGet(ResponseEntity.notFound()::build);
     }
 
+    @GetMapping("/mercado-pago/payment/{paymentId}")
+    public ResponseEntity<CustomerVehicleBookingDTO> findByPaymentId(@PathVariable("paymentId") Long paymentId) {
+        return customerVehicleBookingService.findByPaymentId(paymentId)
+                .map(CustomerVehicleBookingMapper.INSTANCE::toDTO)
+                .map(ResponseEntity::ok)
+                .orElseGet(ResponseEntity.notFound()::build);
+    }
+
     @GetMapping
     public ResponseEntity<List<CustomerVehicleBookingDTO>> findAll() {
         return ResponseEntity.ok(

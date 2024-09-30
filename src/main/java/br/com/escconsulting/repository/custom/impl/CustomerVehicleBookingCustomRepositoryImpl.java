@@ -66,8 +66,89 @@ public class CustomerVehicleBookingCustomRepositoryImpl extends SimpleJpaReposit
         // Fetch do customer diretamente no root
         root.fetch("customer", JoinType.LEFT);
 
+        // Fetch da FK customerAddressBilling e seus relacionamentos (Address -> country, state, city)
+        Fetch<CustomerVehicleBooking, CustomerAddress> billingAddressFetch = root.fetch("customerAddressBilling", JoinType.LEFT);
+        Fetch<CustomerAddress, Address> billingAddress = billingAddressFetch.fetch("address", JoinType.LEFT);
+        billingAddress.fetch("country", JoinType.LEFT);
+        billingAddress.fetch("state", JoinType.LEFT);
+        billingAddress.fetch("city", JoinType.LEFT);
+
+        // Fetch da FK customerAddressDelivery e seus relacionamentos (Address -> country, state, city)
+        Fetch<CustomerVehicleBooking, CustomerAddress> deliveryAddressFetch = root.fetch("customerAddressDelivery", JoinType.LEFT);
+        Fetch<CustomerAddress, Address> deliveryAddress = deliveryAddressFetch.fetch("address", JoinType.LEFT);
+        deliveryAddress.fetch("country", JoinType.LEFT);
+        deliveryAddress.fetch("state", JoinType.LEFT);
+        deliveryAddress.fetch("city", JoinType.LEFT);
+
+        // Fetch da FK customerAddressPickUp e seus relacionamentos (Address -> country, state, city)
+        Fetch<CustomerVehicleBooking, CustomerAddress> pickUpAddressFetch = root.fetch("customerAddressPickUp", JoinType.LEFT);
+        Fetch<CustomerAddress, Address> pickUpAddress = pickUpAddressFetch.fetch("address", JoinType.LEFT);
+        pickUpAddress.fetch("country", JoinType.LEFT);
+        pickUpAddress.fetch("state", JoinType.LEFT);
+        pickUpAddress.fetch("city", JoinType.LEFT);
+
         // Defina a condição para o ID
         cq.select(root).where(cb.equal(root.get("customerVehicleBookingId"), customerVehicleBookingId));
+
+        // Execute a consulta e retorne o resultado
+        return Optional.ofNullable(entityManager.createQuery(cq).getSingleResult());
+    }
+
+    @Override
+    public Optional<CustomerVehicleBooking> findByPaymentId(Long mercadoPagoPaymentId) {
+
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<CustomerVehicleBooking> cq = cb.createQuery(CustomerVehicleBooking.class);
+        Root<CustomerVehicleBooking> root = cq.from(CustomerVehicleBooking.class);
+
+        // Realize o fetch de customerVehicle uma única vez e reutilize-o
+        Fetch<CustomerVehicleBooking, CustomerVehicle> customerVehicleFetch = root.fetch("customerVehicle", JoinType.LEFT);
+
+        customerVehicleFetch.fetch("customer", JoinType.LEFT);
+        customerVehicleFetch.fetch("vehicle", JoinType.LEFT)
+                .fetch("vehicleBrand", JoinType.LEFT);
+
+        customerVehicleFetch.fetch("vehicleModel", JoinType.LEFT)
+                .fetch("vehicleCategory", JoinType.LEFT);
+
+        customerVehicleFetch.fetch("vehicleColor", JoinType.LEFT);
+        customerVehicleFetch.fetch("vehicleFuelType", JoinType.LEFT);
+        customerVehicleFetch.fetch("vehicleTransmission", JoinType.LEFT);
+
+        // Fetch de endereços e detalhes associados
+        Fetch<CustomerVehicle, CustomerVehicleAddress> addressesFetch = customerVehicleFetch.fetch("addresses", JoinType.LEFT);
+        Fetch<CustomerVehicleAddress, Address> addressFetch = addressesFetch.fetch("address", JoinType.LEFT);
+
+        addressFetch.fetch("country", JoinType.LEFT);
+        addressFetch.fetch("state", JoinType.LEFT);
+        addressFetch.fetch("city", JoinType.LEFT);
+
+        // Fetch do customer diretamente no root
+        root.fetch("customer", JoinType.LEFT);
+
+        // Fetch da FK customerAddressBilling e seus relacionamentos (Address -> country, state, city)
+        Fetch<CustomerVehicleBooking, CustomerAddress> billingAddressFetch = root.fetch("customerAddressBilling", JoinType.LEFT);
+        Fetch<CustomerAddress, Address> billingAddress = billingAddressFetch.fetch("address", JoinType.LEFT);
+        billingAddress.fetch("country", JoinType.LEFT);
+        billingAddress.fetch("state", JoinType.LEFT);
+        billingAddress.fetch("city", JoinType.LEFT);
+
+        // Fetch da FK customerAddressDelivery e seus relacionamentos (Address -> country, state, city)
+        Fetch<CustomerVehicleBooking, CustomerAddress> deliveryAddressFetch = root.fetch("customerAddressDelivery", JoinType.LEFT);
+        Fetch<CustomerAddress, Address> deliveryAddress = deliveryAddressFetch.fetch("address", JoinType.LEFT);
+        deliveryAddress.fetch("country", JoinType.LEFT);
+        deliveryAddress.fetch("state", JoinType.LEFT);
+        deliveryAddress.fetch("city", JoinType.LEFT);
+
+        // Fetch da FK customerAddressPickUp e seus relacionamentos (Address -> country, state, city)
+        Fetch<CustomerVehicleBooking, CustomerAddress> pickUpAddressFetch = root.fetch("customerAddressPickUp", JoinType.LEFT);
+        Fetch<CustomerAddress, Address> pickUpAddress = pickUpAddressFetch.fetch("address", JoinType.LEFT);
+        pickUpAddress.fetch("country", JoinType.LEFT);
+        pickUpAddress.fetch("state", JoinType.LEFT);
+        pickUpAddress.fetch("city", JoinType.LEFT);
+
+        // Defina a condição para o ID
+        cq.select(root).where(cb.equal(root.get("mercadoPagoPaymentId"), mercadoPagoPaymentId));
 
         // Execute a consulta e retorne o resultado
         return Optional.ofNullable(entityManager.createQuery(cq).getSingleResult());

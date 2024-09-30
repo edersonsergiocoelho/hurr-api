@@ -1,5 +1,6 @@
 package br.com.escconsulting.dto.customer.address;
 
+import br.com.escconsulting.dto.address.AddressDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,7 +15,7 @@ public class CustomerAddressDTO {
 
     private UUID customerAddressId;
     private UUID customerId;
-    private UUID addressId;
+    private AddressDTO address;
     private Instant createdDate;
     private Instant modifiedDate;
     private Boolean enabled;

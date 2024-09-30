@@ -16,6 +16,8 @@ public interface CustomerVehicleBookingCustomRepository extends JpaRepository<Cu
 
     Optional<CustomerVehicleBooking> findById(UUID customerId);
 
+    Optional<CustomerVehicleBooking> findByPaymentId(Long mercadoPagoPaymentId);
+
     List<CustomerVehicleBooking> findByCustomerVehicleWithdrawableBalance(UUID customerId);
 
     Page<CustomerVehicleBookingDTO> searchPage(CustomerVehicleBookingSearchDTO customerVehicleBookingSearchDTO, Pageable pageable);
