@@ -40,5 +40,7 @@ public interface CustomerVehicleBookingService {
 
     Optional<CustomerVehicleBooking> update(UUID customerVehicleBookingId, CustomerVehicleBooking customerVehicleBooking);
 
+    Optional<CustomerVehicleBooking> cancelBooking(UUID customerVehicleBookingId, CustomerVehicleBooking customerVehicleBooking);
+
     void delete(UUID customerVehicleBookingId);
 }

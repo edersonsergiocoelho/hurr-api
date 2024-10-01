@@ -168,14 +168,14 @@ public class CustomerVehicleBooking extends AbstractEntity implements Serializab
     /**
      * O identificador do pagamento do gateway de pagamento.
      */
-    @Column(name = "mp_payment_id", nullable = false)
+    @Column(name = "mercado_pago_payment_id", nullable = false)
     private Long mercadoPagoPaymentId;
 
     /**
      * Dados de pagamento do gateway de pagamento em formato JSONB.
      */
     @ColumnTransformer(write = "?::jsonb")
-    @Column(name = "mp_payment_data", columnDefinition = "jsonb")
+    @Column(name = "mercado_pago_payment_data", columnDefinition = "jsonb")
     @Convert(converter = JsonNodeConverter.class)
     private MercadoPagoPayment mercadoPagoPaymentData;
 }

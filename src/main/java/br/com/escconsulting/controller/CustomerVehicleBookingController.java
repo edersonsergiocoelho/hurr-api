@@ -144,6 +144,15 @@ public class CustomerVehicleBookingController {
                 .orElseThrow(() -> new IllegalStateException("Failed to update customer vehicle booking."));
     }
 
+    @PutMapping("/cancel-booking/{customerVehicleBookingId}")
+    public ResponseEntity<?> cancelBooking(@PathVariable("customerVehicleBookingId") UUID customerVehicleBookingId,
+                                           @RequestBody CustomerVehicleBooking customerVehicleBooking) {
+        return customerVehicleBookingService.cancelBooking(customerVehicleBookingId, customerVehicleBooking)
+                .map(CustomerVehicleBookingMapper.INSTANCE::toDTO)
+                .map(updatedCustomerVehicleBooking -> ResponseEntity.ok(updatedCustomerVehicleBooking))
+                .orElseThrow(() -> new IllegalStateException("Failed to update customer vehicle booking."));
+    }
+
     @DeleteMapping("/{customerVehicleBookingId}")
     public ResponseEntity<?> delete(@PathVariable("customerVehicleBookingId") UUID customerVehicleBookingId) {
         customerVehicleBookingService.delete(customerVehicleBookingId);

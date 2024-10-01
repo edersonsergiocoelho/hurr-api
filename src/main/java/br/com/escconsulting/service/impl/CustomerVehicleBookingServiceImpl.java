@@ -9,9 +9,14 @@ import br.com.escconsulting.repository.CustomerVehicleBookingRepository;
 import br.com.escconsulting.repository.custom.CustomerVehicleBookingCustomRepository;
 import br.com.escconsulting.service.CustomerService;
 import br.com.escconsulting.service.CustomerVehicleBookingService;
+import br.com.escconsulting.service.mercado.pago.MPPaymentService;
+import com.mercadopago.exceptions.MPApiException;
+import com.mercadopago.exceptions.MPException;
+import com.mercadopago.resources.payment.PaymentRefund;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -19,6 +24,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -33,6 +39,8 @@ public class CustomerVehicleBookingServiceImpl implements CustomerVehicleBooking
     private final CustomerVehicleBookingRepository customerVehicleBookingRepository;
 
     private final CustomerVehicleBookingCustomRepository customerVehicleBookingCustomRepository;
+
+    private final MPPaymentService mpPaymentService;
 
     @Transactional
     @Override
@@ -62,6 +70,7 @@ public class CustomerVehicleBookingServiceImpl implements CustomerVehicleBooking
         return customerVehicleBookingRepository.findAll();
     }
 
+    @Transactional
     @Override
     public List<CustomerVehicleBooking> findByCustomerVehicleWithdrawableBalance(LocalUser localUser) {
         Optional<Customer> optionalCustomer = customerService.findByEmail(localUser.getUsername());
@@ -167,6 +176,66 @@ public class CustomerVehicleBookingServiceImpl implements CustomerVehicleBooking
                     existingCustomerVehicleBooking.setModifiedDate(Instant.now());
 
                     return customerVehicleBookingRepository.save(existingCustomerVehicleBooking);
+                });
+    }
+
+    @Transactional
+    @Override
+    public Optional<CustomerVehicleBooking> cancelBooking(UUID customerVehicleBookingId, CustomerVehicleBooking customerVehicleBooking) {
+        return findById(customerVehicleBookingId)
+                .map(existingCustomerVehicleBooking -> {
+                    // Verifica se a reserva já foi cancelada
+                    if (existingCustomerVehicleBooking.getBookingCancellationDate() != null) {
+                        throw new IllegalStateException("customer.vehicle.booking.already.cancelled");
+                    }
+
+                    // Atualiza os dados de cancelamento
+                    existingCustomerVehicleBooking.setBookingCancellationDate(LocalDateTime.now());
+                    existingCustomerVehicleBooking.setModifiedDate(Instant.now());
+
+                    // Salva a reserva atualizada
+                    return customerVehicleBookingRepository.save(existingCustomerVehicleBooking);
+                })
+                .map(updatedCustomerVehicleBooking -> {
+                    try {
+
+                        // Junta a data de início da reserva com a hora de início
+                        LocalDateTime reservationStartDateTime = LocalDateTime.of(
+                                updatedCustomerVehicleBooking.getReservationStartDate(),
+                                LocalTime.parse(updatedCustomerVehicleBooking.getReservationStartTime())
+                        );
+
+                        // Verifica se a data atual ultrapassa a data de início da reserva
+                        if (LocalDateTime.now().isAfter(reservationStartDateTime)) {
+                            // Aplica desconto de 10% no reembolso usando BigDecimal
+                            BigDecimal originalAmount = updatedCustomerVehicleBooking.getTotalBookingValue();
+                            BigDecimal discountRate = new BigDecimal("0.10"); // 10% de desconto
+                            BigDecimal discountAmount = originalAmount.multiply(discountRate); // Calcula o valor do desconto
+                            BigDecimal refundAmount = originalAmount.subtract(discountAmount); // Subtrai o desconto do valor original
+
+                            Optional<PaymentRefund> refund = mpPaymentService.refund(
+                                    updatedCustomerVehicleBooking.getMercadoPagoPaymentId(),
+                                    refundAmount
+                            );
+
+                            if (!refund.isPresent()) {
+                                throw new IllegalStateException("customer.vehicle.booking.refund.failed");
+                            }
+
+                        } else {
+                            // Reembolso integral se a data atual não ultrapassou a data de início da reserva
+                            Optional<PaymentRefund> refund = mpPaymentService.refund(updatedCustomerVehicleBooking.getMercadoPagoPaymentId());
+
+                            if (!refund.isPresent()) {
+                                throw new IllegalStateException("customer.vehicle.booking.refund.failed");
+                            }
+                        }
+
+                    } catch (MPException | MPApiException e) {
+                        throw new RuntimeException("customer.vehicle.booking.refund.error", e);
+                    }
+
+                    return updatedCustomerVehicleBooking; // Retorna a reserva cancelada após o processamento do reembolso
                 });
     }
 
