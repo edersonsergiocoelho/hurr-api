@@ -36,7 +36,9 @@ public interface CustomerVehicleBookingService {
 
     Optional<CustomerVehicleBooking> save(CustomerVehicleBooking customerVehicleBooking);
 
-    Optional<CustomerVehicleBooking> finalizeBooking(UUID customerVehicleBookingId, CustomerVehicleBooking customerVehicleBooking);
+    Optional<CustomerVehicleBooking> checkIn(UUID customerVehicleBookingId, CustomerVehicleBooking customerVehicleBooking);
+
+    Optional<CustomerVehicleBooking> checkOut(UUID customerVehicleBookingId, CustomerVehicleBooking customerVehicleBooking);
 
     Optional<CustomerVehicleBooking> update(UUID customerVehicleBookingId, CustomerVehicleBooking customerVehicleBooking);
 

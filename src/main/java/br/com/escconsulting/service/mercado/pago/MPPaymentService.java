@@ -12,6 +12,10 @@ public interface MPPaymentService {
 
     Optional<Payment> findById(Long paymentId) throws MPException, MPApiException;
 
+    Optional<Payment> capture(Long paymentId) throws MPException, MPApiException;
+
+    Optional<Payment> capture(Long paymentId, BigDecimal amount) throws MPException, MPApiException;
+
     Optional<PaymentRefund> refund(Long paymentId) throws MPException, MPApiException;
 
     Optional<PaymentRefund> refund(Long paymentId, BigDecimal amount) throws MPException, MPApiException;

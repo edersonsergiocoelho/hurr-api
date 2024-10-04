@@ -29,7 +29,7 @@ public class CustomerVehicleReviewController {
         return customerVehicleReviewService.findById(id)
                 .map(CustomerVehicleReviewMapper.INSTANCE::toDTO)
                 .map(ResponseEntity::ok)
-                .orElseGet(ResponseEntity.notFound()::build);
+                .orElseGet(ResponseEntity.noContent()::build);
     }
 
     @GetMapping("/by/customer-vehicle/{customerVehicleId}/customer/{customerId}")
@@ -39,7 +39,7 @@ public class CustomerVehicleReviewController {
         return customerVehicleReviewService.findByCustomerVehicleIdAndCustomerId(customerVehicleId, customerId)
                 .map(CustomerVehicleReviewMapper.INSTANCE::toDTO)
                 .map(ResponseEntity::ok)
-                .orElseGet(ResponseEntity.notFound()::build);
+                .orElseGet(ResponseEntity.noContent()::build);
     }
 
     @GetMapping

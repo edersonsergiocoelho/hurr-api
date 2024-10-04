@@ -3,8 +3,11 @@ package br.com.escconsulting.service.impl;
 import br.com.escconsulting.dto.LocalUser;
 import br.com.escconsulting.dto.customer.vehicle.booking.CustomerVehicleBookingDTO;
 import br.com.escconsulting.dto.customer.vehicle.booking.CustomerVehicleBookingSearchDTO;
+import br.com.escconsulting.dto.mercado.pago.MPPaymentDTO;
 import br.com.escconsulting.entity.Customer;
 import br.com.escconsulting.entity.CustomerVehicleBooking;
+import br.com.escconsulting.mapper.CustomerVehicleBookingMapper;
+import br.com.escconsulting.mapper.MPPaymentMapper;
 import br.com.escconsulting.repository.CustomerVehicleBookingRepository;
 import br.com.escconsulting.repository.custom.CustomerVehicleBookingCustomRepository;
 import br.com.escconsulting.service.CustomerService;
@@ -12,11 +15,11 @@ import br.com.escconsulting.service.CustomerVehicleBookingService;
 import br.com.escconsulting.service.mercado.pago.MPPaymentService;
 import com.mercadopago.exceptions.MPApiException;
 import com.mercadopago.exceptions.MPException;
+import com.mercadopago.resources.payment.Payment;
 import com.mercadopago.resources.payment.PaymentRefund;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -140,24 +143,50 @@ public class CustomerVehicleBookingServiceImpl implements CustomerVehicleBooking
     public Optional<CustomerVehicleBooking> save(CustomerVehicleBooking customerVehicleBooking) {
 
         customerVehicleBooking.setCreatedDate(Instant.now());
-        customerVehicleBooking.setEnabled(Boolean.TRUE);
 
         return Optional.of(customerVehicleBookingRepository.save(customerVehicleBooking));
     }
 
     @Transactional
     @Override
-    public Optional<CustomerVehicleBooking> finalizeBooking(UUID customerVehicleBookingId, CustomerVehicleBooking customerVehicleBooking) {
+    public Optional<CustomerVehicleBooking> checkIn(UUID customerVehicleBookingId, CustomerVehicleBooking customerVehicleBooking) {
         return findById(customerVehicleBookingId)
                 .map(existingCustomerVehicleBooking -> {
 
-                    if (customerVehicleBooking.getBookingStartKM() != null) {
-                        existingCustomerVehicleBooking.setBookingStartKM(customerVehicleBooking.getBookingStartKM());
+                    CustomerVehicleBookingMapper.INSTANCE.update(customerVehicleBooking, existingCustomerVehicleBooking);
+
+                    existingCustomerVehicleBooking.setBookingStartDate(LocalDateTime.now());
+                    existingCustomerVehicleBooking.setModifiedDate(Instant.now());
+
+                    return customerVehicleBookingRepository.save(existingCustomerVehicleBooking);
+                });
+    }
+
+    @Transactional
+    @Override
+    public Optional<CustomerVehicleBooking> checkOut(UUID customerVehicleBookingId, CustomerVehicleBooking customerVehicleBooking) {
+        return findById(customerVehicleBookingId)
+                .map(existingCustomerVehicleBooking -> {
+
+                    if (customerVehicleBooking.getTotalBookingValue().longValue() > existingCustomerVehicleBooking.getTotalBookingValue().longValue()) {
+                        try {
+                            Optional<Payment> capture = mpPaymentService.capture(customerVehicleBooking.getMpPaymentId(), customerVehicleBooking.getTotalBookingValue());
+
+                            if (capture.isPresent()) {
+                                MPPaymentDTO MPPaymentDTOData = new MPPaymentDTO();
+
+                                MPPaymentMapper.INSTANCE.update(capture.get(), MPPaymentDTOData);
+                                customerVehicleBooking.setMPPaymentDTOData(MPPaymentDTOData);
+                            }
+
+                        } catch (MPException e) {
+                            throw new RuntimeException(e);
+                        } catch (MPApiException e) {
+                            throw new RuntimeException(e);
+                        }
                     }
 
-                    if (customerVehicleBooking.getBookingEndKM() != null) {
-                        existingCustomerVehicleBooking.setBookingEndKM(customerVehicleBooking.getBookingEndKM());
-                    }
+                    CustomerVehicleBookingMapper.INSTANCE.update(customerVehicleBooking, existingCustomerVehicleBooking);
 
                     existingCustomerVehicleBooking.setBookingEndDate(LocalDateTime.now());
                     existingCustomerVehicleBooking.setModifiedDate(Instant.now());
@@ -172,7 +201,8 @@ public class CustomerVehicleBookingServiceImpl implements CustomerVehicleBooking
         return findById(customerVehicleBookingId)
                 .map(existingCustomerVehicleBooking -> {
 
-                    existingCustomerVehicleBooking.setEnabled(customerVehicleBooking.getEnabled());
+                    CustomerVehicleBookingMapper.INSTANCE.update(customerVehicleBooking, existingCustomerVehicleBooking);
+
                     existingCustomerVehicleBooking.setModifiedDate(Instant.now());
 
                     return customerVehicleBookingRepository.save(existingCustomerVehicleBooking);
@@ -214,7 +244,7 @@ public class CustomerVehicleBookingServiceImpl implements CustomerVehicleBooking
                             BigDecimal refundAmount = originalAmount.subtract(discountAmount); // Subtrai o desconto do valor original
 
                             Optional<PaymentRefund> refund = mpPaymentService.refund(
-                                    updatedCustomerVehicleBooking.getMercadoPagoPaymentId(),
+                                    updatedCustomerVehicleBooking.getMpPaymentId(),
                                     refundAmount
                             );
 
@@ -224,7 +254,7 @@ public class CustomerVehicleBookingServiceImpl implements CustomerVehicleBooking
 
                         } else {
                             // Reembolso integral se a data atual não ultrapassou a data de início da reserva
-                            Optional<PaymentRefund> refund = mpPaymentService.refund(updatedCustomerVehicleBooking.getMercadoPagoPaymentId());
+                            Optional<PaymentRefund> refund = mpPaymentService.refund(updatedCustomerVehicleBooking.getMpPaymentId());
 
                             if (!refund.isPresent()) {
                                 throw new IllegalStateException("customer.vehicle.booking.refund.failed");

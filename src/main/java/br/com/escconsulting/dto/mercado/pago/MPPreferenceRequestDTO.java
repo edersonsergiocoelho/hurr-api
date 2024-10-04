@@ -17,11 +17,11 @@ import java.util.Map;
 @AllArgsConstructor
 @NoArgsConstructor(force = true)
 @JsonSerialize
-public class MercadoPagoPreferenceRequestDTO {
+public class MPPreferenceRequestDTO {
 
     private final String additionalInfo;
     private final String autoReturn;
-    private final MercadoPagoPreferenceBackUrlsRequestDTO backUrls;
+    private final PreferenceBackUrlsRequest backUrls;
     private final Boolean binaryMode;
     private final OffsetDateTime dateOfExpiration;
     private final PreferenceDifferentialPricingRequest differentialPricing;
@@ -29,13 +29,13 @@ public class MercadoPagoPreferenceRequestDTO {
     private final OffsetDateTime expirationDateTo;
     private final Boolean expires;
     private final String externalReference;
-    private final List<MercadoPagoPreferenceItemRequestDTO> items;
+    private final List<PreferenceItemRequest> items;
     private final String marketplace;
     private final BigDecimal marketplaceFee;
     private final Map<String, Object> metadata;
     private final String notificationUrl;
     private final String operationType;
-    private final MercadoPagoPreferencePayerRequestDTO payer;
+    private final PreferencePayerRequest payer;
     private final PreferencePaymentMethodsRequest paymentMethods;
     private final List<String> processingModes;
     private final String purpose;

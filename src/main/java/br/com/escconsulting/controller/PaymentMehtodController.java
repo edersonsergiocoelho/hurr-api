@@ -32,7 +32,7 @@ public class PaymentMehtodController {
         return paymentMethodService.findById(paymentMethodId)
                 .map(PaymentMethodMapper.INSTANCE::toDTO)
                 .map(ResponseEntity::ok)
-                .orElseGet(ResponseEntity.notFound()::build);
+                .orElseGet(ResponseEntity.noContent()::build);
     }
 
     @GetMapping

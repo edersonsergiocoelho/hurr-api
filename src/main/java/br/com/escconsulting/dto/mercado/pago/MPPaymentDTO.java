@@ -1,4 +1,4 @@
-package br.com.escconsulting.entity.mercado.pago;
+package br.com.escconsulting.dto.mercado.pago;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.google.gson.annotations.SerializedName;
@@ -12,7 +12,7 @@ import java.util.Map;
 
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class MercadoPagoPayment {
+public class MPPaymentDTO {
 
     private Long id;
     private OffsetDateTime dateCreated;

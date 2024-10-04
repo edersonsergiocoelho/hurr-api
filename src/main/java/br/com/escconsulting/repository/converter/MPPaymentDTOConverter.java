@@ -1,6 +1,6 @@
 package br.com.escconsulting.repository.converter;
 
-import br.com.escconsulting.entity.mercado.pago.MercadoPagoPayment;
+import br.com.escconsulting.dto.mercado.pago.MPPaymentDTO;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -8,10 +8,10 @@ import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
 
 @Converter
-public class JsonNodeConverter implements AttributeConverter<MercadoPagoPayment, String> {
+public class MPPaymentDTOConverter implements AttributeConverter<MPPaymentDTO, String> {
 
     @Override
-    public String convertToDatabaseColumn(MercadoPagoPayment jsonNode) {
+    public String convertToDatabaseColumn(MPPaymentDTO jsonNode) {
         try {
             return new ObjectMapper().registerModule(new JavaTimeModule()).writeValueAsString(jsonNode);
         } catch (JsonProcessingException e) {
@@ -22,9 +22,9 @@ public class JsonNodeConverter implements AttributeConverter<MercadoPagoPayment,
     }
 
     @Override
-    public MercadoPagoPayment convertToEntityAttribute(String jsonString) {
+    public MPPaymentDTO convertToEntityAttribute(String jsonString) {
         try {
-            return new ObjectMapper().registerModule(new JavaTimeModule()).readValue(jsonString, MercadoPagoPayment.class);
+            return new ObjectMapper().registerModule(new JavaTimeModule()).readValue(jsonString, MPPaymentDTO.class);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(
                     "Error converting String to JsonNode: " + e.getMessage()

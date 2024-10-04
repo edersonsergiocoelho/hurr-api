@@ -1,7 +1,7 @@
 package br.com.escconsulting.service.mercado.pago.impl;
 
 import br.com.escconsulting.config.MPConfig;
-import br.com.escconsulting.dto.mercado.pago.MercadoPagoPreferenceRequestDTO;
+import br.com.escconsulting.dto.mercado.pago.MPPreferenceRequestDTO;
 import br.com.escconsulting.service.mercado.pago.MPPreferenceService;
 import com.mercadopago.MercadoPagoConfig;
 import com.mercadopago.client.common.AddressRequest;
@@ -30,7 +30,7 @@ public class MPPreferenceServiceImpl implements MPPreferenceService {
     }
 
     @Override
-    public Preference createPreference(MercadoPagoPreferenceRequestDTO preferenceRequestDTO) throws MPException, MPApiException {
+    public Preference createPreference(MPPreferenceRequestDTO preferenceRequestDTO) throws MPException, MPApiException {
 
         MercadoPagoConfig.setAccessToken(mpConfig.getAccessToken());
 

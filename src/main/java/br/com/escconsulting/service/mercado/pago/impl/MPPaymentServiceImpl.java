@@ -34,6 +34,26 @@ public class MPPaymentServiceImpl implements MPPaymentService {
 
     @Transactional
     @Override
+    public Optional<Payment> capture(Long paymentId) throws MPException, MPApiException {
+
+        MercadoPagoConfig.setAccessToken(mpConfig.getAccessToken());
+
+        PaymentClient paymentClient = new PaymentClient();
+        return Optional.ofNullable(paymentClient.capture(paymentId));
+    }
+
+    @Transactional
+    @Override
+    public Optional<Payment> capture(Long paymentId, BigDecimal amount) throws MPException, MPApiException {
+
+        MercadoPagoConfig.setAccessToken(mpConfig.getAccessToken());
+
+        PaymentClient paymentClient = new PaymentClient();
+        return Optional.ofNullable(paymentClient.capture(paymentId, amount));
+    }
+
+    @Transactional
+    @Override
     public Optional<PaymentRefund> refund(Long paymentId) throws MPException, MPApiException {
 
         MercadoPagoConfig.setAccessToken(mpConfig.getAccessToken());

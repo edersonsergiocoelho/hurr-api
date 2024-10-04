@@ -1,9 +1,8 @@
 package br.com.escconsulting.entity;
 
+import br.com.escconsulting.dto.mercado.pago.MPPaymentDTO;
 import br.com.escconsulting.entity.generic.AbstractEntity;
-import br.com.escconsulting.entity.mercado.pago.MercadoPagoPayment;
-import br.com.escconsulting.repository.converter.JsonNodeConverter;
-import com.mercadopago.resources.payment.Payment;
+import br.com.escconsulting.repository.converter.MPPaymentDTOConverter;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.ColumnTransformer;
@@ -168,14 +167,14 @@ public class CustomerVehicleBooking extends AbstractEntity implements Serializab
     /**
      * O identificador do pagamento do gateway de pagamento.
      */
-    @Column(name = "mercado_pago_payment_id", nullable = false)
-    private Long mercadoPagoPaymentId;
+    @Column(name = "mp_payment_id", nullable = false)
+    private Long mpPaymentId;
 
     /**
      * Dados de pagamento do gateway de pagamento em formato JSONB.
      */
     @ColumnTransformer(write = "?::jsonb")
-    @Column(name = "mercado_pago_payment_data", columnDefinition = "jsonb")
-    @Convert(converter = JsonNodeConverter.class)
-    private MercadoPagoPayment mercadoPagoPaymentData;
+    @Column(name = "mp_payment_data", columnDefinition = "jsonb")
+    @Convert(converter = MPPaymentDTOConverter.class)
+    private MPPaymentDTO MPPaymentDTOData;
 }

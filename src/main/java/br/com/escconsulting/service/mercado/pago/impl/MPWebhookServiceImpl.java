@@ -1,7 +1,9 @@
 package br.com.escconsulting.service.mercado.pago.impl;
 
 import br.com.escconsulting.config.MPConfig;
+import br.com.escconsulting.dto.mercado.pago.MPPaymentDTO;
 import br.com.escconsulting.entity.CustomerVehicleBooking;
+import br.com.escconsulting.mapper.MPPaymentMapper;
 import br.com.escconsulting.service.CustomerAddressService;
 import br.com.escconsulting.service.CustomerService;
 import br.com.escconsulting.service.CustomerVehicleBookingService;
@@ -9,8 +11,6 @@ import br.com.escconsulting.service.CustomerVehicleService;
 import br.com.escconsulting.service.mercado.pago.MPWebhookService;
 import br.com.escconsulting.util.RandomCodeGenerator;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.mercadopago.MercadoPagoConfig;
@@ -137,11 +137,12 @@ public class MPWebhookServiceImpl implements MPWebhookService {
             customerVehicleBooking.setReservationEndTime(reservationEndTime);
             customerVehicleBooking.setWithdrawableBookingValue(totalBookingValue.subtract(new BigDecimal(15)));
             customerVehicleBooking.setTotalBookingValue(totalBookingValue);
-            customerVehicleBooking.setMercadoPagoPaymentId(payment.getId());
+            customerVehicleBooking.setMpPaymentId(payment.getId());
 
-            ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
-            JsonNode jsonNode = objectMapper.valueToTree(payment);
-            //customerVehicleBooking.setMercadoPagoPaymentData(jsonNode);
+            MPPaymentDTO MPPaymentDTOData = new MPPaymentDTO();
+
+            MPPaymentMapper.INSTANCE.update(payment, MPPaymentDTOData);
+            customerVehicleBooking.setMPPaymentDTOData(MPPaymentDTOData);
 
             Optional<CustomerVehicleBooking> optionalCustomerVehicleBookingSaved = customerVehicleBookingService.save(customerVehicleBooking);
 
