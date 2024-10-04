@@ -176,7 +176,7 @@ public class CustomerVehicleBookingServiceImpl implements CustomerVehicleBooking
                                 MPPaymentDTO MPPaymentDTOData = new MPPaymentDTO();
 
                                 MPPaymentMapper.INSTANCE.update(capture.get(), MPPaymentDTOData);
-                                customerVehicleBooking.setMPPaymentDTOData(MPPaymentDTOData);
+                                customerVehicleBooking.setMpPayment(MPPaymentDTOData);
                             }
 
                         } catch (MPException e) {

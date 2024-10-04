@@ -174,7 +174,7 @@ public class CustomerVehicleBooking extends AbstractEntity implements Serializab
      * Dados de pagamento do gateway de pagamento em formato JSONB.
      */
     @ColumnTransformer(write = "?::jsonb")
-    @Column(name = "mp_payment_data", columnDefinition = "jsonb")
+    @Column(name = "mp_payment", columnDefinition = "jsonb")
     @Convert(converter = MPPaymentDTOConverter.class)
-    private MPPaymentDTO MPPaymentDTOData;
+    private MPPaymentDTO mpPayment;
 }

@@ -142,7 +142,7 @@ public class MPWebhookServiceImpl implements MPWebhookService {
             MPPaymentDTO MPPaymentDTOData = new MPPaymentDTO();
 
             MPPaymentMapper.INSTANCE.update(payment, MPPaymentDTOData);
-            customerVehicleBooking.setMPPaymentDTOData(MPPaymentDTOData);
+            customerVehicleBooking.setMpPayment(MPPaymentDTOData);
 
             Optional<CustomerVehicleBooking> optionalCustomerVehicleBookingSaved = customerVehicleBookingService.save(customerVehicleBooking);
 

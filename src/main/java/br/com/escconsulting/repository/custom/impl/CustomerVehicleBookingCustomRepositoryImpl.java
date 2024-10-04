@@ -148,7 +148,7 @@ public class CustomerVehicleBookingCustomRepositoryImpl extends SimpleJpaReposit
         pickUpAddress.fetch("city", JoinType.LEFT);
 
         // Defina a condição para o ID
-        cq.select(root).where(cb.equal(root.get("mercadoPagoPaymentId"), mercadoPagoPaymentId));
+        cq.select(root).where(cb.equal(root.get("mpPaymentId"), mercadoPagoPaymentId));
 
         // Execute a consulta e retorne o resultado
         return Optional.ofNullable(entityManager.createQuery(cq).getSingleResult());
