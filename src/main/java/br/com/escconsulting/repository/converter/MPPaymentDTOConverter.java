@@ -24,7 +24,12 @@ public class MPPaymentDTOConverter implements AttributeConverter<MPPaymentDTO, S
     @Override
     public MPPaymentDTO convertToEntityAttribute(String jsonString) {
         try {
-            return new ObjectMapper().registerModule(new JavaTimeModule()).readValue(jsonString, MPPaymentDTO.class);
+            if (jsonString != null && !jsonString.isEmpty()) {
+                return new ObjectMapper()
+                        .registerModule(new JavaTimeModule())
+                        .readValue(jsonString, MPPaymentDTO.class);
+            }
+            return null; // Retorna null caso o jsonString seja null ou vazio
         } catch (JsonProcessingException e) {
             throw new RuntimeException(
                     "Error converting String to JsonNode: " + e.getMessage()
