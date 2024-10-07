@@ -37,7 +37,7 @@ public class CustomerVehicleBookingController {
                 .orElseGet(ResponseEntity.noContent()::build);
     }
 
-    @GetMapping("/mercado-pago/payment/{paymentId}")
+    @GetMapping("/mp/payment/{paymentId}")
     public ResponseEntity<CustomerVehicleBookingDTO> findByPaymentId(@PathVariable("paymentId") Long paymentId) {
         return customerVehicleBookingService.findByPaymentId(paymentId)
                 .map(CustomerVehicleBookingMapper.INSTANCE::toDTO)

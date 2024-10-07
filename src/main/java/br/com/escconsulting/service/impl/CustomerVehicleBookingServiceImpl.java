@@ -6,6 +6,7 @@ import br.com.escconsulting.dto.customer.vehicle.booking.CustomerVehicleBookingS
 import br.com.escconsulting.dto.mercado.pago.MPPaymentDTO;
 import br.com.escconsulting.entity.Customer;
 import br.com.escconsulting.entity.CustomerVehicleBooking;
+import br.com.escconsulting.entity.enumeration.BookingStatus;
 import br.com.escconsulting.mapper.CustomerVehicleBookingMapper;
 import br.com.escconsulting.mapper.MPPaymentMapper;
 import br.com.escconsulting.repository.CustomerVehicleBookingRepository;
@@ -142,57 +143,10 @@ public class CustomerVehicleBookingServiceImpl implements CustomerVehicleBooking
     @Override
     public Optional<CustomerVehicleBooking> save(CustomerVehicleBooking customerVehicleBooking) {
 
+        customerVehicleBooking.setBookingStatus(BookingStatus.RESERVED);
         customerVehicleBooking.setCreatedDate(Instant.now());
 
         return Optional.of(customerVehicleBookingRepository.save(customerVehicleBooking));
-    }
-
-    @Transactional
-    @Override
-    public Optional<CustomerVehicleBooking> checkIn(UUID customerVehicleBookingId, CustomerVehicleBooking customerVehicleBooking) {
-        return findById(customerVehicleBookingId)
-                .map(existingCustomerVehicleBooking -> {
-
-                    CustomerVehicleBookingMapper.INSTANCE.update(customerVehicleBooking, existingCustomerVehicleBooking);
-
-                    existingCustomerVehicleBooking.setBookingStartDate(LocalDateTime.now());
-                    existingCustomerVehicleBooking.setModifiedDate(Instant.now());
-
-                    return customerVehicleBookingRepository.save(existingCustomerVehicleBooking);
-                });
-    }
-
-    @Transactional
-    @Override
-    public Optional<CustomerVehicleBooking> checkOut(UUID customerVehicleBookingId, CustomerVehicleBooking customerVehicleBooking) {
-        return findById(customerVehicleBookingId)
-                .map(existingCustomerVehicleBooking -> {
-
-                    if (customerVehicleBooking.getTotalBookingValue().longValue() > existingCustomerVehicleBooking.getTotalBookingValue().longValue()) {
-                        try {
-                            Optional<Payment> capture = mpPaymentService.capture(customerVehicleBooking.getMpPaymentId(), customerVehicleBooking.getTotalBookingValue());
-
-                            if (capture.isPresent()) {
-                                MPPaymentDTO MPPaymentDTOData = new MPPaymentDTO();
-
-                                MPPaymentMapper.INSTANCE.update(capture.get(), MPPaymentDTOData);
-                                customerVehicleBooking.setMpPayment(MPPaymentDTOData);
-                            }
-
-                        } catch (MPException e) {
-                            throw new RuntimeException(e);
-                        } catch (MPApiException e) {
-                            throw new RuntimeException(e);
-                        }
-                    }
-
-                    CustomerVehicleBookingMapper.INSTANCE.update(customerVehicleBooking, existingCustomerVehicleBooking);
-
-                    existingCustomerVehicleBooking.setBookingEndDate(LocalDateTime.now());
-                    existingCustomerVehicleBooking.setModifiedDate(Instant.now());
-
-                    return customerVehicleBookingRepository.save(existingCustomerVehicleBooking);
-                });
     }
 
     @Transactional
@@ -211,6 +165,61 @@ public class CustomerVehicleBookingServiceImpl implements CustomerVehicleBooking
 
     @Transactional
     @Override
+    public Optional<CustomerVehicleBooking> checkIn(UUID customerVehicleBookingId, CustomerVehicleBooking customerVehicleBooking) {
+        return findById(customerVehicleBookingId)
+                .map(existingCustomerVehicleBooking -> {
+
+                    CustomerVehicleBookingMapper.INSTANCE.update(customerVehicleBooking, existingCustomerVehicleBooking);
+
+                    customerVehicleBooking.setBookingStatus(BookingStatus.IN_PROGRESS);
+                    existingCustomerVehicleBooking.setBookingStartDate(LocalDateTime.now());
+                    existingCustomerVehicleBooking.setModifiedDate(Instant.now());
+
+                    return customerVehicleBookingRepository.save(existingCustomerVehicleBooking);
+                });
+    }
+
+    @Transactional
+    @Override
+    public Optional<CustomerVehicleBooking> checkOut(UUID customerVehicleBookingId, CustomerVehicleBooking customerVehicleBooking) {
+        return findById(customerVehicleBookingId)
+                .map(existingCustomerVehicleBooking -> {
+
+                    CustomerVehicleBookingMapper.INSTANCE.update(customerVehicleBooking, existingCustomerVehicleBooking);
+
+                    if (customerVehicleBooking.getTotalFinalBookingValue() != null &&
+                            customerVehicleBooking.getTotalFinalBookingValue().longValue() > existingCustomerVehicleBooking.getTotalBookingValue().longValue()) {
+
+                        existingCustomerVehicleBooking.setBookingStatus(BookingStatus.PENDING_ADDITIONAL_PAYMENT);
+
+                    } else {
+                        existingCustomerVehicleBooking.setBookingStatus(BookingStatus.COMPLETED);
+                    }
+
+                    existingCustomerVehicleBooking.setBookingEndDate(LocalDateTime.now());
+                    existingCustomerVehicleBooking.setModifiedDate(Instant.now());
+
+                    return customerVehicleBookingRepository.save(existingCustomerVehicleBooking);
+                });
+    }
+
+    @Transactional
+    @Override
+    public Optional<CustomerVehicleBooking> paymentAdditional(UUID customerVehicleBookingId, CustomerVehicleBooking customerVehicleBooking) {
+        return findById(customerVehicleBookingId)
+                .map(existingCustomerVehicleBooking -> {
+
+                    CustomerVehicleBookingMapper.INSTANCE.update(customerVehicleBooking, existingCustomerVehicleBooking);
+
+                    existingCustomerVehicleBooking.setBookingStatus(BookingStatus.COMPLETED);
+                    existingCustomerVehicleBooking.setModifiedDate(Instant.now());
+
+                    return customerVehicleBookingRepository.save(existingCustomerVehicleBooking);
+                });
+    }
+
+    @Transactional
+    @Override
     public Optional<CustomerVehicleBooking> cancelBooking(UUID customerVehicleBookingId, CustomerVehicleBooking customerVehicleBooking) {
         return findById(customerVehicleBookingId)
                 .map(existingCustomerVehicleBooking -> {
@@ -220,6 +229,7 @@ public class CustomerVehicleBookingServiceImpl implements CustomerVehicleBooking
                     }
 
                     // Atualiza os dados de cancelamento
+                    existingCustomerVehicleBooking.setBookingStatus(BookingStatus.CANCELED);
                     existingCustomerVehicleBooking.setBookingCancellationDate(LocalDateTime.now());
                     existingCustomerVehicleBooking.setModifiedDate(Instant.now());
 

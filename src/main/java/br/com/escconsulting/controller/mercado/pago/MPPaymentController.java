@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/mercado-pago/payment")
+@RequestMapping("/mp/payment")
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class MPPaymentController {
 

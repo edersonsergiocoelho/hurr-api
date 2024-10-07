@@ -1,6 +1,7 @@
 package br.com.escconsulting.entity;
 
 import br.com.escconsulting.dto.mercado.pago.MPPaymentDTO;
+import br.com.escconsulting.entity.enumeration.BookingStatus;
 import br.com.escconsulting.entity.generic.AbstractEntity;
 import br.com.escconsulting.repository.converter.MPPaymentDTOConverter;
 import jakarta.persistence.*;
@@ -63,7 +64,7 @@ public class CustomerVehicleBooking extends AbstractEntity implements Serializab
      * O endereço de cobrança do cliente.
      */
     @ManyToOne
-    @JoinColumn(name = "customer_address_billing_id")
+    @JoinColumn(name = "customer_address_billing_id", nullable = false)
     private CustomerAddress customerAddressBilling;
 
     /**
@@ -140,11 +141,17 @@ public class CustomerVehicleBooking extends AbstractEntity implements Serializab
     @Column(name = "booking_start_date")
     private LocalDateTime bookingStartDate;
 
+    @Column(name = "check_in_notes")
+    private String checkInNotes;
+
     /**
      * A data e hora de término da reserva.
      */
     @Column(name = "booking_end_date")
     private LocalDateTime bookingEndDate;
+
+    @Column(name = "check_out_notes")
+    private String checkOutNotes;
 
     /**
      * A data e hora em que a reserva foi cancelada.
@@ -163,6 +170,16 @@ public class CustomerVehicleBooking extends AbstractEntity implements Serializab
      */
     @Column(name = "total_booking_value", nullable = false, precision = 13, scale = 2)
     private BigDecimal totalBookingValue;
+
+    @Column(name = "total_additional_value", precision = 13, scale = 2)
+    private BigDecimal totalAdditionalValue;
+
+    @Column(name = "total_final_booking_value", nullable = false, precision = 13, scale = 2)
+    private BigDecimal totalFinalBookingValue;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "booking_status", length = 50, nullable = false)
+    private BookingStatus bookingStatus;
 
     /**
      * O identificador do pagamento do gateway de pagamento.

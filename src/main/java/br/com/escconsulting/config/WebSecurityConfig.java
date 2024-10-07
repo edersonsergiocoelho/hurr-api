@@ -96,7 +96,7 @@ public class WebSecurityConfig {
 	private RequestMatcher getPublicRequestMatchers() {
 		return new OrRequestMatcher(
 				new AntPathRequestMatcher("/"),
-				new AntPathRequestMatcher("/mercado-pago/webhook"),
+				new AntPathRequestMatcher("/mp/webhook"),
 				new AntPathRequestMatcher("/error"),
 				new AntPathRequestMatcher("/api/all"),
 				new AntPathRequestMatcher("/api/auth/**"),
