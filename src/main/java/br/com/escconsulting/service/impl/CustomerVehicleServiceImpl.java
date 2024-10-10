@@ -80,6 +80,17 @@ public class CustomerVehicleServiceImpl implements CustomerVehicleService {
     }
 
     @Transactional
+    @Override
+    public Page<CustomerVehicleDTO> customerSearchPage(LocalUser localUser, CustomerVehicleSearchDTO customerVehicleSearchDTO, Pageable pageable) {
+        Optional<Customer> optionalCustomer = customerService.findByEmail(localUser.getUsername());
+
+        return optionalCustomer.map(customer -> {
+            customerVehicleSearchDTO.setCustomerId(customer.getCustomerId());
+            return customerVehicleCustomRepository.searchPage(customerVehicleSearchDTO, pageable);
+        }).orElseThrow(() -> new RuntimeException("Customer not found for email: " + localUser.getUsername()));
+    }
+
+    @Transactional
     public Optional<CustomerVehicle> save(LocalUser localUser, CustomerVehicleSaveDTO customerVehicleSaveDTO) {
 
         return Optional.ofNullable(customerService.findByEmail(localUser.getUsername())

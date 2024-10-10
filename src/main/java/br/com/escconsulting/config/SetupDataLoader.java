@@ -47,17 +47,16 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
 			return;
 		}
 
-		// Create initial roles
-		Role adminRole = createRoleIfNotFound("ROLE_ADMIN");
-		Role customerVehicleRole = createRoleIfNotFound("ROLE_CUSTOMER_VEHICLE");
-		Role modRole = createRoleIfNotFound("ROLE_MODERATOR");
-		Role userRole = createRoleIfNotFound("ROLE_USER");
+		// Criar roles iniciais se não existirem
+		Role adminRole = getRoleIfFound("ROLE_ADMIN");
+		Role customerVehicleRole = getRoleIfFound("ROLE_CUSTOMER_VEHICLE");
+		Role modRole = getRoleIfFound("ROLE_MODERATOR");
+		Role userRole = getRoleIfFound("ROLE_USER");
 
-		// Create initial users
+		// Criar usuários iniciais
 		createUserIfNotFound("admin@hurr.com.br", "Admin", "admin@", Set.of(adminRole));
 
 		if (scriptsTestEnabled) {
-
 			createUserIfNotFound("joao.silva@example.com", "João Silva", "1234", Set.of(customerVehicleRole));
 			createUserIfNotFound("maria.oliveira@example.com", "Maria Oliveira", "1234", Set.of(modRole));
 			createUserIfNotFound("carlos.souza@example.com", "Carlos Souza", "1234", Set.of(userRole));
@@ -86,8 +85,8 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
 			user.setCreatedDate(Instant.now());
 			user.setModifiedDate(Instant.now());
 
-			if (! email.equalsIgnoreCase("admin@hurr.com.br") &&
-				! email.equalsIgnoreCase("renata.mendes@example.com")) {
+			if (!email.equalsIgnoreCase("admin@hurr.com.br") &&
+					!email.equalsIgnoreCase("renata.mendes@example.com")) {
 				user.setPhotoValidated(Boolean.TRUE);
 			}
 
@@ -108,13 +107,8 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
 	}
 
 	@Transactional
-	private Role createRoleIfNotFound(final String roleName) {
-		return roleRepository.findByRoleName(roleName).orElseGet(() -> {
-			Role role = new Role();
-			role.setRoleName(roleName);
-			role.setCreatedDate(Instant.now());
-			role.setEnabled(true);
-			return roleRepository.save(role);
-		});
+	private Role getRoleIfFound(final String roleName) {
+		return roleRepository.findByRoleName(roleName)
+				.orElseThrow(() -> new RuntimeException("Role not found: " + roleName));
 	}
 }

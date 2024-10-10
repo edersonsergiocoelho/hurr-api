@@ -47,15 +47,19 @@ public class ScriptExecutor implements ApplicationListener<ContextRefreshedEvent
 
         // Defina a lista de scripts na sequência desejada
         List<String> scripts = new ArrayList<>(Arrays.asList(
-                "V1__insert-vehicle-brand.sql",
-                "V2__insert-vehicle-category.sql",
-                "V3__insert-vehicle-color.sql",
-                "V4__insert-vehicle-fuel-type.sql",
-                "V5__insert-vehicle-transmission.sql",
-                "V6__insert-address-type.sql",
-                "V7__insert-country.sql",
-                "V8__insert-payment-method.sql",
-                "V9__insert-payment-status.sql",
+                "V1__insert-role.sql",
+                "V2__insert-type_menu.sql",
+                "V3__insert-menu.sql",
+                "V4__insert-role-menu.sql",
+                "V5__insert-vehicle-brand.sql",
+                "V6__insert-vehicle-category.sql",
+                "V7__insert-vehicle-color.sql",
+                "V8__insert-vehicle-fuel-type.sql",
+                "V9__insert-vehicle-transmission.sql",
+                "V10__insert-address-type.sql",
+                "V11__insert-country.sql",
+                "V12__insert-payment-method.sql",
+                "V13__insert-payment-status.sql",
 
                 // State's
                 "state/V1__insert-state-country-brasil.sql",

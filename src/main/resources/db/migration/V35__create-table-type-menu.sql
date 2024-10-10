@@ -6,7 +6,8 @@ CREATE TABLE IF NOT EXISTS type_menu
     created_date TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT current_timestamp, -- Data de criação do registro
     modified_date TIMESTAMP WITHOUT TIME ZONE, -- Data de modificação do registro
     enabled boolean NOT NULL DEFAULT true, -- Indicador de ativação do registro
-    CONSTRAINT type_menu_pkey PRIMARY KEY (type_menu_id) -- Chave primária da tabela (identificador único do tipo de menu)
+    CONSTRAINT type_menu_pkey PRIMARY KEY (type_menu_id), -- Chave primária da tabela (identificador único do tipo de menu)
+    CONSTRAINT type_menu_unique UNIQUE (type_menu_name),
 );
 
 COMMENT ON TABLE type_menu IS 'Tabela para armazenar os diferentes tipos de menus';

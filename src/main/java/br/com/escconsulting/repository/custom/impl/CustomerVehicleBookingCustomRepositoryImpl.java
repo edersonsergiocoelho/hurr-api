@@ -161,27 +161,51 @@ public class CustomerVehicleBookingCustomRepositoryImpl extends SimpleJpaReposit
         CriteriaQuery<CustomerVehicleBooking> cq = cb.createQuery(CustomerVehicleBooking.class);
         Root<CustomerVehicleBooking> root = cq.from(CustomerVehicleBooking.class);
 
-        Fetch<CustomerVehicleBooking, CustomerVehicle> customerVehicleFetch = root.fetch("customerVehicle");
-        Fetch<CustomerVehicle, Customer> customerVehicleCustomerFetch = customerVehicleFetch.fetch("customer");
+        // Realize o fetch de customerVehicle uma única vez e reutilize-o
+        Fetch<CustomerVehicleBooking, CustomerVehicle> customerVehicleFetch = root.fetch("customerVehicle", JoinType.LEFT);
 
-        Fetch<CustomerVehicle, Vehicle> customerVehicleVehicleFetch = customerVehicleFetch.fetch("vehicle");
-        Fetch<Vehicle, VehicleBrand> vehicleVehicleBrandFetch = customerVehicleVehicleFetch.fetch("vehicleBrand");
+        customerVehicleFetch.fetch("customer", JoinType.LEFT);
+        customerVehicleFetch.fetch("vehicle", JoinType.LEFT)
+                .fetch("vehicleBrand", JoinType.LEFT);
 
-        Fetch<CustomerVehicle, VehicleModel> customerVehicleVehicleModelFetch = customerVehicleFetch.fetch("vehicleModel");
-        Fetch<VehicleModel, VehicleCategory> vehicleModelVehicleCategoryFetch = customerVehicleVehicleModelFetch.fetch("vehicleCategory");
+        customerVehicleFetch.fetch("vehicleModel", JoinType.LEFT)
+                .fetch("vehicleCategory", JoinType.LEFT);
 
-        Fetch<CustomerVehicle, VehicleColor> customerVehicleVehicleColorFetch = customerVehicleFetch.fetch("vehicleColor");
-        Fetch<CustomerVehicle, VehicleFuelType> customerVehicleVehicleFuelTypeFetch = customerVehicleFetch.fetch("vehicleFuelType");
-        Fetch<CustomerVehicle, VehicleTransmission> customerVehicleVehicleTransmissionFetch = customerVehicleFetch.fetch("vehicleTransmission");
+        customerVehicleFetch.fetch("vehicleColor", JoinType.LEFT);
+        customerVehicleFetch.fetch("vehicleFuelType", JoinType.LEFT);
+        customerVehicleFetch.fetch("vehicleTransmission", JoinType.LEFT);
 
-        Fetch<CustomerVehicle, CustomerVehicleAddress> customerVehicleCustomerVehicleAddressFetch = customerVehicleFetch.fetch("addresses");
-        Fetch<CustomerVehicleAddress, Address> customerVehicleAddressAddressFetch = customerVehicleCustomerVehicleAddressFetch.fetch("address");
+        // Fetch de endereços e detalhes associados
+        Fetch<CustomerVehicle, CustomerVehicleAddress> addressesFetch = customerVehicleFetch.fetch("addresses", JoinType.LEFT);
+        Fetch<CustomerVehicleAddress, Address> addressFetch = addressesFetch.fetch("address", JoinType.LEFT);
 
-        Fetch<Address, Country> addressCountryFetch = customerVehicleAddressAddressFetch.fetch("country");
-        Fetch<Address, State> addressStateFetch = customerVehicleAddressAddressFetch.fetch("state");
-        Fetch<Address, City> addressCityFetch = customerVehicleAddressAddressFetch.fetch("city");
+        addressFetch.fetch("country", JoinType.LEFT);
+        addressFetch.fetch("state", JoinType.LEFT);
+        addressFetch.fetch("city", JoinType.LEFT);
 
-        Fetch<CustomerVehicleBooking, Customer> customerFetch = root.fetch("customer");
+        // Fetch do customer diretamente no root
+        root.fetch("customer", JoinType.LEFT);
+
+        // Fetch da FK customerAddressBilling e seus relacionamentos (Address -> country, state, city)
+        Fetch<CustomerVehicleBooking, CustomerAddress> billingAddressFetch = root.fetch("customerAddressBilling", JoinType.LEFT);
+        Fetch<CustomerAddress, Address> billingAddress = billingAddressFetch.fetch("address", JoinType.LEFT);
+        billingAddress.fetch("country", JoinType.LEFT);
+        billingAddress.fetch("state", JoinType.LEFT);
+        billingAddress.fetch("city", JoinType.LEFT);
+
+        // Fetch da FK customerAddressDelivery e seus relacionamentos (Address -> country, state, city)
+        Fetch<CustomerVehicleBooking, CustomerAddress> deliveryAddressFetch = root.fetch("customerAddressDelivery", JoinType.LEFT);
+        Fetch<CustomerAddress, Address> deliveryAddress = deliveryAddressFetch.fetch("address", JoinType.LEFT);
+        deliveryAddress.fetch("country", JoinType.LEFT);
+        deliveryAddress.fetch("state", JoinType.LEFT);
+        deliveryAddress.fetch("city", JoinType.LEFT);
+
+        // Fetch da FK customerAddressPickUp e seus relacionamentos (Address -> country, state, city)
+        Fetch<CustomerVehicleBooking, CustomerAddress> pickUpAddressFetch = root.fetch("customerAddressPickUp", JoinType.LEFT);
+        Fetch<CustomerAddress, Address> pickUpAddress = pickUpAddressFetch.fetch("address", JoinType.LEFT);
+        pickUpAddress.fetch("country", JoinType.LEFT);
+        pickUpAddress.fetch("state", JoinType.LEFT);
+        pickUpAddress.fetch("city", JoinType.LEFT);
 
         cq.select(root);
 

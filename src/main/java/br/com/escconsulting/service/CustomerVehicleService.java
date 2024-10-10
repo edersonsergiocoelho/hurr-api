@@ -22,6 +22,8 @@ public interface CustomerVehicleService {
 
     Page<CustomerVehicleDTO> searchPage(CustomerVehicleSearchDTO customerVehicleSearchDTO, Pageable pageable);
 
+    Page<CustomerVehicleDTO> customerSearchPage(LocalUser localUser, CustomerVehicleSearchDTO customerVehicleSearchDTO, Pageable pageable);
+
     Optional<CustomerVehicle> save(LocalUser localUser, CustomerVehicleSaveDTO customerVehicleSaveDTO);
 
     Optional<CustomerVehicle> update(UUID customerVehicleId, CustomerVehicle customerVehicle);

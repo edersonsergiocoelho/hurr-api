@@ -46,15 +46,30 @@ public class CustomerVehicleController {
     }
 
     @PostMapping("/search/page")
-    public ResponseEntity<?> search(@RequestBody CustomerVehicleSearchDTO customerVehicleSearchDTO,
-                                    @RequestParam(value = "page", defaultValue = "0") int page,
-                                    @RequestParam(value = "size", defaultValue = "10") int size,
-                                    @RequestParam(value = "sortDir", defaultValue = "DESC") String sortDir,
-                                    @RequestParam(value = "sortBy", defaultValue = "createdDate") String sortBy) {
+    public ResponseEntity<?> searchPage(@RequestBody CustomerVehicleSearchDTO customerVehicleSearchDTO,
+                                        @RequestParam(value = "page", defaultValue = "0") int page,
+                                        @RequestParam(value = "size", defaultValue = "10") int size,
+                                        @RequestParam(value = "sortDir", defaultValue = "DESC") String sortDir,
+                                        @RequestParam(value = "sortBy", defaultValue = "createdDate") String sortBy) {
 
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(sortDir), sortBy));
 
         Page<CustomerVehicleDTO> customerVehicles = customerVehicleService.searchPage(customerVehicleSearchDTO, pageable);
+
+        return ResponseEntity.ok(customerVehicles);
+    }
+
+    @PostMapping("/customer/search/page")
+    public ResponseEntity<?> customerSearchPage(@CurrentUser LocalUser localUser,
+                                                @RequestBody CustomerVehicleSearchDTO customerVehicleSearchDTO,
+                                                @RequestParam(value = "page", defaultValue = "0") int page,
+                                                @RequestParam(value = "size", defaultValue = "10") int size,
+                                                @RequestParam(value = "sortDir", defaultValue = "DESC") String sortDir,
+                                                @RequestParam(value = "sortBy", defaultValue = "createdDate") String sortBy) {
+
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(sortDir), sortBy));
+
+        Page<CustomerVehicleDTO> customerVehicles = customerVehicleService.customerSearchPage(localUser, customerVehicleSearchDTO, pageable);
 
         return ResponseEntity.ok(customerVehicles);
     }

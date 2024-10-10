@@ -10,6 +10,7 @@ CREATE TABLE IF NOT EXISTS menu (
     modified_date TIMESTAMP WITHOUT TIME ZONE, -- Data de modificação do registro
     enabled boolean NOT NULL DEFAULT true, -- Indicador de ativação do registro
     CONSTRAINT menu_pkey PRIMARY KEY (menu_id), -- Chave primária da tabela (identificador único do menu)
+    CONSTRAINT menu_unique UNIQUE (name),
     CONSTRAINT menu_to_parent_menu_fk FOREIGN KEY (menu_parent_id) -- Restrição de integridade referencial para a tabela menu (auto-referência)
         REFERENCES menu (menu_id) MATCH SIMPLE
         ON UPDATE NO ACTION

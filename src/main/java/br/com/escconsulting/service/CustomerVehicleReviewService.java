@@ -10,7 +10,7 @@ public interface CustomerVehicleReviewService {
 
     Optional<CustomerVehicleReview> findById(UUID customerVehicleReviewId);
 
-    Optional<CustomerVehicleReview> findByCustomerVehicleIdAndCustomerId(UUID customerVehicleId, UUID customerId);
+    Optional<CustomerVehicleReview> findByCustomerVehicleBookingIdAndCustomerId(UUID customerVehicleBookingId, UUID customerId);
 
     List<CustomerVehicleReview> findAll();
 
