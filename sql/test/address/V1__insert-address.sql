@@ -10,7 +10,7 @@ VALUES (
     (SELECT city_id FROM city WHERE city_name = 'Itapecerica da Serra'),
     (SELECT state_id FROM state WHERE state_name = 'São Paulo'),
     '06855-810', 'Av. das Flôres', current_timestamp, NULL, true)
-ON CONFLICT (street_address, "number", city_id, state_id) 
+ON CONFLICT (country_id, city_id, state_id, street_address, "number", zip_code) 
 DO NOTHING;
 
 -- Inserção do endereço 'Avenida Paulista'
@@ -22,7 +22,7 @@ VALUES (
     (SELECT city_id FROM city WHERE city_name = 'São Paulo'),
     (SELECT state_id FROM state WHERE state_name = 'São Paulo'),
     '01310-000', 'Avenida Paulista', current_timestamp, NULL, true)
-ON CONFLICT (street_address, "number", city_id, state_id) 
+ON CONFLICT (country_id, city_id, state_id, street_address, "number", zip_code) 
 DO NOTHING;
 
 -- Inserção do endereço 'Rua da Lapa'
@@ -34,7 +34,7 @@ VALUES (
     (SELECT city_id FROM city WHERE city_name = 'São Paulo'),
     (SELECT state_id FROM state WHERE state_name = 'São Paulo'),
     '05001-000', 'Rua da Lapa', current_timestamp, NULL, true)
-ON CONFLICT (street_address, "number", city_id, state_id) 
+ON CONFLICT (country_id, city_id, state_id, street_address, "number", zip_code) 
 DO NOTHING;
 
 -- Inserção do endereço 'Av. NIterói'
@@ -46,7 +46,7 @@ VALUES (
     (SELECT city_id FROM city WHERE city_name = 'Itapecerica da Serra'),
     (SELECT state_id FROM state WHERE state_name = 'São Paulo'),
     '06850-200', 'Av. NIterói', current_timestamp, NULL, true)
-ON CONFLICT (street_address, "number", city_id, state_id) 
+ON CONFLICT (country_id, city_id, state_id, street_address, "number", zip_code) 
 DO NOTHING;
 
 -- Inserção do endereço 'Avenida Brigadeiro Faria Lima'
@@ -58,7 +58,7 @@ VALUES (
     (SELECT city_id FROM city WHERE city_name = 'São Paulo'),
     (SELECT state_id FROM state WHERE state_name = 'São Paulo'),
     '01451-000', 'Avenida Brigadeiro Faria Lima', current_timestamp, NULL, true)
-ON CONFLICT (street_address, "number", city_id, state_id) 
+ON CONFLICT (country_id, city_id, state_id, street_address, "number", zip_code) 
 DO NOTHING;
 
 -- Inserção do endereço 'Rua das Palmeiras'
@@ -70,7 +70,7 @@ VALUES (
     (SELECT city_id FROM city WHERE city_name = 'Itapecerica da Serra'),
     (SELECT state_id FROM state WHERE state_name = 'São Paulo'),
     '06852-000', 'Rua das Palmeiras', current_timestamp, NULL, true)
-ON CONFLICT (street_address, "number", city_id, state_id) 
+ON CONFLICT (country_id, city_id, state_id, street_address, "number", zip_code) 
 DO NOTHING;
 
 -- Inserção do endereço 'Rua Augusta'
@@ -82,7 +82,7 @@ VALUES (
     (SELECT city_id FROM city WHERE city_name = 'São Paulo'),
     (SELECT state_id FROM state WHERE state_name = 'São Paulo'),
     '01305-000', 'Rua Augusta', current_timestamp, NULL, true)
-ON CONFLICT (street_address, "number", city_id, state_id) 
+ON CONFLICT (country_id, city_id, state_id, street_address, "number", zip_code) 
 DO NOTHING;
 
 -- Inserção do endereço 'Rua Estados Unidos'
@@ -94,7 +94,7 @@ VALUES (
     (SELECT city_id FROM city WHERE city_name = 'Itapecerica da Serra'),
     (SELECT state_id FROM state WHERE state_name = 'São Paulo'),
     '06850-200', 'Rua Estados Unidos', current_timestamp, NULL, true)
-ON CONFLICT (street_address, "number", city_id, state_id) 
+ON CONFLICT (country_id, city_id, state_id, street_address, "number", zip_code) 
 DO NOTHING;
 
 -- Inserção do endereço 'Avenida dos Estados'
@@ -106,7 +106,7 @@ VALUES (
     (SELECT city_id FROM city WHERE city_name = 'São Paulo'),
     (SELECT state_id FROM state WHERE state_name = 'São Paulo'),
     '03100-000', 'Avenida dos Estados', current_timestamp, NULL, true)
-ON CONFLICT (street_address, "number", city_id, state_id) 
+ON CONFLICT (country_id, city_id, state_id, street_address, "number", zip_code) 
 DO NOTHING;
 
 -- Inserção do endereço 'Rua Catende'
@@ -118,7 +118,7 @@ VALUES (
     (SELECT city_id FROM city WHERE city_name = 'Itapecerica da Serra'),
     (SELECT state_id FROM state WHERE state_name = 'São Paulo'),
     '06851-240', 'Rua Catende', current_timestamp, NULL, true)
-ON CONFLICT (street_address, "number", city_id, state_id) 
+ON CONFLICT (country_id, city_id, state_id, street_address, "number", zip_code) 
 DO NOTHING;
 
 -- Inserção do endereço 'Rua das Margaridas'
@@ -130,7 +130,7 @@ VALUES (
     (SELECT city_id FROM city WHERE city_name = 'São Paulo'),
     (SELECT state_id FROM state WHERE state_name = 'São Paulo'),
     '01315-000', 'Rua das Margaridas', current_timestamp, NULL, true)
-ON CONFLICT (street_address, "number", city_id, state_id) 
+ON CONFLICT (country_id, city_id, state_id, street_address, "number", zip_code) 
 DO NOTHING;
 
 -- Inserção do endereço 'Avenida Brigadeiro Faria Lima' (segunda ocorrência)
@@ -142,5 +142,5 @@ VALUES (
     (SELECT city_id FROM city WHERE city_name = 'São Paulo'),
     (SELECT state_id FROM state WHERE state_name = 'São Paulo'),
     '01452-000', 'Avenida Brigadeiro Faria Lima', current_timestamp, NULL, true)
-ON CONFLICT (street_address, "number", city_id, state_id) 
+ON CONFLICT (country_id, city_id, state_id, street_address, "number", zip_code) 
 DO NOTHING;

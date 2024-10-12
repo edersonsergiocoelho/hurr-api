@@ -1,6 +1,5 @@
 package br.com.escconsulting.service;
 
-import br.com.escconsulting.dto.LocalUser;
 import br.com.escconsulting.dto.payment.method.PaymentMethodDTO;
 import br.com.escconsulting.dto.payment.method.PaymentMethodSearchDTO;
 import br.com.escconsulting.entity.PaymentMethod;
@@ -17,7 +16,7 @@ public interface PaymentMethodService {
 
     List<PaymentMethod> findAll();
 
-    Page<PaymentMethodDTO> searchPage(LocalUser localUser, PaymentMethodSearchDTO paymentMethodSearchDTO, Pageable pageable);
+    Page<PaymentMethodDTO> searchPage(PaymentMethodSearchDTO paymentMethodSearchDTO, Pageable pageable);
 
     Optional<PaymentMethod> save(PaymentMethod paymentMethod);
 

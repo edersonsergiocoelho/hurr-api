@@ -1,11 +1,10 @@
 package br.com.escconsulting.controller;
 
-import br.com.escconsulting.config.CurrentUser;
-import br.com.escconsulting.dto.LocalUser;
 import br.com.escconsulting.dto.payment.method.PaymentMethodDTO;
 import br.com.escconsulting.dto.payment.method.PaymentMethodSearchDTO;
 import br.com.escconsulting.entity.PaymentMethod;
 import br.com.escconsulting.mapper.PaymentMethodMapper;
+import br.com.escconsulting.mapper.PaymentStatusMapper;
 import br.com.escconsulting.service.PaymentMethodService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/payment-method")
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
-public class PaymentMehtodController {
+public class PaymentMethodController {
 
     private final PaymentMethodService paymentMethodService;
 
@@ -46,7 +46,6 @@ public class PaymentMehtodController {
 
     @PostMapping("/search/page")
     public ResponseEntity<?> search(
-            @CurrentUser LocalUser localUser,
             @RequestBody PaymentMethodSearchDTO paymentMethodSearchDTO,
             @RequestParam(value = "page", defaultValue = "0") int page,
             @RequestParam(value = "size", defaultValue = "10") int size,
@@ -55,7 +54,7 @@ public class PaymentMehtodController {
 
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(sortDir), sortBy));
 
-        Page<PaymentMethodDTO> paymentMethods = paymentMethodService.searchPage(localUser, paymentMethodSearchDTO, pageable);
+        Page<PaymentMethodDTO> paymentMethods = paymentMethodService.searchPage(paymentMethodSearchDTO, pageable);
 
         return ResponseEntity.ok(paymentMethods);
     }
@@ -64,7 +63,7 @@ public class PaymentMehtodController {
     public ResponseEntity<?> save(@RequestBody PaymentMethod paymentMethod) {
         return paymentMethodService.save(paymentMethod)
                 .map(PaymentMethodMapper.INSTANCE::toDTO)
-                .map(ResponseEntity::ok)
+                .map(dto -> ResponseEntity.status(HttpStatus.CREATED).body(dto))
                 .orElseThrow(() -> new IllegalStateException("Failed to save payment method."));
     }
 

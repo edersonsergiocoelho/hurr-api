@@ -1,13 +1,13 @@
 package br.com.escconsulting.service.impl;
 
-import br.com.escconsulting.dto.LocalUser;
 import br.com.escconsulting.dto.payment.method.PaymentMethodDTO;
 import br.com.escconsulting.dto.payment.method.PaymentMethodSearchDTO;
-import br.com.escconsulting.entity.Customer;
+import br.com.escconsulting.entity.File;
 import br.com.escconsulting.entity.PaymentMethod;
+import br.com.escconsulting.mapper.PaymentMethodMapper;
 import br.com.escconsulting.repository.PaymentMethodRepository;
 import br.com.escconsulting.repository.custom.PaymentMethodCustomRepository;
-import br.com.escconsulting.service.CustomerService;
+import br.com.escconsulting.service.FileService;
 import br.com.escconsulting.service.PaymentMethodService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +25,7 @@ import java.util.UUID;
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class PaymentMethodServiceImpl implements PaymentMethodService {
 
-    private final CustomerService customerService;
+    private final FileService fileService;
 
     private final PaymentMethodRepository paymentMethodRepository;
 
@@ -47,21 +47,20 @@ public class PaymentMethodServiceImpl implements PaymentMethodService {
 
     @Transactional
     @Override
-    public Page<PaymentMethodDTO> searchPage(LocalUser localUser, PaymentMethodSearchDTO paymentMethodSearchDTO, Pageable pageable) {
-        Optional<Customer> optionalCustomer = customerService.findByEmail(localUser.getUsername());
-
-        return optionalCustomer.map(customer -> {
-            paymentMethodSearchDTO.setCustomerId(customer.getCustomerId());
-            return paymentMethodCustomRepository.searchPage(paymentMethodSearchDTO, pageable);
-        }).orElseThrow(() -> new RuntimeException("Customer not found for email: " + localUser.getUsername()));
+    public Page<PaymentMethodDTO> searchPage(PaymentMethodSearchDTO paymentMethodSearchDTO, Pageable pageable) {
+        return paymentMethodCustomRepository.searchPage(paymentMethodSearchDTO, pageable);
     }
 
     @Transactional
     @Override
     public Optional<PaymentMethod> save(PaymentMethod paymentMethod) {
 
-        paymentMethod.setCreatedDate(Instant.now());
-        paymentMethod.setEnabled(Boolean.TRUE);
+        if (paymentMethod.getFile() != null) {
+
+            Optional<File> optionalFile = fileService.save(paymentMethod.getFile());
+
+            optionalFile.ifPresent(paymentMethod::setFile);
+        }
 
         return Optional.of(paymentMethodRepository.save(paymentMethod));
     }
@@ -72,7 +71,23 @@ public class PaymentMethodServiceImpl implements PaymentMethodService {
         return findById(paymentMethodId)
                 .map(existingPaymentMethod -> {
 
-                    existingPaymentMethod.setEnabled(paymentMethod.getEnabled());
+                    if (paymentMethod.getFile() != null) {
+
+                        if (existingPaymentMethod.getFile() != null && existingPaymentMethod.getFile().getFileId() != null) {
+
+                            if (paymentMethod.getFile().getFileId() == null && existingPaymentMethod.getFile().getFileId() != null) {
+
+                                fileService.delete(existingPaymentMethod.getFile().getFileId());
+                            }
+                        }
+
+                        Optional<File> optionalFile = fileService.save(paymentMethod.getFile());
+
+                        optionalFile.ifPresent(existingPaymentMethod::setFile);
+                    }
+
+                    PaymentMethodMapper.INSTANCE.update(paymentMethod, existingPaymentMethod);
+
                     existingPaymentMethod.setModifiedDate(Instant.now());
 
                     return paymentMethodRepository.save(existingPaymentMethod);

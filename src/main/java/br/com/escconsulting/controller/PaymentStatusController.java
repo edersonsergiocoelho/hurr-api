@@ -71,7 +71,7 @@ public class PaymentStatusController {
         return paymentStatusService.save(paymentStatus)
                 .map(PaymentStatusMapper.INSTANCE::toDTO)
                 .map(dto -> ResponseEntity.status(HttpStatus.CREATED).body(dto))
-                .orElseThrow(() -> new IllegalStateException("Failed to save payment method."));
+                .orElseThrow(() -> new IllegalStateException("Failed to save payment status."));
     }
 
     @PutMapping("/{paymentStatusId}")
@@ -80,7 +80,7 @@ public class PaymentStatusController {
         return paymentStatusService.update(paymentStatusId, paymentStatus)
                 .map(PaymentStatusMapper.INSTANCE::toDTO)
                 .map(updatedPaymentStatus -> ResponseEntity.ok(updatedPaymentStatus))
-                .orElseThrow(() -> new IllegalStateException("Failed to update payment method."));
+                .orElseThrow(() -> new IllegalStateException("Failed to update payment status."));
     }
 
     @DeleteMapping("/{paymentStatusId}")
