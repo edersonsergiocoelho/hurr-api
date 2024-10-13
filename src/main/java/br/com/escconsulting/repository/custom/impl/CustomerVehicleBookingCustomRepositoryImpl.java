@@ -430,8 +430,8 @@ public class CustomerVehicleBookingCustomRepositoryImpl extends SimpleJpaReposit
         spec = cb.and(spec, cb.equal(root.get("customerVehicle").get("customer").get("customerId"), customerVehicleBookingSearchDTO.getCustomerId()));
 
         // Subquery to exclude CustomerVehicleBookings with a corresponding CustomerWithdrawalRequest
-        Subquery<CustomerWithdrawalRequest> subquery = cq.subquery(CustomerWithdrawalRequest.class);
-        Root<CustomerWithdrawalRequest> subRoot = subquery.from(CustomerWithdrawalRequest.class);
+        Subquery<CustomerVehicleWithdrawalRequest> subquery = cq.subquery(CustomerVehicleWithdrawalRequest.class);
+        Root<CustomerVehicleWithdrawalRequest> subRoot = subquery.from(CustomerVehicleWithdrawalRequest.class);
 
         // Subquery conditions
         Predicate subqueryCondition = cb.equal(subRoot.get("customerVehicleBooking").get("customerVehicleBookingId"), root.get("customerVehicleBookingId"));
@@ -464,8 +464,8 @@ public class CustomerVehicleBookingCustomRepositoryImpl extends SimpleJpaReposit
         spec = cb.and(spec, cb.equal(root.get("customerVehicle").get("customer").get("customerId"), customerVehicleBookingSearchDTO.getCustomerId()));
 
         // Subquery to exclude CustomerVehicleBookings with a corresponding CustomerWithdrawalRequest
-        Subquery<CustomerWithdrawalRequest> subquery = cq.subquery(CustomerWithdrawalRequest.class);
-        Root<CustomerWithdrawalRequest> subRoot = subquery.from(CustomerWithdrawalRequest.class);
+        Subquery<CustomerVehicleWithdrawalRequest> subquery = cq.subquery(CustomerVehicleWithdrawalRequest.class);
+        Root<CustomerVehicleWithdrawalRequest> subRoot = subquery.from(CustomerVehicleWithdrawalRequest.class);
 
         // Subquery conditions
         Predicate subqueryCondition = cb.equal(subRoot.get("customerVehicleBooking").get("customerVehicleBookingId"), root.get("customerVehicleBookingId"));

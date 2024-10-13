@@ -6,7 +6,6 @@ import br.com.escconsulting.dto.customer.vehicle.booking.CustomerVehicleBookingD
 import br.com.escconsulting.dto.customer.vehicle.booking.CustomerVehicleBookingSearchDTO;
 import br.com.escconsulting.entity.CustomerVehicleBooking;
 import br.com.escconsulting.mapper.CustomerVehicleBookingMapper;
-import br.com.escconsulting.mapper.CustomerWithdrawalRequestMapper;
 import br.com.escconsulting.service.CustomerVehicleBookingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;

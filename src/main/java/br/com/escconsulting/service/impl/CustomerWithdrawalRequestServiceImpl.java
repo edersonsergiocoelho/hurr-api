@@ -1,11 +1,11 @@
 package br.com.escconsulting.service.impl;
 
 import br.com.escconsulting.dto.LocalUser;
-import br.com.escconsulting.dto.customer.withdrawal.request.CustomerWithdrawalRequestDTO;
-import br.com.escconsulting.dto.customer.withdrawal.request.CustomerWithdrawalRequestSearchDTO;
-import br.com.escconsulting.entity.CustomerWithdrawalRequest;
-import br.com.escconsulting.repository.CustomerWithdrawalRequestRepository;
-import br.com.escconsulting.repository.custom.CustomerWithdrawalRequestCustomRepository;
+import br.com.escconsulting.dto.customer.vehicle.withdrawal.request.CustomerVehicleWithdrawalRequestDTO;
+import br.com.escconsulting.dto.customer.vehicle.withdrawal.request.CustomerVehicleWithdrawalRequestSearchDTO;
+import br.com.escconsulting.entity.CustomerVehicleWithdrawalRequest;
+import br.com.escconsulting.repository.CustomerVehicleWithdrawalRequestRepository;
+import br.com.escconsulting.repository.custom.CustomerVehicleWithdrawalRequestCustomRepository;
 import br.com.escconsulting.service.CustomerWithdrawalRequestService;
 import br.com.escconsulting.service.EmailService;
 import br.com.escconsulting.service.PaymentStatusService;
@@ -32,69 +32,69 @@ public class CustomerWithdrawalRequestServiceImpl implements CustomerWithdrawalR
     private final PaymentStatusService paymentStatusService;
 
     // Repository's
-    private final CustomerWithdrawalRequestRepository customerWithdrawalRequestRepository;
+    private final CustomerVehicleWithdrawalRequestRepository customerVehicleWithdrawalRequestRepository;
 
-    private final CustomerWithdrawalRequestCustomRepository customerWithdrawalRequestCustomRepository;
+    private final CustomerVehicleWithdrawalRequestCustomRepository customerVehicleWithdrawalRequestCustomRepository;
 
     @Transactional
     @Override
-    public Optional<CustomerWithdrawalRequest> findById(UUID customerWithdrawalRequestId) {
+    public Optional<CustomerVehicleWithdrawalRequest> findById(UUID customerWithdrawalRequestId) {
 
-        return Optional.ofNullable(customerWithdrawalRequestRepository.findById(customerWithdrawalRequestId)
+        return Optional.ofNullable(customerVehicleWithdrawalRequestRepository.findById(customerWithdrawalRequestId)
                 .orElseThrow(() -> new RuntimeException("CustomerWithdrawalRequest not found with customerWithdrawalRequestId: " + customerWithdrawalRequestId)));
     }
 
     @Transactional
     @Override
-    public List<CustomerWithdrawalRequest> findAll() {
-        return customerWithdrawalRequestRepository.findAll();
+    public List<CustomerVehicleWithdrawalRequest> findAll() {
+        return customerVehicleWithdrawalRequestRepository.findAll();
     }
 
     @Transactional
     @Override
-    public Page<CustomerWithdrawalRequestDTO> searchPage(LocalUser localUser, CustomerWithdrawalRequestSearchDTO customerWithdrawalRequestSearchDTO, Pageable pageable) {
-        return customerWithdrawalRequestCustomRepository.searchPage(customerWithdrawalRequestSearchDTO, pageable);
+    public Page<CustomerVehicleWithdrawalRequestDTO> searchPage(LocalUser localUser, CustomerVehicleWithdrawalRequestSearchDTO customerVehicleWithdrawalRequestSearchDTO, Pageable pageable) {
+        return customerVehicleWithdrawalRequestCustomRepository.searchPage(customerVehicleWithdrawalRequestSearchDTO, pageable);
     }
 
     @Transactional
     @Override
-    public Optional<CustomerWithdrawalRequest> save(CustomerWithdrawalRequest customerWithdrawalRequest) {
+    public Optional<CustomerVehicleWithdrawalRequest> save(CustomerVehicleWithdrawalRequest customerVehicleWithdrawalRequest) {
 
-        customerWithdrawalRequest.setCreatedDate(Instant.now());
-        customerWithdrawalRequest.setEnabled(Boolean.TRUE);
+        customerVehicleWithdrawalRequest.setCreatedDate(Instant.now());
+        customerVehicleWithdrawalRequest.setEnabled(Boolean.TRUE);
 
-        return Optional.of(customerWithdrawalRequestRepository.save(customerWithdrawalRequest));
+        return Optional.of(customerVehicleWithdrawalRequestRepository.save(customerVehicleWithdrawalRequest));
     }
 
     @Transactional
     @Override
-    public List<CustomerWithdrawalRequest> saveAll(List<CustomerWithdrawalRequest> customerWithdrawalRequests) {
+    public List<CustomerVehicleWithdrawalRequest> saveAll(List<CustomerVehicleWithdrawalRequest> customerVehicleWithdrawalRequests) {
 
-        customerWithdrawalRequests.forEach(customerWithdrawalRequest -> {
+        customerVehicleWithdrawalRequests.forEach(customerWithdrawalRequest -> {
 
             customerWithdrawalRequest.setCreatedDate(Instant.now());
             customerWithdrawalRequest.setEnabled(Boolean.TRUE);
         });
 
-        return customerWithdrawalRequestRepository.saveAll(customerWithdrawalRequests);
+        return customerVehicleWithdrawalRequestRepository.saveAll(customerVehicleWithdrawalRequests);
     }
 
     @Transactional
     @Override
-    public Optional<CustomerWithdrawalRequest> update(UUID customerWithdrawalRequestId, CustomerWithdrawalRequest customerWithdrawalRequest) {
+    public Optional<CustomerVehicleWithdrawalRequest> update(UUID customerWithdrawalRequestId, CustomerVehicleWithdrawalRequest customerVehicleWithdrawalRequest) {
         return findById(customerWithdrawalRequestId)
                 .map(existingCustomerWithdrawalRequest -> {
 
-                    existingCustomerWithdrawalRequest.setEnabled(customerWithdrawalRequest.getEnabled());
+                    existingCustomerWithdrawalRequest.setEnabled(customerVehicleWithdrawalRequest.getEnabled());
                     existingCustomerWithdrawalRequest.setModifiedDate(Instant.now());
 
-                    return customerWithdrawalRequestRepository.save(existingCustomerWithdrawalRequest);
+                    return customerVehicleWithdrawalRequestRepository.save(existingCustomerWithdrawalRequest);
                 });
     }
 
     @Transactional
     @Override
-    public Optional<CustomerWithdrawalRequest> approval(UUID customerWithdrawalRequestId) {
+    public Optional<CustomerVehicleWithdrawalRequest> approval(UUID customerWithdrawalRequestId) {
         return findById(customerWithdrawalRequestId)
                 .map(existingCustomerWithdrawalRequest -> {
 
@@ -103,7 +103,7 @@ public class CustomerWithdrawalRequestServiceImpl implements CustomerWithdrawalR
                     existingCustomerWithdrawalRequest.setWithdrawalDate(LocalDateTime.now());
                     existingCustomerWithdrawalRequest.setModifiedDate(Instant.now());
 
-                    return customerWithdrawalRequestRepository.save(existingCustomerWithdrawalRequest);
+                    return customerVehicleWithdrawalRequestRepository.save(existingCustomerWithdrawalRequest);
                 }).map(existingCustomerWithdrawalRequest -> {
                     emailService.sendCustomerWithdrawalRequestApproval(existingCustomerWithdrawalRequest);
                     return existingCustomerWithdrawalRequest;
@@ -113,6 +113,6 @@ public class CustomerWithdrawalRequestServiceImpl implements CustomerWithdrawalR
     @Transactional
     @Override
     public void delete(UUID customerWithdrawalRequestId) {
-        findById(customerWithdrawalRequestId).ifPresent(customerWithdrawalRequestRepository::delete);
+        findById(customerWithdrawalRequestId).ifPresent(customerVehicleWithdrawalRequestRepository::delete);
     }
 }

@@ -1,4 +1,4 @@
-package br.com.escconsulting.dto.customer.bank.account;
+package br.com.escconsulting.dto.customer.vehicle.bank.account;
 
 import br.com.escconsulting.dto.bank.BankDTO;
 import br.com.escconsulting.dto.customer.CustomerDTO;
@@ -11,9 +11,9 @@ import java.util.UUID;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class CustomerBankAccountDTO {
+public class CustomerVehicleBankAccountDTO {
 
-    private UUID customerBankAccountId;
+    private UUID customerVehicleBankAccountId;
     private CustomerDTO customer;
     private BankDTO bank;
     private String accountNumber;

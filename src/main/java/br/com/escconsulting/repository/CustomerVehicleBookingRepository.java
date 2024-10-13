@@ -15,15 +15,7 @@ import java.util.UUID;
 @Repository
 public interface CustomerVehicleBookingRepository extends JpaRepository<CustomerVehicleBooking, UUID> {
 
-    /*
-    @Query(value = "SELECT * FROM customer_vehicle_booking WHERE mp_payment_data->>'id' = :paymentId", nativeQuery = true)
-    Optional<CustomerVehicleBooking> findByPaymentId(@Param("paymentId") Long paymentId);
-    */
-
-    /*
-    @Query(value = "SELECT * FROM customer_vehicle_booking WHERE (mp_payment_data->>'id') = :paymentId", nativeQuery = true)
-    Optional<CustomerVehicleBooking> findByPaymentId(@Param("paymentId") String paymentId);
-    */
-
     boolean existsByBooking(String booking);
+
+    boolean existsByMpPaymentId(Long mpPaymentId);
 }

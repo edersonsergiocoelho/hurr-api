@@ -1,9 +1,9 @@
 package br.com.escconsulting.service;
 
 import br.com.escconsulting.dto.LocalUser;
-import br.com.escconsulting.dto.customer.bank.account.CustomerBankAccountDTO;
-import br.com.escconsulting.dto.customer.bank.account.CustomerBankAccountSearchDTO;
-import br.com.escconsulting.entity.CustomerBankAccount;
+import br.com.escconsulting.dto.customer.vehicle.bank.account.CustomerVehicleBankAccountDTO;
+import br.com.escconsulting.dto.customer.vehicle.bank.account.CustomerVehicleBankAccountSearchDTO;
+import br.com.escconsulting.entity.CustomerVehicleBankAccount;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -13,15 +13,15 @@ import java.util.UUID;
 
 public interface CustomerBankAccountService {
 
-    Optional<CustomerBankAccount> findById(UUID customerBankAccountId);
+    Optional<CustomerVehicleBankAccount> findById(UUID customerBankAccountId);
 
-    List<CustomerBankAccount> findAll();
+    List<CustomerVehicleBankAccount> findAll();
 
-    Page<CustomerBankAccountDTO> searchPage(LocalUser localUser, CustomerBankAccountSearchDTO customerBankAccountSearchDTO, Pageable pageable);
+    Page<CustomerVehicleBankAccountDTO> searchPage(LocalUser localUser, CustomerVehicleBankAccountSearchDTO customerVehicleBankAccountSearchDTO, Pageable pageable);
 
-    Optional<CustomerBankAccount> save(CustomerBankAccount customerBankAccount);
+    Optional<CustomerVehicleBankAccount> save(CustomerVehicleBankAccount customerVehicleBankAccount);
 
-    Optional<CustomerBankAccount> update(UUID customerBankAccountId, CustomerBankAccount customerBankAccount);
+    Optional<CustomerVehicleBankAccount> update(UUID customerBankAccountId, CustomerVehicleBankAccount customerVehicleBankAccount);
 
     void delete(UUID customerBankAccountId);
 }

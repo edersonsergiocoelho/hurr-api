@@ -2,7 +2,11 @@ package br.com.escconsulting.entity;
 
 import br.com.escconsulting.entity.generic.AbstractEntity;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -13,8 +17,8 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "customer_withdrawal_request")
-public class CustomerWithdrawalRequest extends AbstractEntity implements Serializable {
+@Table(name = "customer_vehicle_withdrawal_request")
+public class CustomerVehicleWithdrawalRequest extends AbstractEntity implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
@@ -24,8 +28,8 @@ public class CustomerWithdrawalRequest extends AbstractEntity implements Seriali
      */
     @Id
     @GeneratedValue(generator = "UUID")
-    @Column(name = "customer_withdrawal_request_id", updatable = false, nullable = false)
-    private UUID customerWithdrawalRequestId;
+    @Column(name = "customer_vehicle_withdrawal_request_id", updatable = false, nullable = false)
+    private UUID customerVehicleWithdrawalRequestId;
 
     /**
      * Identificador do cliente.
@@ -45,8 +49,8 @@ public class CustomerWithdrawalRequest extends AbstractEntity implements Seriali
      * Identificador da conta bancária do cliente.
      */
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "customer_bank_account", nullable = false)
-    private CustomerBankAccount customerBankAccount;
+    @JoinColumn(name = "customer_vehicle_bank_account", nullable = false)
+    private CustomerVehicleBankAccount customerVehicleBankAccount;
 
     /**
      * Identificador do método de pagamento usado para a retirada.

@@ -2,10 +2,10 @@ package br.com.escconsulting.controller;
 
 import br.com.escconsulting.config.CurrentUser;
 import br.com.escconsulting.dto.LocalUser;
-import br.com.escconsulting.dto.customer.withdrawal.request.CustomerWithdrawalRequestDTO;
-import br.com.escconsulting.dto.customer.withdrawal.request.CustomerWithdrawalRequestSearchDTO;
-import br.com.escconsulting.entity.CustomerWithdrawalRequest;
-import br.com.escconsulting.mapper.CustomerWithdrawalRequestMapper;
+import br.com.escconsulting.dto.customer.vehicle.withdrawal.request.CustomerVehicleWithdrawalRequestDTO;
+import br.com.escconsulting.dto.customer.vehicle.withdrawal.request.CustomerVehicleWithdrawalRequestSearchDTO;
+import br.com.escconsulting.entity.CustomerVehicleWithdrawalRequest;
+import br.com.escconsulting.mapper.CustomerVehicleWithdrawalRequestMapper;
 import br.com.escconsulting.service.CustomerWithdrawalRequestService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +31,7 @@ public class CustomerWithdrawalRequestController {
     @GetMapping("/{customerWithdrawalRequestId}")
     public ResponseEntity<?> findById(@PathVariable("customerWithdrawalRequestId") UUID customerWithdrawalRequestId) {
         return customerWithdrawalRequestService.findById(customerWithdrawalRequestId)
-                .map(CustomerWithdrawalRequestMapper.INSTANCE::toDTO)
+                .map(CustomerVehicleWithdrawalRequestMapper.INSTANCE::toDTO)
                 .map(ResponseEntity::ok)
                 .orElseGet(ResponseEntity.notFound()::build);
     }
@@ -40,7 +40,7 @@ public class CustomerWithdrawalRequestController {
     public ResponseEntity<?> findAll() {
         return ResponseEntity.ok(
                 customerWithdrawalRequestService.findAll().stream()
-                        .map(CustomerWithdrawalRequestMapper.INSTANCE::toDTO)
+                        .map(CustomerVehicleWithdrawalRequestMapper.INSTANCE::toDTO)
                         .collect(Collectors.toList())
         );
     }
@@ -48,7 +48,7 @@ public class CustomerWithdrawalRequestController {
     @PostMapping("/search/page")
     public ResponseEntity<?> search(
             @CurrentUser LocalUser localUser,
-            @RequestBody CustomerWithdrawalRequestSearchDTO customerWithdrawalRequestSearchDTO,
+            @RequestBody CustomerVehicleWithdrawalRequestSearchDTO customerVehicleWithdrawalRequestSearchDTO,
             @RequestParam(value = "page", defaultValue = "0") int page,
             @RequestParam(value = "size", defaultValue = "10") int size,
             @RequestParam(value = "sortDir", defaultValue = "DESC") String sortDir,
@@ -56,32 +56,32 @@ public class CustomerWithdrawalRequestController {
 
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(sortDir), sortBy));
 
-        Page<CustomerWithdrawalRequestDTO> customerWithdrawalRequests = customerWithdrawalRequestService.searchPage(localUser, customerWithdrawalRequestSearchDTO, pageable);
+        Page<CustomerVehicleWithdrawalRequestDTO> customerWithdrawalRequests = customerWithdrawalRequestService.searchPage(localUser, customerVehicleWithdrawalRequestSearchDTO, pageable);
 
         return ResponseEntity.ok(customerWithdrawalRequests);
     }
 
     @PostMapping
-    public ResponseEntity<?> save(@RequestBody CustomerWithdrawalRequest customerWithdrawalRequest) {
-        return customerWithdrawalRequestService.save(customerWithdrawalRequest)
-                .map(CustomerWithdrawalRequestMapper.INSTANCE::toDTO)
+    public ResponseEntity<?> save(@RequestBody CustomerVehicleWithdrawalRequest customerVehicleWithdrawalRequest) {
+        return customerWithdrawalRequestService.save(customerVehicleWithdrawalRequest)
+                .map(CustomerVehicleWithdrawalRequestMapper.INSTANCE::toDTO)
                 .map(savedCustomerWithdrawalRequest -> ResponseEntity.status(HttpStatus.CREATED).build())
                 .orElseThrow(() -> new IllegalStateException("Failed to save customer withdrawal request."));
     }
 
     @PostMapping("/all")
-    public ResponseEntity<?> saveBulk(@RequestBody List<CustomerWithdrawalRequest> customerWithdrawalRequests) {
+    public ResponseEntity<?> saveBulk(@RequestBody List<CustomerVehicleWithdrawalRequest> customerVehicleWithdrawalRequests) {
         return ResponseEntity.status(HttpStatus.CREATED).body(
-                customerWithdrawalRequestService.saveAll(customerWithdrawalRequests).stream()
-                .map(CustomerWithdrawalRequestMapper.INSTANCE::toDTO)
+                customerWithdrawalRequestService.saveAll(customerVehicleWithdrawalRequests).stream()
+                .map(CustomerVehicleWithdrawalRequestMapper.INSTANCE::toDTO)
                 .collect(Collectors.toList()));
     }
 
     @PutMapping("/{customerWithdrawalRequestId}")
     public ResponseEntity<?> update(@PathVariable("customerWithdrawalRequestId") UUID customerWithdrawalRequestId,
-                                    @RequestBody CustomerWithdrawalRequest customerWithdrawalRequest) {
-        return customerWithdrawalRequestService.update(customerWithdrawalRequestId, customerWithdrawalRequest)
-                .map(CustomerWithdrawalRequestMapper.INSTANCE::toDTO)
+                                    @RequestBody CustomerVehicleWithdrawalRequest customerVehicleWithdrawalRequest) {
+        return customerWithdrawalRequestService.update(customerWithdrawalRequestId, customerVehicleWithdrawalRequest)
+                .map(CustomerVehicleWithdrawalRequestMapper.INSTANCE::toDTO)
                 .map(ResponseEntity::ok)
                 .orElseThrow(() -> new IllegalStateException("Failed to update customer withdrawal request."));
     }
@@ -89,7 +89,7 @@ public class CustomerWithdrawalRequestController {
     @PutMapping("/approval/{customerWithdrawalRequestId}")
     public ResponseEntity<?> approval(@PathVariable("customerWithdrawalRequestId") UUID customerWithdrawalRequestId) {
         return customerWithdrawalRequestService.approval(customerWithdrawalRequestId)
-                .map(CustomerWithdrawalRequestMapper.INSTANCE::toDTONoFile)
+                .map(CustomerVehicleWithdrawalRequestMapper.INSTANCE::toDTONoFile)
                 .map(ResponseEntity::ok)
                 .orElseThrow(() -> new IllegalStateException("Failed to update customer withdrawal request."));
     }

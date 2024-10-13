@@ -3,7 +3,8 @@ package br.com.escconsulting.service.mercado.pago.impl;
 import br.com.escconsulting.config.MPConfig;
 import br.com.escconsulting.dto.mercado.pago.MPPaymentDTO;
 import br.com.escconsulting.entity.CustomerVehicleBooking;
-import br.com.escconsulting.mapper.MPPaymentMapper;
+import br.com.escconsulting.entity.enumeration.BookingStatus;
+import br.com.escconsulting.mapper.mercado.pago.MPPaymentMapper;
 import br.com.escconsulting.service.CustomerAddressService;
 import br.com.escconsulting.service.CustomerService;
 import br.com.escconsulting.service.CustomerVehicleBookingService;
@@ -94,6 +95,10 @@ public class MPWebhookServiceImpl implements MPWebhookService {
 
     private void processCustomerVehicleBookingPayment(Payment payment) throws MPException, MPApiException {
 
+        if (customerVehicleBookingService.existsByMpPaymentId(payment.getId())) {
+            return;
+        }
+
         // Lógica para processar CUSTOMER_VEHICLE_BOOKING_PAYMENT
         String customerId = (String) payment.getMetadata().get("customer_id");
         String customerVehicleId = (String) payment.getMetadata().get("customer_vehicle_id");
@@ -165,6 +170,7 @@ public class MPWebhookServiceImpl implements MPWebhookService {
         customerVehicleBooking.setReservationEndTime(reservationEndTime);
         customerVehicleBooking.setWithdrawableBookingValue(totalBookingValue.subtract(new BigDecimal(15)));
         customerVehicleBooking.setTotalBookingValue(totalBookingValue);
+        customerVehicleBooking.setTotalFinalBookingValue(totalBookingValue);
         customerVehicleBooking.setMpPaymentId(payment.getId());
 
         MPPaymentDTO MPPaymentDTOData = new MPPaymentDTO();

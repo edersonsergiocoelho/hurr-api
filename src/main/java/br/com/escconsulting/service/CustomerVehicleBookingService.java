@@ -20,6 +20,8 @@ public interface CustomerVehicleBookingService {
 
     boolean existsByBooking(String booking);
 
+    boolean existsByMpPaymentId(Long mpPaymentId);
+
     List<CustomerVehicleBooking> findAll();
 
     List<CustomerVehicleBooking> findByCustomerVehicleWithdrawableBalance(LocalUser localUser);

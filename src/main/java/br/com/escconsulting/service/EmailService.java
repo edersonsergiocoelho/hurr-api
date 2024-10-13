@@ -24,7 +24,7 @@ public interface EmailService {
 
     void sendProfilePictureReproved(FileApproved fileApproved, User user);
 
-    void sendCustomerWithdrawalRequestApproval(CustomerWithdrawalRequest customerWithdrawalRequest);
+    void sendCustomerWithdrawalRequestApproval(CustomerVehicleWithdrawalRequest customerVehicleWithdrawalRequest);
 
     void sendCustomerVehicleCreated(CustomerVehicle customerVehicle);
 }

@@ -1,4 +1,4 @@
-package br.com.escconsulting.mapper;
+package br.com.escconsulting.mapper.mercado.pago;
 
 import br.com.escconsulting.dto.mercado.pago.MPPaymentDTO;
 import com.mercadopago.resources.payment.Payment;

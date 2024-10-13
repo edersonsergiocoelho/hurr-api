@@ -1,12 +1,11 @@
-package br.com.escconsulting.dto.customer.withdrawal.request;
+package br.com.escconsulting.dto.customer.vehicle.withdrawal.request;
 
 import lombok.Getter;
-import lombok.Setter;
 
 import java.util.UUID;
 
 @Getter
-public class CustomerWithdrawalRequestSearchDTO {
+public class CustomerVehicleWithdrawalRequestSearchDTO {
 
     private String cpf;
     private UUID paymentMethodId;

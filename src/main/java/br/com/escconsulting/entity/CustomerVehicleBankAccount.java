@@ -6,7 +6,6 @@ import lombok.*;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.time.LocalDateTime;
 import java.util.UUID;
 
 /**
@@ -17,14 +16,14 @@ import java.util.UUID;
  */
 
 @Entity
-@Table(name = "customer_bank_account")
+@Table(name = "customer_vehicle_bank_account")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode(of = "customerBankAccountId", callSuper = false)
+@EqualsAndHashCode(of = "customerVehicleBankAccountId", callSuper = false)
 @ToString
-public class CustomerBankAccount extends AbstractEntity implements Serializable {
+public class CustomerVehicleBankAccount extends AbstractEntity implements Serializable {
 
     @Serial
     private static final long serialVersionUID = -5223744745154642982L;
@@ -34,8 +33,8 @@ public class CustomerBankAccount extends AbstractEntity implements Serializable 
      */
     @Id
     @GeneratedValue(generator = "UUID")
-    @Column(name = "customer_bank_account_id", updatable = false, nullable = false)
-    private UUID customerBankAccountId;
+    @Column(name = "customer_vehicle_bank_account_id", updatable = false, nullable = false)
+    private UUID customerVehicleBankAccountId;
 
     /**
      * Identificador do cliente.
@@ -52,22 +51,10 @@ public class CustomerBankAccount extends AbstractEntity implements Serializable 
     private Bank bank;
 
     /**
-     * Número da conta bancária.
+     * Tipo de Pix associada à conta bancária.
      */
-    @Column(name = "account_number", length = 20, nullable = false)
-    private String accountNumber;
-
-    /**
-     * Tipo da conta bancária, por exemplo, "corrente" ou "poupança".
-     */
-    @Column(name = "account_type", length = 20, nullable = false)
-    private String accountType;
-
-    /**
-     * Número da agência bancária.
-     */
-    @Column(name = "branch_number", length = 20, nullable = false)
-    private String branchNumber;
+    @Column(name = "pix_type", length = 20)
+    private String pixType;
 
     /**
      * Chave Pix associada à conta bancária.

@@ -1,12 +1,12 @@
 package br.com.escconsulting.service.impl;
 
 import br.com.escconsulting.dto.LocalUser;
-import br.com.escconsulting.dto.customer.bank.account.CustomerBankAccountDTO;
-import br.com.escconsulting.dto.customer.bank.account.CustomerBankAccountSearchDTO;
+import br.com.escconsulting.dto.customer.vehicle.bank.account.CustomerVehicleBankAccountDTO;
+import br.com.escconsulting.dto.customer.vehicle.bank.account.CustomerVehicleBankAccountSearchDTO;
 import br.com.escconsulting.entity.Customer;
-import br.com.escconsulting.entity.CustomerBankAccount;
-import br.com.escconsulting.repository.CustomerBankAccountRepository;
-import br.com.escconsulting.repository.custom.CustomerBankAccountCustomRepository;
+import br.com.escconsulting.entity.CustomerVehicleBankAccount;
+import br.com.escconsulting.repository.CustomerVehicleBankAccountRepository;
+import br.com.escconsulting.repository.custom.CustomerVehicleBankAccountCustomRepository;
 import br.com.escconsulting.service.CustomerBankAccountService;
 import br.com.escconsulting.service.CustomerService;
 import jakarta.transaction.Transactional;
@@ -27,61 +27,61 @@ public class CustomerBankAccountServiceImpl implements CustomerBankAccountServic
 
     private final CustomerService customerService;
 
-    private final CustomerBankAccountRepository customerBankAccountRepository;
+    private final CustomerVehicleBankAccountRepository customerVehicleBankAccountRepository;
 
-    private final CustomerBankAccountCustomRepository customerBankAccountCustomRepository;
+    private final CustomerVehicleBankAccountCustomRepository customerVehicleBankAccountCustomRepository;
 
     @Transactional
     @Override
-    public Optional<CustomerBankAccount> findById(UUID customerBankAccountId) {
+    public Optional<CustomerVehicleBankAccount> findById(UUID customerBankAccountId) {
 
-        return Optional.ofNullable(customerBankAccountRepository.findById(customerBankAccountId)
+        return Optional.ofNullable(customerVehicleBankAccountRepository.findById(customerBankAccountId)
                 .orElseThrow(() -> new RuntimeException("CustomerBankAccount not found with customerBankAccountId: " + customerBankAccountId)));
     }
 
     @Transactional
     @Override
-    public List<CustomerBankAccount> findAll() {
-        return customerBankAccountRepository.findAll();
+    public List<CustomerVehicleBankAccount> findAll() {
+        return customerVehicleBankAccountRepository.findAll();
     }
 
     @Transactional
     @Override
-    public Page<CustomerBankAccountDTO> searchPage(LocalUser localUser, CustomerBankAccountSearchDTO customerBankAccountSearchDTO, Pageable pageable) {
+    public Page<CustomerVehicleBankAccountDTO> searchPage(LocalUser localUser, CustomerVehicleBankAccountSearchDTO customerVehicleBankAccountSearchDTO, Pageable pageable) {
         Optional<Customer> optionalCustomer = customerService.findByEmail(localUser.getUsername());
 
         return optionalCustomer.map(customer -> {
-            customerBankAccountSearchDTO.setCustomerId(customer.getCustomerId());
-            return customerBankAccountCustomRepository.searchPage(customerBankAccountSearchDTO, pageable);
+            customerVehicleBankAccountSearchDTO.setCustomerId(customer.getCustomerId());
+            return customerVehicleBankAccountCustomRepository.searchPage(customerVehicleBankAccountSearchDTO, pageable);
         }).orElseThrow(() -> new RuntimeException("Customer not found for email: " + localUser.getUsername()));
     }
 
     @Transactional
     @Override
-    public Optional<CustomerBankAccount> save(CustomerBankAccount customerBankAccount) {
+    public Optional<CustomerVehicleBankAccount> save(CustomerVehicleBankAccount customerVehicleBankAccount) {
 
-        customerBankAccount.setCreatedDate(Instant.now());
-        customerBankAccount.setEnabled(Boolean.TRUE);
+        customerVehicleBankAccount.setCreatedDate(Instant.now());
+        customerVehicleBankAccount.setEnabled(Boolean.TRUE);
 
-        return Optional.of(customerBankAccountRepository.save(customerBankAccount));
+        return Optional.of(customerVehicleBankAccountRepository.save(customerVehicleBankAccount));
     }
 
     @Transactional
     @Override
-    public Optional<CustomerBankAccount> update(UUID customerBankAccountId, CustomerBankAccount customerBankAccount) {
+    public Optional<CustomerVehicleBankAccount> update(UUID customerBankAccountId, CustomerVehicleBankAccount customerVehicleBankAccount) {
         return findById(customerBankAccountId)
                 .map(existingCustomerBankAccount -> {
 
-                    existingCustomerBankAccount.setEnabled(customerBankAccount.getEnabled());
+                    existingCustomerBankAccount.setEnabled(customerVehicleBankAccount.getEnabled());
                     existingCustomerBankAccount.setModifiedDate(Instant.now());
 
-                    return customerBankAccountRepository.save(existingCustomerBankAccount);
+                    return customerVehicleBankAccountRepository.save(existingCustomerBankAccount);
                 });
     }
 
     @Transactional
     @Override
     public void delete(UUID customerBankAccountId) {
-        findById(customerBankAccountId).ifPresent(customerBankAccountRepository::delete);
+        findById(customerBankAccountId).ifPresent(customerVehicleBankAccountRepository::delete);
     }
 }

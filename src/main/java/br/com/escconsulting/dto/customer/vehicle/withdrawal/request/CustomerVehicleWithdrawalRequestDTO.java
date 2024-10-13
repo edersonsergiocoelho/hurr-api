@@ -1,7 +1,7 @@
-package br.com.escconsulting.dto.customer.withdrawal.request;
+package br.com.escconsulting.dto.customer.vehicle.withdrawal.request;
 
 import br.com.escconsulting.dto.customer.CustomerDTO;
-import br.com.escconsulting.dto.customer.bank.account.CustomerBankAccountDTO;
+import br.com.escconsulting.dto.customer.vehicle.bank.account.CustomerVehicleBankAccountDTO;
 import br.com.escconsulting.dto.customer.vehicle.booking.CustomerVehicleBookingDTO;
 import br.com.escconsulting.dto.payment.method.PaymentMethodDTO;
 import br.com.escconsulting.dto.payment.status.PaymentStatusDTO;
@@ -16,12 +16,12 @@ import java.util.UUID;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class CustomerWithdrawalRequestDTO {
+public class CustomerVehicleWithdrawalRequestDTO {
 
-    private UUID customerWithdrawalRequestId;
+    private UUID customerVehicleWithdrawalRequestId;
     private CustomerDTO customer;
     private CustomerVehicleBookingDTO customerVehicleBooking;
-    private CustomerBankAccountDTO customerBankAccount;
+    private CustomerVehicleBankAccountDTO customerVehicleBankAccount;
     private PaymentMethodDTO paymentMethod;
     private PaymentStatusDTO paymentStatus;
     private LocalDateTime withdrawalDate;

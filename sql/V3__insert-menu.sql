@@ -81,17 +81,26 @@ VALUES
 ('Solicitações De Retirada De Dinheiro', 'Solicitações De Retirada De Dinheiro Do Dono Do Carro', 'pi pi-money-bill', 'customer-withdrawal-request', 3)
 ON CONFLICT (name) DO NOTHING; -- Ignora a inserção em caso de conflito pelo nome
 
+-- Operações Administrador
 INSERT INTO menu (name, description, icon, url, menu_order)
 VALUES
 ('Operações Administrador', 'Operações Do Administrador', 'pi pi-cog', 'payment-status', 2)
 ON CONFLICT (name) DO NOTHING; -- Ignora a inserção em caso de conflito pelo nome
 
+-- Operações Administrador - Bank
 INSERT INTO menu (name, description, icon, url, menu_order)
 VALUES
-('Método De Pagamento', 'Método De Pagamento De Retirada De Dinheiro Do Dono Do Carro', 'pi pi-credit-card', 'payment-method', 1)
+('Banco', 'Cadastro De Bancos', 'pi pi-building-columns', 'bank', 1)
 ON CONFLICT (name) DO NOTHING; -- Ignora a inserção em caso de conflito pelo nome
 
+-- Operações Administrador - PaymentMethod
 INSERT INTO menu (name, description, icon, url, menu_order)
 VALUES
-('Status De Pagamento', 'Status De Pagamento De Retirada De Dinheiro Do Dono Do Carro', 'pi pi-check', 'payment-status', 2)
+('Método De Pagamento', 'Método De Pagamento De Retirada De Dinheiro Do Dono Do Carro', 'pi pi-credit-card', 'payment-method', 2)
+ON CONFLICT (name) DO NOTHING; -- Ignora a inserção em caso de conflito pelo nome
+
+-- Operações Administrador - PaymentStatus
+INSERT INTO menu (name, description, icon, url, menu_order)
+VALUES
+('Status De Pagamento', 'Status De Pagamento De Retirada De Dinheiro Do Dono Do Carro', 'pi pi-check', 'payment-status', 3)
 ON CONFLICT (name) DO NOTHING; -- Ignora a inserção em caso de conflito pelo nome

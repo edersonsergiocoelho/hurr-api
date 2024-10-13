@@ -1,11 +1,11 @@
 package br.com.escconsulting.repository.custom.impl;
 
-import br.com.escconsulting.dto.customer.bank.account.CustomerBankAccountDTO;
-import br.com.escconsulting.dto.customer.bank.account.CustomerBankAccountSearchDTO;
+import br.com.escconsulting.dto.customer.vehicle.bank.account.CustomerVehicleBankAccountDTO;
+import br.com.escconsulting.dto.customer.vehicle.bank.account.CustomerVehicleBankAccountSearchDTO;
 import br.com.escconsulting.entity.*;
-import br.com.escconsulting.mapper.CustomerBankAccountMapper;
-import br.com.escconsulting.repository.CustomerBankAccountRepository;
-import br.com.escconsulting.repository.custom.CustomerBankAccountCustomRepository;
+import br.com.escconsulting.mapper.CustomerVehicleBankAccountMapper;
+import br.com.escconsulting.repository.CustomerVehicleBankAccountRepository;
+import br.com.escconsulting.repository.custom.CustomerVehicleBankAccountCustomRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.*;
@@ -21,25 +21,25 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Repository
-public class CustomerBankAccountCustomRepositoryImpl extends SimpleJpaRepository<CustomerBankAccount, UUID> implements CustomerBankAccountCustomRepository {
+public class CustomerVehicleBankAccountCustomRepositoryImpl extends SimpleJpaRepository<CustomerVehicleBankAccount, UUID> implements CustomerVehicleBankAccountCustomRepository {
 
     private final EntityManager entityManager;
 
-    private final CustomerBankAccountRepository customerBankAccountRepository;
+    private final CustomerVehicleBankAccountRepository customerVehicleBankAccountRepository;
 
-    public CustomerBankAccountCustomRepositoryImpl(EntityManager entityManager, CustomerBankAccountRepository customerBankAccountRepository) {
-        super(CustomerBankAccount.class, entityManager);
+    public CustomerVehicleBankAccountCustomRepositoryImpl(EntityManager entityManager, CustomerVehicleBankAccountRepository customerVehicleBankAccountRepository) {
+        super(CustomerVehicleBankAccount.class, entityManager);
         this.entityManager = entityManager;
-        this.customerBankAccountRepository = customerBankAccountRepository;
+        this.customerVehicleBankAccountRepository = customerVehicleBankAccountRepository;
     }
 
-    public Page<CustomerBankAccountDTO> searchPage(CustomerBankAccountSearchDTO customerBankAccountSearchDTO, Pageable pageable) {
+    public Page<CustomerVehicleBankAccountDTO> searchPage(CustomerVehicleBankAccountSearchDTO customerVehicleBankAccountSearchDTO, Pageable pageable) {
 
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-        CriteriaQuery<CustomerBankAccount> cq = cb.createQuery(CustomerBankAccount.class);
-        Root<CustomerBankAccount> root = cq.from(CustomerBankAccount.class);
+        CriteriaQuery<CustomerVehicleBankAccount> cq = cb.createQuery(CustomerVehicleBankAccount.class);
+        Root<CustomerVehicleBankAccount> root = cq.from(CustomerVehicleBankAccount.class);
 
-        Fetch<CustomerBankAccount, CustomerVehicle> customerVehicleFetch = root.fetch("customerVehicle");
+        Fetch<CustomerVehicleBankAccount, CustomerVehicle> customerVehicleFetch = root.fetch("customerVehicle");
         Fetch<CustomerVehicle, Customer> customerVehicleCustomerFetch = customerVehicleFetch.fetch("customer");
 
         Fetch<CustomerVehicle, Vehicle> customerVehicleVehicleFetch = customerVehicleFetch.fetch("vehicle");
@@ -59,12 +59,12 @@ public class CustomerBankAccountCustomRepositoryImpl extends SimpleJpaRepository
         Fetch<Address, State> addressStateFetch = customerVehicleAddressAddressFetch.fetch("state");
         Fetch<Address, City> addressCityFetch = customerVehicleAddressAddressFetch.fetch("city");
 
-        Fetch<CustomerBankAccount, Customer> customerFetch = root.fetch("customer");
+        Fetch<CustomerVehicleBankAccount, Customer> customerFetch = root.fetch("customer");
 
         Predicate spec = cb.conjunction();
 
-        if (customerBankAccountSearchDTO != null) {
-            spec = cb.and(spec, cb.equal(root.get("customer").get("customerId"), customerBankAccountSearchDTO.getCustomerId()));
+        if (customerVehicleBankAccountSearchDTO != null) {
+            spec = cb.and(spec, cb.equal(root.get("customer").get("customerId"), customerVehicleBankAccountSearchDTO.getCustomerId()));
         }
 
         cq.where(spec);
@@ -80,27 +80,27 @@ public class CustomerBankAccountCustomRepositoryImpl extends SimpleJpaRepository
             cq.orderBy(orders);
         }
 
-        TypedQuery<CustomerBankAccount> query = entityManager.createQuery(cq);
+        TypedQuery<CustomerVehicleBankAccount> query = entityManager.createQuery(cq);
 
         query.setFirstResult((int) pageable.getOffset());
         query.setMaxResults(pageable.getPageSize());
 
-        List<CustomerBankAccount> resultList = query.getResultList();
+        List<CustomerVehicleBankAccount> resultList = query.getResultList();
 
-        List<CustomerBankAccountDTO> dtoList = resultList.stream()
-                .map(CustomerBankAccountMapper.INSTANCE::toDTO)
+        List<CustomerVehicleBankAccountDTO> dtoList = resultList.stream()
+                .map(CustomerVehicleBankAccountMapper.INSTANCE::toDTO)
                 .collect(Collectors.toList());
 
-        return new PageImpl<>(dtoList, pageable, this.countSearchPage(customerBankAccountSearchDTO));
+        return new PageImpl<>(dtoList, pageable, this.countSearchPage(customerVehicleBankAccountSearchDTO));
     }
 
-    public Page<CustomerBankAccountDTO> customerVehicleSearchPage(CustomerBankAccountSearchDTO customerBankAccountSearchDTO, Pageable pageable) {
+    public Page<CustomerVehicleBankAccountDTO> customerVehicleSearchPage(CustomerVehicleBankAccountSearchDTO customerVehicleBankAccountSearchDTO, Pageable pageable) {
 
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-        CriteriaQuery<CustomerBankAccount> cq = cb.createQuery(CustomerBankAccount.class);
-        Root<CustomerBankAccount> root = cq.from(CustomerBankAccount.class);
+        CriteriaQuery<CustomerVehicleBankAccount> cq = cb.createQuery(CustomerVehicleBankAccount.class);
+        Root<CustomerVehicleBankAccount> root = cq.from(CustomerVehicleBankAccount.class);
 
-        Fetch<CustomerBankAccount, CustomerVehicle> customerVehicleFetch = root.fetch("customerVehicle");
+        Fetch<CustomerVehicleBankAccount, CustomerVehicle> customerVehicleFetch = root.fetch("customerVehicle");
         Fetch<CustomerVehicle, Customer> customerVehicleCustomerFetch = customerVehicleFetch.fetch("customer");
 
         Fetch<CustomerVehicle, Vehicle> customerVehicleVehicleFetch = customerVehicleFetch.fetch("vehicle");
@@ -120,12 +120,12 @@ public class CustomerBankAccountCustomRepositoryImpl extends SimpleJpaRepository
         Fetch<Address, State> addressStateFetch = customerVehicleAddressAddressFetch.fetch("state");
         Fetch<Address, City> addressCityFetch = customerVehicleAddressAddressFetch.fetch("city");
 
-        Fetch<CustomerBankAccount, Customer> customerFetch = root.fetch("customer");
+        Fetch<CustomerVehicleBankAccount, Customer> customerFetch = root.fetch("customer");
 
         Predicate spec = cb.conjunction();
 
-        if (customerBankAccountSearchDTO != null) {
-            spec = cb.and(spec, cb.equal(root.get("customerVehicle").get("customer").get("customerId"), customerBankAccountSearchDTO.getCustomerId()));
+        if (customerVehicleBankAccountSearchDTO != null) {
+            spec = cb.and(spec, cb.equal(root.get("customerVehicle").get("customer").get("customerId"), customerVehicleBankAccountSearchDTO.getCustomerId()));
         }
 
         cq.where(spec);
@@ -141,31 +141,31 @@ public class CustomerBankAccountCustomRepositoryImpl extends SimpleJpaRepository
             cq.orderBy(orders);
         }
 
-        TypedQuery<CustomerBankAccount> query = entityManager.createQuery(cq);
+        TypedQuery<CustomerVehicleBankAccount> query = entityManager.createQuery(cq);
 
         query.setFirstResult((int) pageable.getOffset());
         query.setMaxResults(pageable.getPageSize());
 
-        List<CustomerBankAccount> resultList = query.getResultList();
+        List<CustomerVehicleBankAccount> resultList = query.getResultList();
 
-        List<CustomerBankAccountDTO> dtoList = resultList.stream()
-                .map(CustomerBankAccountMapper.INSTANCE::toDTO)
+        List<CustomerVehicleBankAccountDTO> dtoList = resultList.stream()
+                .map(CustomerVehicleBankAccountMapper.INSTANCE::toDTO)
                 .collect(Collectors.toList());
 
-        return new PageImpl<>(dtoList, pageable, this.countSearchPage(customerBankAccountSearchDTO));
+        return new PageImpl<>(dtoList, pageable, this.countSearchPage(customerVehicleBankAccountSearchDTO));
     }
 
-    public Long countSearchPage(CustomerBankAccountSearchDTO customerBankAccountSearchDTO) {
+    public Long countSearchPage(CustomerVehicleBankAccountSearchDTO customerVehicleBankAccountSearchDTO) {
 
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<Long> cq = cb.createQuery(Long.class);
-        Root<CustomerBankAccount> root = cq.from(CustomerBankAccount.class);
+        Root<CustomerVehicleBankAccount> root = cq.from(CustomerVehicleBankAccount.class);
         cq.select(cb.count(root));
 
         Predicate spec = cb.conjunction();
 
-        if (customerBankAccountSearchDTO != null) {
-            spec = cb.and(spec, cb.equal(root.get("customer").get("customerId"), customerBankAccountSearchDTO.getCustomerId()));
+        if (customerVehicleBankAccountSearchDTO != null) {
+            spec = cb.and(spec, cb.equal(root.get("customer").get("customerId"), customerVehicleBankAccountSearchDTO.getCustomerId()));
         }
 
         cq.where(spec);
@@ -173,17 +173,17 @@ public class CustomerBankAccountCustomRepositoryImpl extends SimpleJpaRepository
         return entityManager.createQuery(cq).getSingleResult();
     }
 
-    public Long countCustomerVehicleSearchPage(CustomerBankAccountSearchDTO customerBankAccountSearchDTO) {
+    public Long countCustomerVehicleSearchPage(CustomerVehicleBankAccountSearchDTO customerVehicleBankAccountSearchDTO) {
 
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<Long> cq = cb.createQuery(Long.class);
-        Root<CustomerBankAccount> root = cq.from(CustomerBankAccount.class);
+        Root<CustomerVehicleBankAccount> root = cq.from(CustomerVehicleBankAccount.class);
         cq.select(cb.count(root));
 
         Predicate spec = cb.conjunction();
 
-        if (customerBankAccountSearchDTO != null) {
-            spec = cb.and(spec, cb.equal(root.get("customerVehicle").get("customer").get("customerId"), customerBankAccountSearchDTO.getCustomerId()));
+        if (customerVehicleBankAccountSearchDTO != null) {
+            spec = cb.and(spec, cb.equal(root.get("customerVehicle").get("customer").get("customerId"), customerVehicleBankAccountSearchDTO.getCustomerId()));
         }
 
         cq.where(spec);
@@ -191,17 +191,17 @@ public class CustomerBankAccountCustomRepositoryImpl extends SimpleJpaRepository
         return entityManager.createQuery(cq).getSingleResult();
     }
 
-    public BigDecimal sumCustomerVehicleTotalEarnings(CustomerBankAccountSearchDTO customerBankAccountSearchDTO) {
+    public BigDecimal sumCustomerVehicleTotalEarnings(CustomerVehicleBankAccountSearchDTO customerVehicleBankAccountSearchDTO) {
 
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<BigDecimal> cq = cb.createQuery(BigDecimal.class);
-        Root<CustomerBankAccount> root = cq.from(CustomerBankAccount.class);
+        Root<CustomerVehicleBankAccount> root = cq.from(CustomerVehicleBankAccount.class);
 
         cq.select(cb.sum(root.get("withdrawableBookingValue")));
 
         Predicate spec = cb.isNull(root.get("bookingCancellationDate"));
 
-        spec = cb.and(spec, cb.equal(root.get("customerVehicle").get("customer").get("customerId"), customerBankAccountSearchDTO.getCustomerId()));
+        spec = cb.and(spec, cb.equal(root.get("customerVehicle").get("customer").get("customerId"), customerVehicleBankAccountSearchDTO.getCustomerId()));
 
         cq.where(spec);
 
@@ -209,18 +209,18 @@ public class CustomerBankAccountCustomRepositoryImpl extends SimpleJpaRepository
         return result != null ? result : BigDecimal.ZERO;
     }
 
-    public BigDecimal sumCustomerVehicleWithdrawableCurrentBalance(CustomerBankAccountSearchDTO customerBankAccountSearchDTO) {
+    public BigDecimal sumCustomerVehicleWithdrawableCurrentBalance(CustomerVehicleBankAccountSearchDTO customerVehicleBankAccountSearchDTO) {
 
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<BigDecimal> cq = cb.createQuery(BigDecimal.class);
-        Root<CustomerBankAccount> root = cq.from(CustomerBankAccount.class);
+        Root<CustomerVehicleBankAccount> root = cq.from(CustomerVehicleBankAccount.class);
 
         cq.select(cb.sum(root.get("withdrawableBookingValue")));
 
         Predicate spec = cb.isNull(root.get("bookingCancellationDate"));
 
         spec = cb.isNotNull(root.get("bookingStartDate"));
-        spec = cb.and(spec, cb.equal(root.get("customerVehicle").get("customer").get("customerId"), customerBankAccountSearchDTO.getCustomerId()));
+        spec = cb.and(spec, cb.equal(root.get("customerVehicle").get("customer").get("customerId"), customerVehicleBankAccountSearchDTO.getCustomerId()));
 
         cq.where(spec);
 
@@ -228,11 +228,11 @@ public class CustomerBankAccountCustomRepositoryImpl extends SimpleJpaRepository
         return result != null ? result : BigDecimal.ZERO;
     }
 
-    public BigDecimal sumCustomerVehicleWithdrawableBalance(CustomerBankAccountSearchDTO customerBankAccountSearchDTO) {
+    public BigDecimal sumCustomerVehicleWithdrawableBalance(CustomerVehicleBankAccountSearchDTO customerVehicleBankAccountSearchDTO) {
 
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<BigDecimal> cq = cb.createQuery(BigDecimal.class);
-        Root<CustomerBankAccount> root = cq.from(CustomerBankAccount.class);
+        Root<CustomerVehicleBankAccount> root = cq.from(CustomerVehicleBankAccount.class);
 
         cq.select(cb.sum(root.get("withdrawableBookingValue")));
 
@@ -240,7 +240,7 @@ public class CustomerBankAccountCustomRepositoryImpl extends SimpleJpaRepository
 
         spec = cb.isNotNull(root.get("bookingStartDate"));
         spec = cb.isNotNull(root.get("bookingEndDate"));
-        spec = cb.and(spec, cb.equal(root.get("customerVehicle").get("customer").get("customerId"), customerBankAccountSearchDTO.getCustomerId()));
+        spec = cb.and(spec, cb.equal(root.get("customerVehicle").get("customer").get("customerId"), customerVehicleBankAccountSearchDTO.getCustomerId()));
 
         cq.where(spec);
 

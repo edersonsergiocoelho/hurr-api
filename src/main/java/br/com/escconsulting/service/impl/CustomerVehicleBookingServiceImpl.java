@@ -3,12 +3,10 @@ package br.com.escconsulting.service.impl;
 import br.com.escconsulting.dto.LocalUser;
 import br.com.escconsulting.dto.customer.vehicle.booking.CustomerVehicleBookingDTO;
 import br.com.escconsulting.dto.customer.vehicle.booking.CustomerVehicleBookingSearchDTO;
-import br.com.escconsulting.dto.mercado.pago.MPPaymentDTO;
 import br.com.escconsulting.entity.Customer;
 import br.com.escconsulting.entity.CustomerVehicleBooking;
 import br.com.escconsulting.entity.enumeration.BookingStatus;
 import br.com.escconsulting.mapper.CustomerVehicleBookingMapper;
-import br.com.escconsulting.mapper.MPPaymentMapper;
 import br.com.escconsulting.repository.CustomerVehicleBookingRepository;
 import br.com.escconsulting.repository.custom.CustomerVehicleBookingCustomRepository;
 import br.com.escconsulting.service.CustomerService;
@@ -16,7 +14,6 @@ import br.com.escconsulting.service.CustomerVehicleBookingService;
 import br.com.escconsulting.service.mercado.pago.MPPaymentService;
 import com.mercadopago.exceptions.MPApiException;
 import com.mercadopago.exceptions.MPException;
-import com.mercadopago.resources.payment.Payment;
 import com.mercadopago.resources.payment.PaymentRefund;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -66,6 +63,12 @@ public class CustomerVehicleBookingServiceImpl implements CustomerVehicleBooking
     @Override
     public boolean existsByBooking(String booking) {
         return customerVehicleBookingRepository.existsByBooking(booking);
+    }
+
+    @Transactional
+    @Override
+    public boolean existsByMpPaymentId(Long mpPaymentId) {
+        return customerVehicleBookingRepository.existsByMpPaymentId(mpPaymentId);
     }
 
     @Transactional
@@ -142,10 +145,6 @@ public class CustomerVehicleBookingServiceImpl implements CustomerVehicleBooking
     @Transactional
     @Override
     public Optional<CustomerVehicleBooking> save(CustomerVehicleBooking customerVehicleBooking) {
-
-        customerVehicleBooking.setBookingStatus(BookingStatus.RESERVED);
-        customerVehicleBooking.setCreatedDate(Instant.now());
-
         return Optional.of(customerVehicleBookingRepository.save(customerVehicleBooking));
     }
 

@@ -11,6 +11,7 @@ import org.hibernate.annotations.ColumnTransformer;
 import java.io.Serial;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -216,4 +217,19 @@ public class CustomerVehicleBooking extends AbstractEntity implements Serializab
     @Column(name = "mp_payment_additional", columnDefinition = "jsonb")
     @Convert(converter = MPPaymentDTOConverter.class)
     private MPPaymentDTO mpPaymentAdditional;
+
+    @PrePersist
+    protected void prePersist() {
+        if (this.getCreatedDate() == null) {
+            this.setCreatedDate(Instant.now());
+        }
+
+        if (this.getBookingStatus() == null) {
+            this.setBookingStatus(BookingStatus.RESERVED);
+        }
+
+        if (this.getEnabled() == null) {
+            this.setEnabled(Boolean.TRUE);
+        }
+    }
 }
