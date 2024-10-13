@@ -2,7 +2,7 @@ package br.com.escconsulting.repository.custom.impl;
 
 import br.com.escconsulting.dto.bank.BankDTO;
 import br.com.escconsulting.dto.bank.BankSearchDTO;
-import br.com.escconsulting.entity.*;
+import br.com.escconsulting.entity.Bank;
 import br.com.escconsulting.mapper.BankMapper;
 import br.com.escconsulting.repository.BankRepository;
 import br.com.escconsulting.repository.custom.BankCustomRepository;
@@ -38,32 +38,35 @@ public class BankCustomRepositoryImpl extends SimpleJpaRepository<Bank, UUID> im
         CriteriaQuery<Bank> cq = cb.createQuery(Bank.class);
         Root<Bank> root = cq.from(Bank.class);
 
-        Fetch<Bank, CustomerVehicle> customerVehicleFetch = root.fetch("customerVehicle");
-        Fetch<CustomerVehicle, Customer> customerVehicleCustomerFetch = customerVehicleFetch.fetch("customer");
-
-        Fetch<CustomerVehicle, Vehicle> customerVehicleVehicleFetch = customerVehicleFetch.fetch("vehicle");
-        Fetch<Vehicle, VehicleBrand> vehicleVehicleBrandFetch = customerVehicleVehicleFetch.fetch("vehicleBrand");
-
-        Fetch<CustomerVehicle, VehicleModel> customerVehicleVehicleModelFetch = customerVehicleFetch.fetch("vehicleModel");
-        Fetch<VehicleModel, VehicleCategory> vehicleModelVehicleCategoryFetch = customerVehicleVehicleModelFetch.fetch("vehicleCategory");
-
-        Fetch<CustomerVehicle, VehicleColor> customerVehicleVehicleColorFetch = customerVehicleFetch.fetch("vehicleColor");
-        Fetch<CustomerVehicle, VehicleFuelType> customerVehicleVehicleFuelTypeFetch = customerVehicleFetch.fetch("vehicleFuelType");
-        Fetch<CustomerVehicle, VehicleTransmission> customerVehicleVehicleTransmissionFetch = customerVehicleFetch.fetch("vehicleTransmission");
-
-        Fetch<CustomerVehicle, CustomerVehicleAddress> customerVehicleCustomerVehicleAddressFetch = customerVehicleFetch.fetch("addresses");
-        Fetch<CustomerVehicleAddress, Address> customerVehicleAddressAddressFetch = customerVehicleCustomerVehicleAddressFetch.fetch("address");
-
-        Fetch<Address, Country> addressCountryFetch = customerVehicleAddressAddressFetch.fetch("country");
-        Fetch<Address, State> addressStateFetch = customerVehicleAddressAddressFetch.fetch("state");
-        Fetch<Address, City> addressCityFetch = customerVehicleAddressAddressFetch.fetch("city");
-
-        Fetch<Bank, Customer> customerFetch = root.fetch("customer");
+        // Adiciona fetch para a entidade File
+        root.fetch("file", JoinType.LEFT); // Supondo que seja um fetch à esquerda (LEFT JOIN)
 
         Predicate spec = cb.conjunction();
 
         if (bankSearchDTO != null) {
-            spec = cb.and(spec, cb.equal(root.get("customer").get("customerId"), bankSearchDTO.getCustomerId()));
+
+            // Adiciona condição de filtro para o campo searchValue em todos os campos desejados
+            if (bankSearchDTO.getGlobalFilter() != null && !bankSearchDTO.getGlobalFilter().isEmpty()) {
+                String likePattern = "%" + bankSearchDTO.getGlobalFilter().toLowerCase() + "%";
+
+                Predicate namePredicate = cb.like(cb.upper(root.get("bankName")), likePattern);
+                // Adicione outros campos aqui da mesma forma
+                Predicate enabledPredicate = cb.like(cb.upper(root.get("enabled").as(String.class)), likePattern);
+
+                // Combine todos os predicados em uma disjunção (OR)
+                spec = cb.and(spec, cb.or(namePredicate, enabledPredicate));
+            }
+
+            // Verifica se o campo 'paymentStatusName' está presente e adiciona a condição com like '%...%'
+            if (bankSearchDTO.getBankName() != null && !bankSearchDTO.getBankName().isEmpty()) {
+                String likePattern = "%" + bankSearchDTO.getBankName() + "%";
+                spec = cb.and(spec, cb.like(cb.upper(root.get("bankName")), likePattern.toLowerCase()));
+            }
+
+            // Verifica se o campo 'enabled' não é nulo e adiciona a condição
+            if (bankSearchDTO.getEnabled() != null) {
+                spec = cb.and(spec, cb.equal(root.get("enabled"), bankSearchDTO.getEnabled()));
+            }
         }
 
         cq.where(spec);
@@ -103,7 +106,29 @@ public class BankCustomRepositoryImpl extends SimpleJpaRepository<Bank, UUID> im
         Predicate spec = cb.conjunction();
 
         if (bankSearchDTO != null) {
-            spec = cb.and(spec, cb.equal(root.get("customer").get("customerId"), bankSearchDTO.getCustomerId()));
+
+            // Adiciona condição de filtro para o campo searchValue em todos os campos desejados
+            if (bankSearchDTO.getGlobalFilter() != null && !bankSearchDTO.getGlobalFilter().isEmpty()) {
+                String likePattern = "%" + bankSearchDTO.getGlobalFilter().toLowerCase() + "%";
+
+                Predicate namePredicate = cb.like(cb.upper(root.get("bankName")), likePattern);
+                // Adicione outros campos aqui da mesma forma
+                Predicate enabledPredicate = cb.like(cb.upper(root.get("enabled").as(String.class)), likePattern);
+
+                // Combine todos os predicados em uma disjunção (OR)
+                spec = cb.and(spec, cb.or(namePredicate, enabledPredicate));
+            }
+
+            // Verifica se o campo 'paymentStatusName' está presente e adiciona a condição com like '%...%'
+            if (bankSearchDTO.getBankName() != null && !bankSearchDTO.getBankName().isEmpty()) {
+                String likePattern = "%" + bankSearchDTO.getBankName() + "%";
+                spec = cb.and(spec, cb.like(cb.upper(root.get("bankName")), likePattern.toLowerCase()));
+            }
+
+            // Verifica se o campo 'enabled' não é nulo e adiciona a condição
+            if (bankSearchDTO.getEnabled() != null) {
+                spec = cb.and(spec, cb.equal(root.get("enabled"), bankSearchDTO.getEnabled()));
+            }
         }
 
         cq.where(spec);
