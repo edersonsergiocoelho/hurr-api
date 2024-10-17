@@ -97,6 +97,27 @@ public class EmailServiceImpl implements EmailService {
         javaMailSender.send(simpleMailMessage);
     }
 
+    @Override
+    public void sendBecomeVehiclePartner(User user) {
+
+        SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
+        simpleMailMessage.setTo(user.getEmail());
+        simpleMailMessage.setSubject("Bem-vindo ao HURR - Você é Agora um Parceiro!");
+
+        StringBuilder emailBody = new StringBuilder();
+        emailBody.append("Olá ").append(user.getDisplayName()).append(",\n\n");
+        emailBody.append("Seja bem-vindo ao HURR! Estamos muito felizes em tê-lo como nosso novo parceiro.\n");
+        emailBody.append("Você agora faz parte de uma comunidade vibrante de pessoas que compartilham experiências e oportunidades incríveis.\n");
+        emailBody.append("Acreditamos que juntos podemos fazer a diferença e oferecer serviços de qualidade aos nossos clientes.\n");
+        emailBody.append("Se precisar de ajuda ou tiver alguma dúvida, nossa equipe está sempre à disposição para auxiliá-lo.\n\n");
+        emailBody.append("Estamos ansiosos para ver você brilhar como um parceiro!\n\n");
+        emailBody.append("Atenciosamente,\n");
+        emailBody.append("Equipe HURR");
+
+        simpleMailMessage.setText(emailBody.toString());
+
+        javaMailSender.send(simpleMailMessage);
+    }
 
     @Override
     public void sendDriverLicenseApproved(FileApproved fileApproved, Customer customer) {
@@ -227,7 +248,7 @@ public class EmailServiceImpl implements EmailService {
     }
 
     @Override
-    public void sendCustomerWithdrawalRequestApproval(CustomerVehicleWithdrawalRequest customerVehicleWithdrawalRequest) {
+    public void sendCustomerVehicleWithdrawalRequestApproval(CustomerVehicleWithdrawalRequest customerVehicleWithdrawalRequest) {
 
         SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
         simpleMailMessage.setTo(customerVehicleWithdrawalRequest.getCustomer().getEmail());

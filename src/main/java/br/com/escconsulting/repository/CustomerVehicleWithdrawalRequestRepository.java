@@ -14,9 +14,9 @@ public interface CustomerVehicleWithdrawalRequestRepository extends JpaRepositor
     @EntityGraph(attributePaths = {
             "customer",
             "customerVehicleBooking",
-            "customerBankAccount",
-            "customerBankAccount.customer",
-            "customerBankAccount.bank",
+            "customerVehicleBankAccount",
+            "customerVehicleBankAccount.customer",
+            "customerVehicleBankAccount.bank",
             "paymentMethod",
             "paymentStatus"
     })

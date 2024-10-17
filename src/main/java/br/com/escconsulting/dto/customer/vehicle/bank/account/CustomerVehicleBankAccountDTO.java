@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.Instant;
 import java.util.UUID;
 
 @Data
@@ -16,8 +17,9 @@ public class CustomerVehicleBankAccountDTO {
     private UUID customerVehicleBankAccountId;
     private CustomerDTO customer;
     private BankDTO bank;
-    private String accountNumber;
-    private String accountType;
-    private String branchNumber;
+    private String pixType;
     private String pixKey;
+    private Instant createdDate;
+    private Instant modifiedDate;
+    private Boolean enabled;
 }

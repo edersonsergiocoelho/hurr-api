@@ -11,6 +11,10 @@ import java.util.UUID;
 @Repository
 public interface CustomerVehicleBankAccountRepository extends JpaRepository<CustomerVehicleBankAccount, UUID> {
 
-    @EntityGraph(attributePaths = {"customer", "bank"})
+    @EntityGraph(attributePaths = {
+            "customer",
+            "bank",
+            "bank.file"
+    })
     List<CustomerVehicleBankAccount> findAll();
 }

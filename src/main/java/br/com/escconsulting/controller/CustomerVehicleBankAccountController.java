@@ -5,10 +5,8 @@ import br.com.escconsulting.dto.LocalUser;
 import br.com.escconsulting.dto.customer.vehicle.bank.account.CustomerVehicleBankAccountDTO;
 import br.com.escconsulting.dto.customer.vehicle.bank.account.CustomerVehicleBankAccountSearchDTO;
 import br.com.escconsulting.entity.CustomerVehicleBankAccount;
-import br.com.escconsulting.entity.PaymentStatus;
 import br.com.escconsulting.mapper.CustomerVehicleBankAccountMapper;
-import br.com.escconsulting.mapper.PaymentStatusMapper;
-import br.com.escconsulting.service.CustomerBankAccountService;
+import br.com.escconsulting.service.CustomerVehicleBankAccountService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -28,11 +26,11 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class CustomerVehicleBankAccountController {
 
-    private final CustomerBankAccountService customerBankAccountService;
+    private final CustomerVehicleBankAccountService customerVehicleBankAccountService;
 
     @GetMapping("/{customerBankAccountId}")
     public ResponseEntity<CustomerVehicleBankAccountDTO> findById(@PathVariable("customerBankAccountId") UUID customerBankAccountId) {
-        return customerBankAccountService.findById(customerBankAccountId)
+        return customerVehicleBankAccountService.findById(customerBankAccountId)
                 .map(CustomerVehicleBankAccountMapper.INSTANCE::toDTO)
                 .map(ResponseEntity::ok)
                 .orElseGet(ResponseEntity.notFound()::build);
@@ -41,7 +39,7 @@ public class CustomerVehicleBankAccountController {
     @GetMapping
     public ResponseEntity<List<CustomerVehicleBankAccountDTO>> findAll() {
         return ResponseEntity.ok(
-                customerBankAccountService.findAll().stream()
+                customerVehicleBankAccountService.findAll().stream()
                         .map(CustomerVehicleBankAccountMapper.INSTANCE::toDTO)
                         .collect(Collectors.toList())
         );
@@ -58,14 +56,16 @@ public class CustomerVehicleBankAccountController {
 
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(sortDir), sortBy));
 
-        Page<CustomerVehicleBankAccountDTO> customerBankAccounts = customerBankAccountService.searchPage(localUser, customerVehicleBankAccountSearchDTO, pageable);
+        Page<CustomerVehicleBankAccountDTO> customerBankAccounts = customerVehicleBankAccountService.searchPage(localUser, customerVehicleBankAccountSearchDTO, pageable);
 
         return ResponseEntity.ok(customerBankAccounts);
     }
 
     @PostMapping
-    public ResponseEntity<?> save(@RequestBody CustomerVehicleBankAccount customerVehicleBankAccount) {
-        return customerBankAccountService.save(customerVehicleBankAccount)
+    public ResponseEntity<?> save(@CurrentUser LocalUser localUser,
+                                  @RequestBody CustomerVehicleBankAccount customerVehicleBankAccount) {
+
+        return customerVehicleBankAccountService.save(localUser, customerVehicleBankAccount)
                 .map(CustomerVehicleBankAccountMapper.INSTANCE::toDTO)
                 .map(dto -> ResponseEntity.status(HttpStatus.CREATED).body(dto))
                 .orElseThrow(() -> new IllegalStateException("Failed to save customer vehicle bank account."));
@@ -74,7 +74,7 @@ public class CustomerVehicleBankAccountController {
     @PutMapping("/{customerBankAccountId}")
     public ResponseEntity<?> update(@PathVariable("customerBankAccountId") UUID customerBankAccountId,
                                     @RequestBody CustomerVehicleBankAccount customerVehicleBankAccount) {
-        return customerBankAccountService.update(customerBankAccountId, customerVehicleBankAccount)
+        return customerVehicleBankAccountService.update(customerBankAccountId, customerVehicleBankAccount)
                 .map(CustomerVehicleBankAccountMapper.INSTANCE::toDTO)
                 .map(updatedCustomerBankAccount -> ResponseEntity.ok(updatedCustomerBankAccount))
                 .orElseThrow(() -> new IllegalStateException("Failed to update customer bank account."));
@@ -82,7 +82,7 @@ public class CustomerVehicleBankAccountController {
 
     @DeleteMapping("/{customerBankAccountId}")
     public ResponseEntity<?> delete(@PathVariable("customerBankAccountId") UUID customerBankAccountId) {
-        customerBankAccountService.delete(customerBankAccountId);
+        customerVehicleBankAccountService.delete(customerBankAccountId);
         return ResponseEntity.noContent().build();
     }
 }

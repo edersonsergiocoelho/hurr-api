@@ -1,5 +1,6 @@
 package br.com.escconsulting.service;
 
+import br.com.escconsulting.dto.LocalUser;
 import br.com.escconsulting.dto.user.role.UserRoleDTO;
 import br.com.escconsulting.dto.user.role.UserRoleSearchDTO;
 import br.com.escconsulting.entity.UserRole;
@@ -22,6 +23,8 @@ public interface UserRoleService {
     List<UserRole> saveAll(List<UserRole> userRoles);
 
     Optional<UserRole> update(UUID userId, UUID roleId, UserRole userUserRole);
+
+    Optional<UserRole> becomeVehiclePartner(LocalUser localUser);
 
     void delete(UUID userId, UUID roleId);
 }

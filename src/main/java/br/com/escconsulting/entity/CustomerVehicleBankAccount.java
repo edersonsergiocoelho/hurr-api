@@ -6,6 +6,7 @@ import lombok.*;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.time.Instant;
 import java.util.UUID;
 
 /**
@@ -61,4 +62,15 @@ public class CustomerVehicleBankAccount extends AbstractEntity implements Serial
      */
     @Column(name = "pix_key", length = 100)
     private String pixKey;
+
+    @PrePersist
+    protected void prePersist() {
+        if (this.getCreatedDate() == null) {
+            this.setCreatedDate(Instant.now());
+        }
+
+        if (this.getEnabled() == null) {
+            this.setEnabled(Boolean.TRUE);
+        }
+    }
 }

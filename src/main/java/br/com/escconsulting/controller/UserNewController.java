@@ -49,9 +49,12 @@ public class UserNewController {
     }
 
     @GetMapping
-    public ResponseEntity<List<User>> findAll() {
-        List<User> listUser = userNewService.findAll();
-        return ResponseEntity.ok(listUser);
+    public ResponseEntity<?> findAll() {
+        return ResponseEntity.ok(
+                userNewService.findAll().stream()
+                        .map(UserMapper.INSTANCE::toSimpleDTO)
+                        .toList()
+        );
     }
 
     @GetMapping("/me")

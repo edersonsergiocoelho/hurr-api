@@ -4,6 +4,7 @@ import br.com.escconsulting.dto.customer.vehicle.bank.account.CustomerVehicleBan
 import br.com.escconsulting.entity.CustomerVehicleBankAccount;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 import org.mapstruct.factory.Mappers;
 
 @Mapper
@@ -14,4 +15,6 @@ public interface CustomerVehicleBankAccountMapper {
     @Mapping(source = "customerVehicleBankAccount.customer", target = "customer")
     @Mapping(source = "customerVehicleBankAccount.bank", target = "bank")
     CustomerVehicleBankAccountDTO toDTO(CustomerVehicleBankAccount customerVehicleBankAccount);
+
+    void update(CustomerVehicleBankAccount source, @MappingTarget CustomerVehicleBankAccount target);
 }

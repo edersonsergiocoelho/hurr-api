@@ -12,6 +12,8 @@ public interface EmailService {
 
     void sendEmailVerificationCode(Customer customer);
 
+    void sendBecomeVehiclePartner(User user);
+
     void sendDriverLicenseApproved(FileApproved fileApproved, Customer customer);
 
     void sendDriverLicenseDisapprove(FileApproved fileApproved, Customer customer);
@@ -24,7 +26,7 @@ public interface EmailService {
 
     void sendProfilePictureReproved(FileApproved fileApproved, User user);
 
-    void sendCustomerWithdrawalRequestApproval(CustomerVehicleWithdrawalRequest customerVehicleWithdrawalRequest);
+    void sendCustomerVehicleWithdrawalRequestApproval(CustomerVehicleWithdrawalRequest customerVehicleWithdrawalRequest);
 
     void sendCustomerVehicleCreated(CustomerVehicle customerVehicle);
 }

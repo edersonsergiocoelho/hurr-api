@@ -64,6 +64,14 @@ spring:
 mercado.pago:
   access.token: TEST-2684799542969721-121823-a68944e3c00bde61be46c2cee16899d2-70202035
 
+inter:
+  client:
+    id: f9ee4a46-2b1a-4c9a-b66d-918a99c94af3
+    secret: bdd0db05-0829-4044-b5ff-12326d84628e
+  cert:
+    path: ./Sandbox_InterAPI_PFX.pfx
+    password: r35gt-ralphaomega16
+
 telegram:
   bot:
     token: 6763877962:AAElA1aQ8FlaOvZjeStegxm41PQUbKRxJ6M

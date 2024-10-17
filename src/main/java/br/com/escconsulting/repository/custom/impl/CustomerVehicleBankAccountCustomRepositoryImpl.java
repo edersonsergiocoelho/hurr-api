@@ -39,27 +39,8 @@ public class CustomerVehicleBankAccountCustomRepositoryImpl extends SimpleJpaRep
         CriteriaQuery<CustomerVehicleBankAccount> cq = cb.createQuery(CustomerVehicleBankAccount.class);
         Root<CustomerVehicleBankAccount> root = cq.from(CustomerVehicleBankAccount.class);
 
-        Fetch<CustomerVehicleBankAccount, CustomerVehicle> customerVehicleFetch = root.fetch("customerVehicle");
-        Fetch<CustomerVehicle, Customer> customerVehicleCustomerFetch = customerVehicleFetch.fetch("customer");
-
-        Fetch<CustomerVehicle, Vehicle> customerVehicleVehicleFetch = customerVehicleFetch.fetch("vehicle");
-        Fetch<Vehicle, VehicleBrand> vehicleVehicleBrandFetch = customerVehicleVehicleFetch.fetch("vehicleBrand");
-
-        Fetch<CustomerVehicle, VehicleModel> customerVehicleVehicleModelFetch = customerVehicleFetch.fetch("vehicleModel");
-        Fetch<VehicleModel, VehicleCategory> vehicleModelVehicleCategoryFetch = customerVehicleVehicleModelFetch.fetch("vehicleCategory");
-
-        Fetch<CustomerVehicle, VehicleColor> customerVehicleVehicleColorFetch = customerVehicleFetch.fetch("vehicleColor");
-        Fetch<CustomerVehicle, VehicleFuelType> customerVehicleVehicleFuelTypeFetch = customerVehicleFetch.fetch("vehicleFuelType");
-        Fetch<CustomerVehicle, VehicleTransmission> customerVehicleVehicleTransmissionFetch = customerVehicleFetch.fetch("vehicleTransmission");
-
-        Fetch<CustomerVehicle, CustomerVehicleAddress> customerVehicleCustomerVehicleAddressFetch = customerVehicleFetch.fetch("addresses");
-        Fetch<CustomerVehicleAddress, Address> customerVehicleAddressAddressFetch = customerVehicleCustomerVehicleAddressFetch.fetch("address");
-
-        Fetch<Address, Country> addressCountryFetch = customerVehicleAddressAddressFetch.fetch("country");
-        Fetch<Address, State> addressStateFetch = customerVehicleAddressAddressFetch.fetch("state");
-        Fetch<Address, City> addressCityFetch = customerVehicleAddressAddressFetch.fetch("city");
-
         Fetch<CustomerVehicleBankAccount, Customer> customerFetch = root.fetch("customer");
+        Fetch<CustomerVehicleBankAccount, Bank> bankFetch = root.fetch("bank");
 
         Predicate spec = cb.conjunction();
 
@@ -100,27 +81,8 @@ public class CustomerVehicleBankAccountCustomRepositoryImpl extends SimpleJpaRep
         CriteriaQuery<CustomerVehicleBankAccount> cq = cb.createQuery(CustomerVehicleBankAccount.class);
         Root<CustomerVehicleBankAccount> root = cq.from(CustomerVehicleBankAccount.class);
 
-        Fetch<CustomerVehicleBankAccount, CustomerVehicle> customerVehicleFetch = root.fetch("customerVehicle");
-        Fetch<CustomerVehicle, Customer> customerVehicleCustomerFetch = customerVehicleFetch.fetch("customer");
-
-        Fetch<CustomerVehicle, Vehicle> customerVehicleVehicleFetch = customerVehicleFetch.fetch("vehicle");
-        Fetch<Vehicle, VehicleBrand> vehicleVehicleBrandFetch = customerVehicleVehicleFetch.fetch("vehicleBrand");
-
-        Fetch<CustomerVehicle, VehicleModel> customerVehicleVehicleModelFetch = customerVehicleFetch.fetch("vehicleModel");
-        Fetch<VehicleModel, VehicleCategory> vehicleModelVehicleCategoryFetch = customerVehicleVehicleModelFetch.fetch("vehicleCategory");
-
-        Fetch<CustomerVehicle, VehicleColor> customerVehicleVehicleColorFetch = customerVehicleFetch.fetch("vehicleColor");
-        Fetch<CustomerVehicle, VehicleFuelType> customerVehicleVehicleFuelTypeFetch = customerVehicleFetch.fetch("vehicleFuelType");
-        Fetch<CustomerVehicle, VehicleTransmission> customerVehicleVehicleTransmissionFetch = customerVehicleFetch.fetch("vehicleTransmission");
-
-        Fetch<CustomerVehicle, CustomerVehicleAddress> customerVehicleCustomerVehicleAddressFetch = customerVehicleFetch.fetch("addresses");
-        Fetch<CustomerVehicleAddress, Address> customerVehicleAddressAddressFetch = customerVehicleCustomerVehicleAddressFetch.fetch("address");
-
-        Fetch<Address, Country> addressCountryFetch = customerVehicleAddressAddressFetch.fetch("country");
-        Fetch<Address, State> addressStateFetch = customerVehicleAddressAddressFetch.fetch("state");
-        Fetch<Address, City> addressCityFetch = customerVehicleAddressAddressFetch.fetch("city");
-
         Fetch<CustomerVehicleBankAccount, Customer> customerFetch = root.fetch("customer");
+        Fetch<CustomerVehicleBankAccount, Bank> bankFetch = root.fetch("bank");
 
         Predicate spec = cb.conjunction();
 
