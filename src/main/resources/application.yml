@@ -1,104 +1,118 @@
+# Configurações gerais da aplicação
 application:
-  title: "Hurr - API"
-  version: "0.0.1"
+  title: "Hurr - API"  # Título da aplicação
+  version: "0.0.1"  # Versão da aplicação
 
+# Configurações dos scripts que a aplicação pode executar
 scripts:
   generic:
-    enabled: true
+    enabled: true  # Habilita a execução de scripts genéricos
   test:
-    enabled: true
-  path: sql
+    enabled: true  # Habilita a execução de scripts de teste
+  path: sql  # Caminho onde os scripts SQL estão localizados
 
 spring:
-
+  # Permite referências circulares entre beans
   main:
     allow-circular-references: true
 
-  # Configurações Do DataSource
+  # Configurações do DataSource (Banco de Dados)
   datasource:
-    url: jdbc:postgresql://localhost:5432/hurr?currentSchema=hurr
-    username: postgres
-    password: postgres
-    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/hurr?currentSchema=hurr  # URL do banco de dados PostgreSQL
+    username: postgres  # Nome de usuário do banco de dados
+    password: postgres  # Senha do banco de dados
+    driver-class-name: org.postgresql.Driver  # Driver do banco de dados
 
-  # Configurações Do JPA
+  # Configurações do JPA (Java Persistence API)
   jpa:
-    show-sql: true
-    open-in-view: false
+    show-sql: true  # Exibe as consultas SQL no console
+    open-in-view: false  # Desativa a sessão do Hibernate na visualização
     properties:
       hibernate:
-        format_sql: true
+        format_sql: true  # Formata as consultas SQL para fácil leitura
 
-  # Configurações Do Security
+  # Configurações de Segurança
   security:
     oauth2:
       client:
         registration:
           google:
-            clientId: 58495673570-raok2adfrlt76dfjivrb53rc3j9l4928.apps.googleusercontent.com
-            clientSecret: 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
+            clientId: 58495673570-raok2adfrlt76dfjivrb53rc3j9l4928.apps.googleusercontent.com  # ID do cliente do Google
+            clientSecret: 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  # Segredo do cliente do Google
 
-  # Configurações Do Servlet
+  # Configurações do Servlet
   servlet:
     multipart:
-      max-file-size: 10MB
-      max-request-size: 10MB
+      max-file-size: 10MB  # Tamanho máximo do arquivo de upload
+      max-request-size: 10MB  # Tamanho máximo da requisição
 
-  # Configurações Do Email
+  # Configurações de Email
   mail:
-    host: smtp.gmail.com
-    port: 587
-    username: edersonsergiocoelho@gmail.com
-    password: jyfbeilm hwvv snmr
+    host: smtp.gmail.com  # Host do servidor de email
+    port: 587  # Porta do servidor de email
+    username: edersonsergiocoelho@gmail.com  # Nome de usuário para autenticação
+    password: jyfbeilm hwvv snmr  # Senha para autenticação
     properties:
       mail:
         smtp:
-          auth: true
+          auth: true  # Habilita autenticação SMTP
           starttls:
-            enable: true
+            enable: true  # Habilita STARTTLS para conexão segura
 
-  # Configurações Do Flyway
+  # Configurações do Flyway (migrador de banco de dados)
   flyway:
-    enabled: true
+    enabled: true  # Habilita o Flyway para gerenciar migrações de banco de dados
 
+logging:
+  level:
+    root: INFO  # Nível padrão de log para a aplicação
+    org.springframework: INFO  # Log detalhado para o Spring Framework
+    org.flywaydb: INFO  # Log detalhado para operações do Flyway
+    br.com.escconsulting: INFO  # Log detalhado para o pacote específico da sua aplicação
+
+# Configurações para integração com Mercado Pago
 mercado.pago:
   access.token: TEST-2684799542969721-121823-a68944e3c00bde61be46c2cee16899d2-70202035
 
+# Configurações para integração com o Inter (banco)
 inter:
   client:
-    id: f9ee4a46-2b1a-4c9a-b66d-918a99c94af3
-    secret: bdd0db05-0829-4044-b5ff-12326d84628e
+    id: f9ee4a46-2b1a-4c9a-b66d-918a99c94af3  # ID do cliente do Inter
+    secret: bdd0db05-0829-4044-b5ff-12326d84628e  # Segredo do cliente do Inter
   cert:
-    path: ./Sandbox_InterAPI_PFX.pfx
-    password: r35gt-ralphaomega16
+    path: ./Sandbox_InterAPI_PFX.pfx  # Caminho para o certificado PFX
+    password: r35gt-ralphaomega16  # Senha do certificado PFX
 
+# Configurações para integração com Telegram
 telegram:
   bot:
-    token: 6763877962:AAElA1aQ8FlaOvZjeStegxm41PQUbKRxJ6M
+    token: 6763877962:AAElA1aQ8FlaOvZjeStegxm41PQUbKRxJ6  # Token do bot do Telegram
 
+# Configurações para Twilio (serviço de mensagens)
 twilio:
   account:
-    sid: ACb5e993772f05ca517d681c993a7969cb
+    sid: ACb5e993772f05ca517d681c993a7969cb  # SID da conta Twilio
   auth:
-    token: e45a50438c256c1d2cd05e4308bee3e9
+    token: e45a50438c256c1d2cd05e4308bee3e9  # Token de autenticação Twilio
   phone:
-    number: "+18329242707"
-    whatsapp: "+14155238886"
+    number: "+18329242707"  # Número de telefone Twilio
+    whatsapp: "+14155238886"  # Número de WhatsApp Twilio
 
+# Configurações para WhatsApp
 whatsapp:
-  #access.token: EAAak18SW4KoBOZCsePbyNqVNukpKNQbNFk1Pr0FnUFGUK9be4TvUvmbBSlOWpdeeXUjISYkYESbvGZCOCYwZBi4oNis1LsB93DwG12vGK0VrWKOZBuDGimBf5mbR1ZAzze2cfkFE6H3DxXDZAyiaCkgT2AlHHZBMl39LbtKyZCxEFj1FOUyqZBBFIDKo7UA6frGZBM
-  access.token: EAAak18SW4KoBOyHh15Gl4iiz73QX7f7Ldi64bXy06SIZA4axZA4ae1qNxLGYzYvfIjBBz2g9cetNlCGCVA8FMQdKzK4CvhHwaPjURuiZABU89iyah2TZAYOUbE1SHz44BZCwVzdu4Coa9Iq1znzLnkt0dfSSxkDkPqUR4yFhdZA2qZASNmIrGuQJ06ZAFxIZCc2waVWlPQtW412ujeZBw4
-  from.phone.number.id: 223267017528976
+  access.token: EAAak18SW4KoBOyHh15Gl4iiz73QX7f7Ldi64bXy06SIZA4axZA4ae1qNxLGYzYvfIjBBz2g9cetNlCGCVA8FMQdKzK4CvhHwaPjURuiZABU89iyah2TZAYOUbE1SHz44BZCwVzdu4Coa9Iq1znzLnkt0dfSSxkDkPqUR4yFhdZA2qZASNmIrGuQJ06ZAFxIZCc2waVWlPQtW412ujeZBw4  # Token de acesso para WhatsApp
+  from.phone.number.id: 223267017528976  # ID do número de telefone WhatsApp
 
+# Configurações da aplicação
 app:
   auth:
-    tokenSecret: 926D96C90030DD58429D2751AC1BDBBC
-    tokenExpirationMsec: 864000000
+    tokenSecret: 926D96C90030DD58429D2751AC1BDBBC  # Segredo para assinar tokens de autenticação
+    tokenExpirationMsec: 864000000  # Expiração do token em milissegundos (10 dias)
 
   oauth2:
-    authorizedRedirectUris:
-      - http://localhost:8081/oauth2/redirect
-      - http://localhost:4200/
-      - http://localhost:4200/user/login
-      - myandroidapp://oauth2/redirect
-      - myiosapp://oauth2/redirect
+    authorizedRedirectUris:  # URIs para redirecionamento após autenticação
+      - http://localhost:8081/oauth2/redirect  # URI para redirecionamento local
+      - http://localhost:4200/  # URI para redirecionamento do frontend
+      - http://localhost:4200/user/login  # URI de login
+      - myandroidapp://oauth2/redirect  # URI para redirecionamento no Android
+      - myiosapp://oauth2/redirect  # URI para redirecionamento no iOS

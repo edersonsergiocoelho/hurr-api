@@ -5,7 +5,7 @@ CREATE TABLE IF NOT EXISTS fee (
 
     fee_type VARCHAR(50) NOT NULL, -- Tipo de taxa (ex: 'commission', 'service fee')
 
-    amount DECIMAL(10, 2) NOT NULL, -- Valor da taxa
+    amount NUMERIC(13,2) NOT NULL, -- Valor da taxa
 
     created_date TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT current_timestamp, -- Data de criação do registro
 

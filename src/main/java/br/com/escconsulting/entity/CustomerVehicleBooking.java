@@ -40,7 +40,7 @@ public class CustomerVehicleBooking extends AbstractEntity implements Serializab
     private static final long serialVersionUID = -4187382216307699223L;
 
     /**
-     * Identificador único para a reserva de veículo do cliente.
+     * Identificador único da reserva do veículo do cliente.
      */
     @Id
     @GeneratedValue(generator = "UUID")
@@ -48,48 +48,48 @@ public class CustomerVehicleBooking extends AbstractEntity implements Serializab
     private UUID customerVehicleBookingId;
 
     /**
-     * O veículo do cliente associado a esta reserva.
+     * Veículo associado a esta reserva.
      */
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "customer_vehicle_id", nullable = false)
     private CustomerVehicle customerVehicle;
 
     /**
-     * O cliente que fez a reserva.
+     * Cliente que fez a reserva.
      */
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "customer_id", nullable = false)
     private Customer customer;
 
     /**
-     * O endereço de cobrança do cliente.
+     * Endereço de cobrança do cliente.
      */
     @ManyToOne
     @JoinColumn(name = "customer_address_billing_id", nullable = false)
     private CustomerAddress customerAddressBilling;
 
     /**
-     * O endereço de entrega do cliente, se aplicável.
+     * Endereço de entrega do cliente (opcional).
      */
     @ManyToOne
     @JoinColumn(name = "customer_address_delivery_id")
     private CustomerAddress customerAddressDelivery;
 
     /**
-     * O custo associado ao endereço de entrega.
+     * Custo associado ao endereço de entrega.
      */
     @Column(name = "customer_address_delivery_value", precision = 13, scale = 2)
     private BigDecimal customerAddressDeliveryValue;
 
     /**
-     * O endereço de retirada do cliente, se aplicável.
+     * Endereço de retirada do cliente (opcional).
      */
     @ManyToOne
     @JoinColumn(name = "customer_address_pickup_id")
     private CustomerAddress customerAddressPickUp;
 
     /**
-     * O custo associado ao endereço de retirada.
+     * Custo associado ao endereço de retirada.
      */
     @Column(name = "customer_address_pickup_value", precision = 13, scale = 2)
     private BigDecimal customerAddressPickUpValue;
@@ -101,83 +101,110 @@ public class CustomerVehicleBooking extends AbstractEntity implements Serializab
     private String booking;
 
     /**
-     * A data de início da reserva.
+     * Data de início da reserva.
      */
     @Column(name = "reservation_start_date", nullable = false)
     private LocalDate reservationStartDate;
 
     /**
-     * A hora de início da reserva.
+     * Hora de início da reserva.
      */
     @Column(name = "reservation_start_time", length = 5, nullable = false)
     private String reservationStartTime;
 
     /**
-     * A data de término da reserva.
+     * Data de término da reserva.
      */
     @Column(name = "reservation_end_date", nullable = false)
     private LocalDate reservationEndDate;
 
     /**
-     * A hora de término da reserva.
+     * Hora de término da reserva.
      */
     @Column(name = "reservation_end_time", length = 5, nullable = false)
     private String reservationEndTime;
 
     /**
-     * A leitura do quilômetro inicial no início da reserva.
+     * Número total de dias da reserva.
+     */
+    @Column(name = "days_reservation", nullable = false)
+    private Integer daysReservation;
+
+    /**
+     * Tarifa diária da reserva.
+     */
+    @Column(name = "daily_rate", nullable = false, precision = 13, scale = 2)
+    private BigDecimal dailyRate;
+
+    /**
+     * Leitura do quilômetro no início da reserva.
      */
     @Column(name = "booking_start_km")
     private Long bookingStartKM;
 
     /**
-     * A leitura do quilômetro final no término da reserva.
+     * Leitura do quilômetro no término da reserva.
      */
     @Column(name = "booking_end_km")
     private Long bookingEndKM;
 
     /**
-     * A data e hora de início da reserva.
+     * Data e hora de início da reserva.
      */
     @Column(name = "booking_start_date")
     private LocalDateTime bookingStartDate;
 
+    /**
+     * Notas de check-in para a reserva.
+     */
     @Column(name = "check_in_notes")
     private String checkInNotes;
 
     /**
-     * A data e hora de término da reserva.
+     * Data e hora de término da reserva.
      */
     @Column(name = "booking_end_date")
     private LocalDateTime bookingEndDate;
 
+    /**
+     * Notas de check-out para a reserva.
+     */
     @Column(name = "check_out_notes")
     private String checkOutNotes;
 
     /**
-     * A data e hora em que a reserva foi cancelada.
+     * Data e hora em que a reserva foi cancelada.
      */
     @Column(name = "booking_cancellation_date")
     private LocalDateTime bookingCancellationDate;
 
     /**
-     * O valor disponível para retirada após a dedução da taxa do site.
+     * Valor disponível para retirada após dedução da taxa do site.
      */
     @Column(name = "withdrawable_booking_value", nullable = false, precision = 13, scale = 2)
     private BigDecimal withdrawableBookingValue;
 
     /**
-     * O valor total da reserva.
+     * Valor total da reserva.
      */
     @Column(name = "total_booking_value", nullable = false, precision = 13, scale = 2)
     private BigDecimal totalBookingValue;
 
+    /**
+     * Valor total de adicionais da reserva.
+     */
     @Column(name = "total_additional_value", precision = 13, scale = 2)
     private BigDecimal totalAdditionalValue;
 
+    /**
+     * Valor total final da reserva.
+     */
     @Column(name = "total_final_booking_value", nullable = false, precision = 13, scale = 2)
     private BigDecimal totalFinalBookingValue;
 
+    /**
+     * Status da reserva.
+     */
     @Enumerated(EnumType.STRING)
     @Column(name = "booking_status", length = 50, nullable = false)
     private BookingStatus bookingStatus;
@@ -220,14 +247,17 @@ public class CustomerVehicleBooking extends AbstractEntity implements Serializab
 
     @PrePersist
     protected void prePersist() {
+        // Verifica se a data de criação está nula; se estiver, define a data atual.
         if (this.getCreatedDate() == null) {
             this.setCreatedDate(Instant.now());
         }
 
+        // Verifica se o status da reserva está nulo; se estiver, define como "RESERVED".
         if (this.getBookingStatus() == null) {
             this.setBookingStatus(BookingStatus.RESERVED);
         }
 
+        // Verifica se o campo "enabled" está nulo; se estiver, define como verdadeiro.
         if (this.getEnabled() == null) {
             this.setEnabled(Boolean.TRUE);
         }

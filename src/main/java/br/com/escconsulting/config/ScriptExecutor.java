@@ -1,6 +1,5 @@
 package br.com.escconsulting.config;
 
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationListener;
@@ -18,7 +17,6 @@ import java.util.Arrays;
 import java.util.List;
 
 @Component
-@Slf4j
 public class ScriptExecutor implements ApplicationListener<ContextRefreshedEvent> {
 
     private final boolean scriptsGenericEnabled;

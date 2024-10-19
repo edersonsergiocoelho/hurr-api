@@ -1,0 +1,24 @@
+<configuration>
+    <timestamp key="dayOfWeek" datePattern="E"/>
+
+    <!-- Appender para o log diário em arquivo -->
+    <appender name="DAILY-LOG" class="ch.qos.logback.core.FileAppender">
+        <file>./logs/inter-sdk-${dayOfWeek}.log</file>
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} %-5level %logger{36} %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- Appender para log no console -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} %-5level %logger{36} %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- Configuração do nível de log -->
+    <root level="error">  <!-- Alterado de debug para info -->
+        <appender-ref ref="DAILY-LOG" />
+        <appender-ref ref="CONSOLE" />
+    </root>
+</configuration>
