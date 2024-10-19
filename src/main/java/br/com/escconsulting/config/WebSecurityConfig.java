@@ -2,7 +2,7 @@ package br.com.escconsulting.config;
 
 import br.com.escconsulting.dto.OAuth2AccessTokenErrorResponse;
 import br.com.escconsulting.exception.AccessTokenRequiredException;
-import br.com.escconsulting.security.jwt.TokenAuthenticationFilter;
+import br.com.escconsulting.security.jwt.OncePerRequestFilterImpl;
 import br.com.escconsulting.security.oauth2.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -68,7 +68,7 @@ public class WebSecurityConfig {
 				.csrf(AbstractHttpConfigurer::disable)
 				.formLogin(AbstractHttpConfigurer::disable)
 				.httpBasic(AbstractHttpConfigurer::disable)
-				.exceptionHandling(exceptionHandling -> exceptionHandling.authenticationEntryPoint(new RestAuthenticationEntryPoint()))
+				.exceptionHandling(exceptionHandling -> exceptionHandling.authenticationEntryPoint(new AuthenticationEntryPointImpl()))
 				.authorizeRequests(authorizeRequests ->
 						authorizeRequests
 								.requestMatchers(getPublicRequestMatchers()).permitAll()
@@ -88,7 +88,7 @@ public class WebSecurityConfig {
 				);
 
 		// Adicione nosso filtro de autenticação baseado em token personalizado
-		http.addFilterBefore(tokenAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+		http.addFilterBefore(oncePerRequestFilterImpl(), UsernamePasswordAuthenticationFilter.class);
 
 		return http.build();
 	}
@@ -96,7 +96,7 @@ public class WebSecurityConfig {
 	private RequestMatcher getPublicRequestMatchers() {
 		return new OrRequestMatcher(
 				new AntPathRequestMatcher("/"),
-				new AntPathRequestMatcher("/mercado-pago/webhook"),
+				new AntPathRequestMatcher("/mp/webhook"),
 				new AntPathRequestMatcher("/error"),
 				new AntPathRequestMatcher("/api/all"),
 				new AntPathRequestMatcher("/api/auth/**"),
@@ -111,17 +111,19 @@ public class WebSecurityConfig {
 				new AntPathRequestMatcher("/vehicle/vehicle-brand/{vehicleBrandId}"),
 				new AntPathRequestMatcher("/vehicle-model/vehicle/{vehicleId}"),
 				new AntPathRequestMatcher("/customer-vehicle/{customerVehicleId}"),
-				new AntPathRequestMatcher("/customer-vehicle/search"),
+				new AntPathRequestMatcher("/customer-vehicle/search/page"),
 				new AntPathRequestMatcher("/customer-vehicle-review/by/customer-vehicle/{customerVehicleId}/customer/{customerId}"),
 				new AntPathRequestMatcher("/customer-vehicle-review/all/by/customer-vehicle/{customerVehicleId}"),
 				new AntPathRequestMatcher("/customer-vehicle-address/by/customer-vehicle/{customerVehicleId}"),
-				new AntPathRequestMatcher("/customer-vehicle-address/by/customer-vehicle/{customerVehicleId}/address-type/{addressTypeName}")
+				new AntPathRequestMatcher("/customer-vehicle-address/by/customer-vehicle/{customerVehicleId}/address-type/{addressTypeName}"),
+				new AntPathRequestMatcher("/customer-vehicle-file-photo/by/customer-vehicle/{customerVehicleId}"),
+				new AntPathRequestMatcher("/customer-vehicle-file-photo/by/customer-vehicle/{customerVehicleId}/and/cover-photo")
 		);
 	}
 
 	@Bean
-	public TokenAuthenticationFilter tokenAuthenticationFilter() {
-		return new TokenAuthenticationFilter();
+	public OncePerRequestFilterImpl oncePerRequestFilterImpl() {
+		return new OncePerRequestFilterImpl();
 	}
 
 	/*

@@ -1,6 +1,6 @@
 package br.com.escconsulting.controller.mercado.pago;
 
-import br.com.escconsulting.dto.mercado.pago.MercadoPagoPreferenceRequestDTO;
+import br.com.escconsulting.dto.mercado.pago.MPPreferenceRequestDTO;
 import br.com.escconsulting.service.mercado.pago.MPPreferenceService;
 import com.mercadopago.exceptions.MPApiException;
 import com.mercadopago.exceptions.MPException;
@@ -11,7 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/mercado-pago/preference")
+@RequestMapping("/mp/preference")
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class MPPreferenceController {
 
@@ -25,7 +25,7 @@ public class MPPreferenceController {
     }
 
     @PostMapping
-    public Preference create(@RequestBody MercadoPagoPreferenceRequestDTO mercadoPagoPreferenceRequestDTO) throws MPException, MPApiException {
-        return mpPreferenceService.createPreference(mercadoPagoPreferenceRequestDTO);
+    public Preference create(@RequestBody MPPreferenceRequestDTO MPPreferenceRequestDTO) throws MPException, MPApiException {
+        return mpPreferenceService.createPreference(MPPreferenceRequestDTO);
     }
 }

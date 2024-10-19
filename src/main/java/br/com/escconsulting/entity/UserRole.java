@@ -6,6 +6,7 @@ import lombok.*;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.time.Instant;
 
 @Entity
 @Getter
@@ -35,4 +36,15 @@ public class UserRole extends AbstractEntity implements Serializable {
     @MapsId("roleId")
     @JoinColumn(name = "role_id")
     private Role role;
+
+    @PrePersist
+    protected void prePersist() {
+        if (this.getCreatedDate() == null) {
+            this.setCreatedDate(Instant.now());
+        }
+
+        if (this.getEnabled() == null) {
+            this.setEnabled(Boolean.TRUE);
+        }
+    }
 }

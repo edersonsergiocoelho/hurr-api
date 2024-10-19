@@ -77,6 +77,15 @@ public class UserRoleController {
                 .orElseThrow(() -> new IllegalStateException("Failed to update user role."));
     }
 
+    @PutMapping("/become-vehicle-partner")
+    public ResponseEntity<String> becomeVehiclePartner(@CurrentUser LocalUser localUser) {
+
+        userRoleService.becomeVehiclePartner(localUser)
+                .orElseThrow(() -> new IllegalStateException("Failed to update user role."));
+
+        return ResponseEntity.noContent().build(); // Retorna 204 No Content
+    }
+
     @DeleteMapping("/{userId}/{roleId}")
     public ResponseEntity<?> delete(@PathVariable("userId") UUID userId,
                                     @PathVariable("roleId") UUID roleId) {

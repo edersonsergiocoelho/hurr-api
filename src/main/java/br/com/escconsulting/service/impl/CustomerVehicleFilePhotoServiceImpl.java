@@ -7,8 +7,6 @@ import br.com.escconsulting.entity.CustomerVehicleFilePhoto;
 import br.com.escconsulting.repository.CustomerVehicleFilePhotoRepository;
 import br.com.escconsulting.repository.custom.CustomerVehicleFilePhotoCustomRepository;
 import br.com.escconsulting.service.CustomerVehicleFilePhotoService;
-import br.com.escconsulting.service.EmailService;
-import br.com.escconsulting.service.PaymentStatusService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +15,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -25,11 +22,6 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class CustomerVehicleFilePhotoServiceImpl implements CustomerVehicleFilePhotoService {
-
-    // Service's
-    private final EmailService emailService;
-
-    private final PaymentStatusService paymentStatusService;
 
     // Repository's
     private final CustomerVehicleFilePhotoRepository customerVehicleFilePhotoRepository;

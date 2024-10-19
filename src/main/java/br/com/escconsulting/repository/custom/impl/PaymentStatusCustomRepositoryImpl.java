@@ -41,7 +41,29 @@ public class PaymentStatusCustomRepositoryImpl extends SimpleJpaRepository<Payme
         Predicate spec = cb.conjunction();
 
         if (paymentStatusSearchDTO != null) {
-            spec = cb.and(spec, cb.equal(root.get("customer").get("customerId"), paymentStatusSearchDTO.getCustomerId()));
+
+            // Adiciona condição de filtro para o campo searchValue em todos os campos desejados
+            if (paymentStatusSearchDTO.getGlobalFilter() != null && !paymentStatusSearchDTO.getGlobalFilter().isEmpty()) {
+                String likePattern = "%" + paymentStatusSearchDTO.getGlobalFilter().toLowerCase() + "%";
+
+                Predicate namePredicate = cb.like(cb.upper(root.get("paymentStatusName")), likePattern);
+                // Adicione outros campos aqui da mesma forma
+                Predicate enabledPredicate = cb.like(cb.upper(root.get("enabled").as(String.class)), likePattern);
+
+                // Combine todos os predicados em uma disjunção (OR)
+                spec = cb.and(spec, cb.or(namePredicate, enabledPredicate));
+            }
+
+            // Verifica se o campo 'paymentStatusName' está presente e adiciona a condição com like '%...%'
+            if (paymentStatusSearchDTO.getPaymentStatusName() != null && !paymentStatusSearchDTO.getPaymentStatusName().isEmpty()) {
+                String likePattern = "%" + paymentStatusSearchDTO.getPaymentStatusName() + "%";
+                spec = cb.and(spec, cb.like(cb.upper(root.get("paymentStatusName")), likePattern.toLowerCase()));
+            }
+
+            // Verifica se o campo 'enabled' não é nulo e adiciona a condição
+            if (paymentStatusSearchDTO.getEnabled() != null) {
+                spec = cb.and(spec, cb.equal(root.get("enabled"), paymentStatusSearchDTO.getEnabled()));
+            }
         }
 
         cq.where(spec);
@@ -81,7 +103,6 @@ public class PaymentStatusCustomRepositoryImpl extends SimpleJpaRepository<Payme
         Predicate spec = cb.conjunction();
 
         if (paymentStatusSearchDTO != null) {
-            spec = cb.and(spec, cb.equal(root.get("customer").get("customerId"), paymentStatusSearchDTO.getCustomerId()));
         }
 
         cq.where(spec);

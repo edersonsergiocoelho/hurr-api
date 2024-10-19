@@ -22,4 +22,5 @@ public class CustomerVehicleSearchDTO {
     private String countryName;
     private String stateName;
     private String cityName;
+    private String addressTypeName;
 }

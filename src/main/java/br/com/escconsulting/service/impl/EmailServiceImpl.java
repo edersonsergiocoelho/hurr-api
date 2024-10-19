@@ -97,6 +97,27 @@ public class EmailServiceImpl implements EmailService {
         javaMailSender.send(simpleMailMessage);
     }
 
+    @Override
+    public void sendBecomeVehiclePartner(User user) {
+
+        SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
+        simpleMailMessage.setTo(user.getEmail());
+        simpleMailMessage.setSubject("Bem-vindo ao HURR - Você é Agora um Parceiro!");
+
+        StringBuilder emailBody = new StringBuilder();
+        emailBody.append("Olá ").append(user.getDisplayName()).append(",\n\n");
+        emailBody.append("Seja bem-vindo ao HURR! Estamos muito felizes em tê-lo como nosso novo parceiro.\n");
+        emailBody.append("Você agora faz parte de uma comunidade vibrante de pessoas que compartilham experiências e oportunidades incríveis.\n");
+        emailBody.append("Acreditamos que juntos podemos fazer a diferença e oferecer serviços de qualidade aos nossos clientes.\n");
+        emailBody.append("Se precisar de ajuda ou tiver alguma dúvida, nossa equipe está sempre à disposição para auxiliá-lo.\n\n");
+        emailBody.append("Estamos ansiosos para ver você brilhar como um parceiro!\n\n");
+        emailBody.append("Atenciosamente,\n");
+        emailBody.append("Equipe HURR");
+
+        simpleMailMessage.setText(emailBody.toString());
+
+        javaMailSender.send(simpleMailMessage);
+    }
 
     @Override
     public void sendDriverLicenseApproved(FileApproved fileApproved, Customer customer) {
@@ -227,21 +248,21 @@ public class EmailServiceImpl implements EmailService {
     }
 
     @Override
-    public void sendCustomerWithdrawalRequestApproval(CustomerWithdrawalRequest customerWithdrawalRequest) {
+    public void sendCustomerVehicleWithdrawalRequestApproval(CustomerVehicleWithdrawalRequest customerVehicleWithdrawalRequest) {
 
         SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
-        simpleMailMessage.setTo(customerWithdrawalRequest.getCustomer().getEmail());
+        simpleMailMessage.setTo(customerVehicleWithdrawalRequest.getCustomer().getEmail());
         simpleMailMessage.setSubject("HURR - Seu Pagamento Foi Efetuado");
 
         StringBuilder emailBody = new StringBuilder();
-        emailBody.append("Olá ").append(customerWithdrawalRequest.getCustomer().getFirstName()).append(",\n\n");
+        emailBody.append("Olá ").append(customerVehicleWithdrawalRequest.getCustomer().getFirstName()).append(",\n\n");
         emailBody.append("Temos o prazer de informar que seu pagamento foi efetuado com sucesso.\n\n");
         emailBody.append("Detalhes do pagamento:\n");
-        emailBody.append("Banco: ").append(customerWithdrawalRequest.getCustomerBankAccount().getBank().getBankName()).append("\n");
-        emailBody.append("PIX: ").append(customerWithdrawalRequest.getCustomerBankAccount().getPixKey()).append("\n");
-        emailBody.append("Método de Pagamento: ").append(customerWithdrawalRequest.getPaymentMethod().getPaymentMethodName()).append("\n");
-        emailBody.append("Status do Pagamento: ").append(customerWithdrawalRequest.getPaymentStatus().getPaymentStatusName()).append("\n");
-        emailBody.append("Data da Retirada: ").append(customerWithdrawalRequest.getWithdrawalDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy hh:mm:ss"))).append("\n\n");
+        emailBody.append("Banco: ").append(customerVehicleWithdrawalRequest.getCustomerVehicleBankAccount().getBank().getBankName()).append("\n");
+        emailBody.append("PIX: ").append(customerVehicleWithdrawalRequest.getCustomerVehicleBankAccount().getPixKey()).append("\n");
+        emailBody.append("Método de Pagamento: ").append(customerVehicleWithdrawalRequest.getPaymentMethod().getPaymentMethodName()).append("\n");
+        emailBody.append("Status do Pagamento: ").append(customerVehicleWithdrawalRequest.getPaymentStatus().getPaymentStatusName()).append("\n");
+        emailBody.append("Data da Retirada: ").append(customerVehicleWithdrawalRequest.getWithdrawalDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy hh:mm:ss"))).append("\n\n");
         emailBody.append("Se precisar de esclarecimentos adicionais ou se tiver dúvidas, por favor, entre em contato pelos canais apropriados.\n");
         emailBody.append("Agradecemos pela sua confiança.\n\n");
         emailBody.append("Atenciosamente,\n");

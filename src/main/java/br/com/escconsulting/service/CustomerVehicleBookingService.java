@@ -16,7 +16,11 @@ public interface CustomerVehicleBookingService {
 
     Optional<CustomerVehicleBooking> findById(UUID customerVehicleBookingId);
 
+    Optional<CustomerVehicleBooking> findByPaymentId(Long customerVehicleBookingId);
+
     boolean existsByBooking(String booking);
+
+    boolean existsByMpPaymentId(Long mpPaymentId);
 
     List<CustomerVehicleBooking> findAll();
 
@@ -34,9 +38,15 @@ public interface CustomerVehicleBookingService {
 
     Optional<CustomerVehicleBooking> save(CustomerVehicleBooking customerVehicleBooking);
 
-    Optional<CustomerVehicleBooking> finalizeBooking(UUID customerVehicleBookingId, CustomerVehicleBooking customerVehicleBooking);
-
     Optional<CustomerVehicleBooking> update(UUID customerVehicleBookingId, CustomerVehicleBooking customerVehicleBooking);
+
+    Optional<CustomerVehicleBooking> checkIn(UUID customerVehicleBookingId, CustomerVehicleBooking customerVehicleBooking);
+
+    Optional<CustomerVehicleBooking> checkOut(UUID customerVehicleBookingId, CustomerVehicleBooking customerVehicleBooking);
+
+    Optional<CustomerVehicleBooking> paymentAdditional(UUID customerVehicleBookingId, CustomerVehicleBooking customerVehicleBooking);
+
+    Optional<CustomerVehicleBooking> cancelBooking(UUID customerVehicleBookingId, CustomerVehicleBooking customerVehicleBooking);
 
     void delete(UUID customerVehicleBookingId);
 }

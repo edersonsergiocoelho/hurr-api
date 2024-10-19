@@ -32,4 +32,6 @@ public class VehicleCategory extends AbstractEntity implements Serializable {
     @Column(name = "vehicleCategory_name", nullable = false, length = 100, unique = true)
     private String vehicleCategoryName;
 
+    @Column(name = "file_id")
+    private UUID fileId;
 }

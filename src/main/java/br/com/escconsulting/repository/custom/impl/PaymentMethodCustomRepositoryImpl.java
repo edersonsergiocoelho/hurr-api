@@ -38,10 +38,35 @@ public class PaymentMethodCustomRepositoryImpl extends SimpleJpaRepository<Payme
         CriteriaQuery<PaymentMethod> cq = cb.createQuery(PaymentMethod.class);
         Root<PaymentMethod> root = cq.from(PaymentMethod.class);
 
+        // Adiciona fetch para a entidade File
+        root.fetch("file", JoinType.LEFT); // Supondo que seja um fetch à esquerda (LEFT JOIN)
+
         Predicate spec = cb.conjunction();
 
         if (paymentMethodSearchDTO != null) {
-            spec = cb.and(spec, cb.equal(root.get("customer").get("customerId"), paymentMethodSearchDTO.getCustomerId()));
+
+            // Adiciona condição de filtro para o campo searchValue em todos os campos desejados
+            if (paymentMethodSearchDTO.getGlobalFilter() != null && !paymentMethodSearchDTO.getGlobalFilter().isEmpty()) {
+                String likePattern = "%" + paymentMethodSearchDTO.getGlobalFilter().toLowerCase() + "%";
+
+                Predicate namePredicate = cb.like(cb.upper(root.get("paymentMethodName")), likePattern);
+                // Adicione outros campos aqui da mesma forma
+                Predicate enabledPredicate = cb.like(cb.upper(root.get("enabled").as(String.class)), likePattern);
+
+                // Combine todos os predicados em uma disjunção (OR)
+                spec = cb.and(spec, cb.or(namePredicate, enabledPredicate));
+            }
+
+            // Verifica se o campo 'paymentStatusName' está presente e adiciona a condição com like '%...%'
+            if (paymentMethodSearchDTO.getPaymentMethodName() != null && !paymentMethodSearchDTO.getPaymentMethodName().isEmpty()) {
+                String likePattern = "%" + paymentMethodSearchDTO.getPaymentMethodName() + "%";
+                spec = cb.and(spec, cb.like(cb.upper(root.get("paymentStatusName")), likePattern.toLowerCase()));
+            }
+
+            // Verifica se o campo 'enabled' não é nulo e adiciona a condição
+            if (paymentMethodSearchDTO.getEnabled() != null) {
+                spec = cb.and(spec, cb.equal(root.get("enabled"), paymentMethodSearchDTO.getEnabled()));
+            }
         }
 
         cq.where(spec);
@@ -81,7 +106,29 @@ public class PaymentMethodCustomRepositoryImpl extends SimpleJpaRepository<Payme
         Predicate spec = cb.conjunction();
 
         if (paymentMethodSearchDTO != null) {
-            spec = cb.and(spec, cb.equal(root.get("customer").get("customerId"), paymentMethodSearchDTO.getCustomerId()));
+
+            // Adiciona condição de filtro para o campo searchValue em todos os campos desejados
+            if (paymentMethodSearchDTO.getGlobalFilter() != null && !paymentMethodSearchDTO.getGlobalFilter().isEmpty()) {
+                String likePattern = "%" + paymentMethodSearchDTO.getGlobalFilter().toLowerCase() + "%";
+
+                Predicate namePredicate = cb.like(cb.upper(root.get("paymentMethodName")), likePattern);
+                // Adicione outros campos aqui da mesma forma
+                Predicate enabledPredicate = cb.like(cb.upper(root.get("enabled").as(String.class)), likePattern);
+
+                // Combine todos os predicados em uma disjunção (OR)
+                spec = cb.and(spec, cb.or(namePredicate, enabledPredicate));
+            }
+
+            // Verifica se o campo 'paymentStatusName' está presente e adiciona a condição com like '%...%'
+            if (paymentMethodSearchDTO.getPaymentMethodName() != null && !paymentMethodSearchDTO.getPaymentMethodName().isEmpty()) {
+                String likePattern = "%" + paymentMethodSearchDTO.getPaymentMethodName() + "%";
+                spec = cb.and(spec, cb.like(cb.upper(root.get("paymentStatusName")), likePattern.toLowerCase()));
+            }
+
+            // Verifica se o campo 'enabled' não é nulo e adiciona a condição
+            if (paymentMethodSearchDTO.getEnabled() != null) {
+                spec = cb.and(spec, cb.equal(root.get("enabled"), paymentMethodSearchDTO.getEnabled()));
+            }
         }
 
         cq.where(spec);

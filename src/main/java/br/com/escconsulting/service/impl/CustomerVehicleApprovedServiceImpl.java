@@ -8,8 +8,6 @@ import br.com.escconsulting.mapper.CustomerVehicleApprovedMapper;
 import br.com.escconsulting.repository.CustomerVehicleApprovedRepository;
 import br.com.escconsulting.repository.custom.CustomerVehicleApprovedCustomRepository;
 import br.com.escconsulting.service.CustomerVehicleApprovedService;
-import br.com.escconsulting.service.EmailService;
-import br.com.escconsulting.service.PaymentStatusService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,11 +23,6 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class CustomerVehicleApprovedServiceImpl implements CustomerVehicleApprovedService {
-
-    // Service's
-    private final EmailService emailService;
-
-    private final PaymentStatusService paymentStatusService;
 
     // Repository's
     private final CustomerVehicleApprovedRepository customerVehicleApprovedRepository;

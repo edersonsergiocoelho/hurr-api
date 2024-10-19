@@ -43,4 +43,7 @@ public class Role extends AbstractEntity implements Serializable {
 
 	@ManyToMany(mappedBy = "roles")
 	private Set<User> users;
+
+	@OneToMany(mappedBy = "role")
+	private Set<RoleMenu> roleMenus;
 }

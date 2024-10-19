@@ -24,22 +24,22 @@ public class CustomerVehicleReviewController {
         this.customerVehicleReviewService = customerVehicleReviewService;
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<CustomerVehicleReviewDTO> findById(@PathVariable("id") UUID id) {
-        return customerVehicleReviewService.findById(id)
+    @GetMapping("/{customerVehicleReviewId}")
+    public ResponseEntity<CustomerVehicleReviewDTO> findById(@PathVariable("customerVehicleReviewId") UUID customerVehicleReviewId) {
+        return customerVehicleReviewService.findById(customerVehicleReviewId)
                 .map(CustomerVehicleReviewMapper.INSTANCE::toDTO)
                 .map(ResponseEntity::ok)
-                .orElseGet(ResponseEntity.notFound()::build);
+                .orElseGet(ResponseEntity.noContent()::build);
     }
 
-    @GetMapping("/by/customer-vehicle/{customerVehicleId}/customer/{customerId}")
-    public ResponseEntity<CustomerVehicleReviewDTO> findByCustomerVehicleIdAndCustomerId(@PathVariable("customerVehicleId") UUID customerVehicleId,
-                                                                                         @PathVariable("customerId") UUID customerId) {
+    @GetMapping("/by/customer-vehicle-booking/{customerVehicleBookingId}/customer/{customerId}")
+    public ResponseEntity<CustomerVehicleReviewDTO> findByCustomerVehicleBookingIdAndCustomerId(@PathVariable("customerVehicleBookingId") UUID customerVehicleBookingId,
+                                                                                                @PathVariable("customerId") UUID customerId) {
 
-        return customerVehicleReviewService.findByCustomerVehicleIdAndCustomerId(customerVehicleId, customerId)
+        return customerVehicleReviewService.findByCustomerVehicleBookingIdAndCustomerId(customerVehicleBookingId, customerId)
                 .map(CustomerVehicleReviewMapper.INSTANCE::toDTO)
                 .map(ResponseEntity::ok)
-                .orElseGet(ResponseEntity.notFound()::build);
+                .orElseGet(ResponseEntity.noContent()::build);
     }
 
     @GetMapping

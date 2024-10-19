@@ -9,9 +9,14 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public interface CustomerVehicleBookingCustomRepository extends JpaRepository<CustomerVehicleBooking, UUID> {
+
+    Optional<CustomerVehicleBooking> findById(UUID customerId);
+
+    Optional<CustomerVehicleBooking> findByPaymentId(Long mercadoPagoPaymentId);
 
     List<CustomerVehicleBooking> findByCustomerVehicleWithdrawableBalance(UUID customerId);
 

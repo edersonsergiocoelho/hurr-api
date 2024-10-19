@@ -32,8 +32,8 @@ public class CustomerVehicleReviewServiceImpl implements CustomerVehicleReviewSe
 
     @Override
     @Transactional
-    public Optional<CustomerVehicleReview> findByCustomerVehicleIdAndCustomerId(UUID customerVehicleId, UUID customerId) {
-        return customerVehicleReviewRepository.findByCustomerVehicleIdAndCustomerId(customerVehicleId, customerId);
+    public Optional<CustomerVehicleReview> findByCustomerVehicleBookingIdAndCustomerId(UUID customerVehicleBookingId, UUID customerId) {
+        return customerVehicleReviewRepository.findByCustomerVehicleBookingIdAndCustomerId(customerVehicleBookingId, customerId);
     }
 
     @Override

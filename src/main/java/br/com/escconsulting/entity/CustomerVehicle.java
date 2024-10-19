@@ -81,7 +81,7 @@ public class CustomerVehicle extends AbstractEntity implements Serializable {
     /**
      * Lista de endereços associados a este veículo do cliente.
      */
-    @OneToMany(mappedBy = "customerVehicle", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "customerVehicle", cascade = {CascadeType.REMOVE, CascadeType.REFRESH}, orphanRemoval = true)
     private List<CustomerVehicleAddress> addresses;
 
     /**

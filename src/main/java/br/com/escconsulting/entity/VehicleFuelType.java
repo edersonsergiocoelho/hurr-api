@@ -31,4 +31,7 @@ public class VehicleFuelType extends AbstractEntity implements Serializable {
 
     @Column(name = "vehicle_fuel_type_name", nullable = false, unique = true)
     private String vehicleFuelTypeName;
+
+    @Column(name = "file_id")
+    private UUID fileId;
 }

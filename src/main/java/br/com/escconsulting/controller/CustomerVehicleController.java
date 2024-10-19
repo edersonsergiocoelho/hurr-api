@@ -18,7 +18,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -46,25 +45,31 @@ public class CustomerVehicleController {
         );
     }
 
-    @PostMapping("/search")
-    public ResponseEntity<List<CustomerVehicle>> searchCustomerVehicles(
-            @RequestBody CustomerVehicleSearchDTO customerVehicleSearchDTO
-    ) {
-        List<CustomerVehicle> customerVehicles = customerVehicleService.search(customerVehicleSearchDTO);
-        return ResponseEntity.ok(customerVehicles);
-    }
-
     @PostMapping("/search/page")
-    public ResponseEntity<?> search(@CurrentUser LocalUser localUser,
-                                    @RequestBody CustomerVehicleSearchDTO customerVehicleSearchDTO,
-                                    @RequestParam(value = "page", defaultValue = "0") int page,
-                                    @RequestParam(value = "size", defaultValue = "10") int size,
-                                    @RequestParam(value = "sortDir", defaultValue = "DESC") String sortDir,
-                                    @RequestParam(value = "sortBy", defaultValue = "createdDate") String sortBy) {
+    public ResponseEntity<?> searchPage(@RequestBody CustomerVehicleSearchDTO customerVehicleSearchDTO,
+                                        @RequestParam(value = "page", defaultValue = "0") int page,
+                                        @RequestParam(value = "size", defaultValue = "10") int size,
+                                        @RequestParam(value = "sortDir", defaultValue = "DESC") String sortDir,
+                                        @RequestParam(value = "sortBy", defaultValue = "createdDate") String sortBy) {
 
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(sortDir), sortBy));
 
-        Page<CustomerVehicleDTO> customerVehicles = customerVehicleService.searchPage(localUser, customerVehicleSearchDTO, pageable);
+        Page<CustomerVehicleDTO> customerVehicles = customerVehicleService.searchPage(customerVehicleSearchDTO, pageable);
+
+        return ResponseEntity.ok(customerVehicles);
+    }
+
+    @PostMapping("/customer/search/page")
+    public ResponseEntity<?> customerSearchPage(@CurrentUser LocalUser localUser,
+                                                @RequestBody CustomerVehicleSearchDTO customerVehicleSearchDTO,
+                                                @RequestParam(value = "page", defaultValue = "0") int page,
+                                                @RequestParam(value = "size", defaultValue = "10") int size,
+                                                @RequestParam(value = "sortDir", defaultValue = "DESC") String sortDir,
+                                                @RequestParam(value = "sortBy", defaultValue = "createdDate") String sortBy) {
+
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(sortDir), sortBy));
+
+        Page<CustomerVehicleDTO> customerVehicles = customerVehicleService.customerSearchPage(localUser, customerVehicleSearchDTO, pageable);
 
         return ResponseEntity.ok(customerVehicles);
     }

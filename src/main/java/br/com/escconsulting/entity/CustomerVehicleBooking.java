@@ -1,12 +1,17 @@
 package br.com.escconsulting.entity;
 
+import br.com.escconsulting.dto.mercado.pago.MPPaymentDTO;
+import br.com.escconsulting.entity.enumeration.BookingStatus;
 import br.com.escconsulting.entity.generic.AbstractEntity;
+import br.com.escconsulting.repository.converter.MPPaymentDTOConverter;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.ColumnTransformer;
 
 import java.io.Serial;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -55,6 +60,13 @@ public class CustomerVehicleBooking extends AbstractEntity implements Serializab
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "customer_id", nullable = false)
     private Customer customer;
+
+    /**
+     * O endereço de cobrança do cliente.
+     */
+    @ManyToOne
+    @JoinColumn(name = "customer_address_billing_id", nullable = false)
+    private CustomerAddress customerAddressBilling;
 
     /**
      * O endereço de entrega do cliente, se aplicável.
@@ -130,11 +142,17 @@ public class CustomerVehicleBooking extends AbstractEntity implements Serializab
     @Column(name = "booking_start_date")
     private LocalDateTime bookingStartDate;
 
+    @Column(name = "check_in_notes")
+    private String checkInNotes;
+
     /**
      * A data e hora de término da reserva.
      */
     @Column(name = "booking_end_date")
     private LocalDateTime bookingEndDate;
+
+    @Column(name = "check_out_notes")
+    private String checkOutNotes;
 
     /**
      * A data e hora em que a reserva foi cancelada.
@@ -154,6 +172,16 @@ public class CustomerVehicleBooking extends AbstractEntity implements Serializab
     @Column(name = "total_booking_value", nullable = false, precision = 13, scale = 2)
     private BigDecimal totalBookingValue;
 
+    @Column(name = "total_additional_value", precision = 13, scale = 2)
+    private BigDecimal totalAdditionalValue;
+
+    @Column(name = "total_final_booking_value", nullable = false, precision = 13, scale = 2)
+    private BigDecimal totalFinalBookingValue;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "booking_status", length = 50, nullable = false)
+    private BookingStatus bookingStatus;
+
     /**
      * O identificador do pagamento do gateway de pagamento.
      */
@@ -163,6 +191,45 @@ public class CustomerVehicleBooking extends AbstractEntity implements Serializab
     /**
      * Dados de pagamento do gateway de pagamento em formato JSONB.
      */
-    @Column(name = "mp_payment_data", columnDefinition = "jsonb")
-    private String mpPaymentData;
+    @ColumnTransformer(write = "?::jsonb")
+    @Column(name = "mp_payment", columnDefinition = "jsonb")
+    @Convert(converter = MPPaymentDTOConverter.class)
+    private MPPaymentDTO mpPayment;
+
+    /**
+     * Dados de pagamento do gateway de pagamento em formato JSONB.
+     */
+    @ColumnTransformer(write = "?::jsonb")
+    @Column(name = "mp_payment_refund", columnDefinition = "jsonb")
+    @Convert(converter = MPPaymentDTOConverter.class)
+    private MPPaymentDTO mpPaymentRefund;
+
+    /**
+     * O identificador do pagamento do gateway de pagamento.
+     */
+    @Column(name = "mp_payment_additional_id", nullable = false)
+    private Long mpPaymentAdditionalId;
+
+    /**
+     * Dados de pagamento do gateway de pagamento em formato JSONB.
+     */
+    @ColumnTransformer(write = "?::jsonb")
+    @Column(name = "mp_payment_additional", columnDefinition = "jsonb")
+    @Convert(converter = MPPaymentDTOConverter.class)
+    private MPPaymentDTO mpPaymentAdditional;
+
+    @PrePersist
+    protected void prePersist() {
+        if (this.getCreatedDate() == null) {
+            this.setCreatedDate(Instant.now());
+        }
+
+        if (this.getBookingStatus() == null) {
+            this.setBookingStatus(BookingStatus.RESERVED);
+        }
+
+        if (this.getEnabled() == null) {
+            this.setEnabled(Boolean.TRUE);
+        }
+    }
 }

@@ -7,7 +7,6 @@ import br.com.escconsulting.entity.VehicleFuelType;
 import br.com.escconsulting.repository.VehicleFuelTypeRepository;
 import br.com.escconsulting.repository.custom.VehicleFuelTypeCustomRepository;
 import br.com.escconsulting.service.EmailService;
-import br.com.escconsulting.service.PaymentStatusService;
 import br.com.escconsulting.service.VehicleFuelTypeService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -27,8 +26,6 @@ public class VehicleFuelTypeServiceImpl implements VehicleFuelTypeService {
 
     // Service's
     private final EmailService emailService;
-
-    private final PaymentStatusService paymentStatusService;
 
     // Repository's
     private final VehicleFuelTypeRepository vehicleFuelTypeRepository;

@@ -10,6 +10,7 @@ import java.util.UUID;
 public interface CustomerVehicleRepository extends JpaRepository<CustomerVehicle, UUID> {
 
     @EntityGraph(attributePaths = {
+            "customer",
             "vehicle",
             "vehicle.vehicleBrand",
             "vehicleModel",
@@ -23,7 +24,7 @@ public interface CustomerVehicleRepository extends JpaRepository<CustomerVehicle
             "addresses.address.city",
             "addresses.address.state"
     })
-    Optional<CustomerVehicle> findById(UUID id);
+    Optional<CustomerVehicle> findById(UUID customerVehicleId);
 
     boolean existsByCode(String code);
 }

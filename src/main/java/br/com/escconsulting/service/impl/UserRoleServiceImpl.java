@@ -1,11 +1,15 @@
 package br.com.escconsulting.service.impl;
 
+import br.com.escconsulting.dto.LocalUser;
 import br.com.escconsulting.dto.user.role.UserRoleDTO;
 import br.com.escconsulting.dto.user.role.UserRoleSearchDTO;
+import br.com.escconsulting.entity.Role;
 import br.com.escconsulting.entity.UserRole;
 import br.com.escconsulting.entity.UserRoleId;
 import br.com.escconsulting.repository.UserRoleRepository;
 import br.com.escconsulting.repository.custom.UserRoleCustomRepository;
+import br.com.escconsulting.service.EmailService;
+import br.com.escconsulting.service.RoleService;
 import br.com.escconsulting.service.UserRoleService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +26,10 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class UserRoleServiceImpl implements UserRoleService {
+
+    private final EmailService emailService;
+
+    private final RoleService roleService;
 
     private final UserRoleRepository userRoleRepository;
 
@@ -50,10 +58,6 @@ public class UserRoleServiceImpl implements UserRoleService {
 
     @Override
     public Optional<UserRole> save(UserRole userRole) {
-
-        userRole.setCreatedDate(Instant.now());
-        userRole.setEnabled(Boolean.TRUE);
-
         return Optional.of(userRoleRepository.save(userRole));
     }
 
@@ -65,6 +69,7 @@ public class UserRoleServiceImpl implements UserRoleService {
     @Override
     @Transactional
     public Optional<UserRole> update(UUID userId, UUID roleId, UserRole userRole) {
+
         return findById(userId, roleId)
                 .map(existingUserRole -> {
 
@@ -79,6 +84,33 @@ public class UserRoleServiceImpl implements UserRoleService {
                     }
 
                     return userRoleRepository.save(existingUserRole);
+                });
+    }
+
+    @Override
+    @Transactional
+    public Optional<UserRole> becomeVehiclePartner(LocalUser localUser) {
+
+        return userRoleRepository.findByUserEmail(localUser.getUsername())
+                .map(existingUserRole -> {
+                    // Deletar o UserRole atual
+                    userRoleRepository.delete(existingUserRole);
+
+                    Optional<Role> roleCustomerVehicle = roleService.findByRoleName("ROLE_CUSTOMER_VEHICLE");
+
+                    // Criar um novo UserRole com a role ROLE_CUSTOMER_VEHICLE
+                    UserRole userRoleNew = new UserRole();
+                    userRoleNew.setUserRoleId(new UserRoleId(existingUserRole.getUser().getUserId(), roleCustomerVehicle.get().getRoleId())); // Supondo que o RoleId seja um UUID
+
+                    userRoleNew.setUser(existingUserRole.getUser());
+                    userRoleNew.setRole(roleCustomerVehicle.get());
+
+                    // Salvar o novo UserRole
+                    return userRoleRepository.save(userRoleNew);
+
+                }).map(existingUserRole -> {
+                    emailService.sendBecomeVehiclePartner(existingUserRole.getUser());
+                    return existingUserRole;
                 });
     }
 

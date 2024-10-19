@@ -6,7 +6,6 @@ import br.com.escconsulting.dto.customer.vehicle.booking.CustomerVehicleBookingD
 import br.com.escconsulting.dto.customer.vehicle.booking.CustomerVehicleBookingSearchDTO;
 import br.com.escconsulting.entity.CustomerVehicleBooking;
 import br.com.escconsulting.mapper.CustomerVehicleBookingMapper;
-import br.com.escconsulting.mapper.CustomerWithdrawalRequestMapper;
 import br.com.escconsulting.service.CustomerVehicleBookingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +33,15 @@ public class CustomerVehicleBookingController {
         return customerVehicleBookingService.findById(customerVehicleBookingId)
                 .map(CustomerVehicleBookingMapper.INSTANCE::toDTO)
                 .map(ResponseEntity::ok)
-                .orElseGet(ResponseEntity.notFound()::build);
+                .orElseGet(ResponseEntity.noContent()::build);
+    }
+
+    @GetMapping("/mp/payment/{paymentId}")
+    public ResponseEntity<CustomerVehicleBookingDTO> findByPaymentId(@PathVariable("paymentId") Long paymentId) {
+        return customerVehicleBookingService.findByPaymentId(paymentId)
+                .map(CustomerVehicleBookingMapper.INSTANCE::toDTO)
+                .map(ResponseEntity::ok)
+                .orElseGet(ResponseEntity.noContent()::build);
     }
 
     @GetMapping
@@ -60,7 +67,7 @@ public class CustomerVehicleBookingController {
                                                                       @RequestBody CustomerVehicleBookingSearchDTO customerVehicleBookingSearchDTO) {
         return customerVehicleBookingService.sumCustomerVehicleTotalEarnings(localUser, customerVehicleBookingSearchDTO)
                 .map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
+                .orElseGet(ResponseEntity.noContent()::build);
     }
 
     @PostMapping("/sum/customer-vehicle/withdrawable-current-balance")
@@ -68,7 +75,7 @@ public class CustomerVehicleBookingController {
                                                                                    @RequestBody CustomerVehicleBookingSearchDTO customerVehicleBookingSearchDTO) {
         return customerVehicleBookingService.sumCustomerVehicleWithdrawableCurrentBalance(localUser, customerVehicleBookingSearchDTO)
                 .map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
+                .orElseGet(ResponseEntity.noContent()::build);
     }
 
     @PostMapping("/sum/customer-vehicle/withdrawable-balance")
@@ -118,10 +125,19 @@ public class CustomerVehicleBookingController {
                 .orElseThrow(() -> new IllegalStateException("Failed to save customer vehicle booking."));
     }
 
-    @PutMapping("finalize-booking/{customerVehicleBookingId}")
-    public ResponseEntity<?> finalizeBooking(@PathVariable("customerVehicleBookingId") UUID customerVehicleBookingId,
+    @PutMapping("check-in/{customerVehicleBookingId}")
+    public ResponseEntity<?> checkIn(@PathVariable("customerVehicleBookingId") UUID customerVehicleBookingId,
                                              @RequestBody CustomerVehicleBooking customerVehicleBooking) {
-        return customerVehicleBookingService.finalizeBooking(customerVehicleBookingId, customerVehicleBooking)
+        return customerVehicleBookingService.checkIn(customerVehicleBookingId, customerVehicleBooking)
+                .map(CustomerVehicleBookingMapper.INSTANCE::toDTO)
+                .map(updatedCustomerVehicleBooking -> ResponseEntity.ok(updatedCustomerVehicleBooking))
+                .orElseThrow(() -> new IllegalStateException("Failed to update customer vehicle booking."));
+    }
+
+    @PutMapping("check-out/{customerVehicleBookingId}")
+    public ResponseEntity<?> checkOut(@PathVariable("customerVehicleBookingId") UUID customerVehicleBookingId,
+                                             @RequestBody CustomerVehicleBooking customerVehicleBooking) {
+        return customerVehicleBookingService.checkOut(customerVehicleBookingId, customerVehicleBooking)
                 .map(CustomerVehicleBookingMapper.INSTANCE::toDTO)
                 .map(updatedCustomerVehicleBooking -> ResponseEntity.ok(updatedCustomerVehicleBooking))
                 .orElseThrow(() -> new IllegalStateException("Failed to update customer vehicle booking."));
@@ -131,6 +147,15 @@ public class CustomerVehicleBookingController {
     public ResponseEntity<?> update(@PathVariable("customerVehicleBookingId") UUID customerVehicleBookingId,
                                     @RequestBody CustomerVehicleBooking customerVehicleBooking) {
         return customerVehicleBookingService.update(customerVehicleBookingId, customerVehicleBooking)
+                .map(CustomerVehicleBookingMapper.INSTANCE::toDTO)
+                .map(updatedCustomerVehicleBooking -> ResponseEntity.ok(updatedCustomerVehicleBooking))
+                .orElseThrow(() -> new IllegalStateException("Failed to update customer vehicle booking."));
+    }
+
+    @PutMapping("/cancel-booking/{customerVehicleBookingId}")
+    public ResponseEntity<?> cancelBooking(@PathVariable("customerVehicleBookingId") UUID customerVehicleBookingId,
+                                           @RequestBody CustomerVehicleBooking customerVehicleBooking) {
+        return customerVehicleBookingService.cancelBooking(customerVehicleBookingId, customerVehicleBooking)
                 .map(CustomerVehicleBookingMapper.INSTANCE::toDTO)
                 .map(updatedCustomerVehicleBooking -> ResponseEntity.ok(updatedCustomerVehicleBooking))
                 .orElseThrow(() -> new IllegalStateException("Failed to update customer vehicle booking."));

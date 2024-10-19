@@ -1,6 +1,5 @@
 package br.com.escconsulting.service;
 
-import br.com.escconsulting.dto.LocalUser;
 import br.com.escconsulting.dto.bank.BankDTO;
 import br.com.escconsulting.dto.bank.BankSearchDTO;
 import br.com.escconsulting.entity.Bank;
@@ -17,7 +16,7 @@ public interface BankService {
 
     List<Bank> findAll();
 
-    Page<BankDTO> searchPage(LocalUser localUser, BankSearchDTO bankSearchDTO, Pageable pageable);
+    Page<BankDTO> searchPage(BankSearchDTO bankSearchDTO, Pageable pageable);
 
     Optional<Bank> save(Bank bank);
 

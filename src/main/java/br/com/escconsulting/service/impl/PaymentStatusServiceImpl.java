@@ -1,13 +1,11 @@
 package br.com.escconsulting.service.impl;
 
-import br.com.escconsulting.dto.LocalUser;
 import br.com.escconsulting.dto.payment.status.PaymentStatusDTO;
 import br.com.escconsulting.dto.payment.status.PaymentStatusSearchDTO;
-import br.com.escconsulting.entity.Customer;
 import br.com.escconsulting.entity.PaymentStatus;
+import br.com.escconsulting.mapper.PaymentStatusMapper;
 import br.com.escconsulting.repository.PaymentStatusRepository;
 import br.com.escconsulting.repository.custom.PaymentStatusCustomRepository;
-import br.com.escconsulting.service.CustomerService;
 import br.com.escconsulting.service.PaymentStatusService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -24,8 +22,6 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class PaymentStatusServiceImpl implements PaymentStatusService {
-
-    private final CustomerService customerService;
 
     private final PaymentStatusRepository paymentStatusRepository;
 
@@ -55,22 +51,13 @@ public class PaymentStatusServiceImpl implements PaymentStatusService {
 
     @Transactional
     @Override
-    public Page<PaymentStatusDTO> searchPage(LocalUser localUser, PaymentStatusSearchDTO paymentStatusSearchDTO, Pageable pageable) {
-        Optional<Customer> optionalCustomer = customerService.findByEmail(localUser.getUsername());
-
-        return optionalCustomer.map(customer -> {
-            paymentStatusSearchDTO.setCustomerId(customer.getCustomerId());
-            return paymentStatusCustomRepository.searchPage(paymentStatusSearchDTO, pageable);
-        }).orElseThrow(() -> new RuntimeException("Customer not found for email: " + localUser.getUsername()));
+    public Page<PaymentStatusDTO> searchPage(PaymentStatusSearchDTO paymentStatusSearchDTO, Pageable pageable) {
+        return paymentStatusCustomRepository.searchPage(paymentStatusSearchDTO, pageable);
     }
 
     @Transactional
     @Override
     public Optional<PaymentStatus> save(PaymentStatus paymentStatus) {
-
-        paymentStatus.setCreatedDate(Instant.now());
-        paymentStatus.setEnabled(Boolean.TRUE);
-
         return Optional.of(paymentStatusRepository.save(paymentStatus));
     }
 
@@ -80,7 +67,8 @@ public class PaymentStatusServiceImpl implements PaymentStatusService {
         return findById(paymentStatusId)
                 .map(existingPaymentStatus -> {
 
-                    existingPaymentStatus.setEnabled(paymentStatus.getEnabled());
+                    PaymentStatusMapper.INSTANCE.update(paymentStatus, existingPaymentStatus);
+
                     existingPaymentStatus.setModifiedDate(Instant.now());
 
                     return paymentStatusRepository.save(existingPaymentStatus);
@@ -91,5 +79,11 @@ public class PaymentStatusServiceImpl implements PaymentStatusService {
     @Override
     public void delete(UUID paymentStatusId) {
         findById(paymentStatusId).ifPresent(paymentStatusRepository::delete);
+    }
+
+    @Transactional
+    @Override
+    public void deleteAll(List<UUID> paymentStatusIds) {
+        paymentStatusRepository.deleteAllById(paymentStatusIds);
     }
 }

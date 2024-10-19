@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/mercado-pago/webhook")
+@RequestMapping("/mp/webhook")
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class MPWebhookController {
 

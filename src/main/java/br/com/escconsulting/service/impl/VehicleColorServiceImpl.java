@@ -7,7 +7,6 @@ import br.com.escconsulting.entity.VehicleColor;
 import br.com.escconsulting.repository.VehicleColorRepository;
 import br.com.escconsulting.repository.custom.VehicleColorCustomRepository;
 import br.com.escconsulting.service.EmailService;
-import br.com.escconsulting.service.PaymentStatusService;
 import br.com.escconsulting.service.VehicleColorService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -27,8 +26,6 @@ public class VehicleColorServiceImpl implements VehicleColorService {
 
     // Service's
     private final EmailService emailService;
-
-    private final PaymentStatusService paymentStatusService;
 
     // Repository's
     private final VehicleColorRepository vehicleColorRepository;

@@ -6,9 +6,9 @@ import br.com.escconsulting.entity.UserRole;
 import br.com.escconsulting.entity.UserRoleId;
 import br.com.escconsulting.repository.RoleRepository;
 import br.com.escconsulting.repository.UserNewRepository;
-import br.com.escconsulting.repository.UserRepository;
 import br.com.escconsulting.repository.UserRoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -16,12 +16,16 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
+import java.util.HashSet;
 import java.util.Set;
 
 @Component
 public class SetupDataLoader implements ApplicationListener<ContextRefreshedEvent> {
 
 	private boolean alreadySetup = false;
+
+	@Value("${scripts.test.enabled}")
+	private boolean scriptsTestEnabled;
 
 	@Autowired
 	private UserNewRepository userRepository;
@@ -43,28 +47,48 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
 			return;
 		}
 
-		// Create initial roles
-		Role userRole = createRoleIfNotFound("ROLE_USER");
-		Role adminRole = createRoleIfNotFound("ROLE_ADMIN");
-		Role modRole = createRoleIfNotFound("ROLE_MODERATOR");
+		// Criar roles iniciais se não existirem
+		Role adminRole = getRoleIfFound("ROLE_ADMIN");
+		Role customerVehicleRole = getRoleIfFound("ROLE_CUSTOMER_VEHICLE");
+		Role modRole = getRoleIfFound("ROLE_MODERATOR");
+		Role userRole = getRoleIfFound("ROLE_USER");
 
-		createUserIfNotFound("admin@javachinna.com", Set.of(userRole, adminRole, modRole));
+		// Criar usuários iniciais
+		createUserIfNotFound("admin@hurr.com.br", "Admin", "admin@", Set.of(adminRole));
+
+		if (scriptsTestEnabled) {
+			createUserIfNotFound("joao.silva@example.com", "João Silva", "1234", Set.of(customerVehicleRole));
+			createUserIfNotFound("maria.oliveira@example.com", "Maria Oliveira", "1234", Set.of(modRole));
+			createUserIfNotFound("carlos.souza@example.com", "Carlos Souza", "1234", Set.of(userRole));
+			createUserIfNotFound("ana.costa@example.com", "Ana Costa", "1234", Set.of(customerVehicleRole));
+			createUserIfNotFound("luiz.pereira@example.com", "Luiz Pereira", "1234", Set.of(userRole));
+			createUserIfNotFound("juliana.santos@example.com", "Juliana Santos", "1234", Set.of(userRole));
+			createUserIfNotFound("fernando.lima@example.com", "Fernando Lima", "1234", Set.of(customerVehicleRole));
+			createUserIfNotFound("gabriela.rocha@example.com", "Gabriela Rocha", "1234", Set.of(userRole));
+			createUserIfNotFound("pedro.almeida@example.com", "Pedro Almeida", "1234", Set.of(userRole));
+			createUserIfNotFound("renata.mendes@example.com", "Renata Mendes", "1234", Set.of(userRole));
+		}
 
 		alreadySetup = true;
 	}
 
 	@Transactional
-	private User createUserIfNotFound(final String email, Set<Role> roles) {
+	private User createUserIfNotFound(final String email, String displayName, String password, Set<Role> roles) {
 		User user = userRepository.findByEmail(email).orElse(null);
 		if (user == null) {
 			user = new User();
-			user.setDisplayName("Admin");
+			user.setDisplayName(displayName);
 			user.setEmail(email);
-			user.setPassword(passwordEncoder.encode("admin@"));
+			user.setPassword(passwordEncoder.encode(password));
 			user.setProvider("LOCAL");
 			user.setEnabled(true);
 			user.setCreatedDate(Instant.now());
 			user.setModifiedDate(Instant.now());
+
+			if (!email.equalsIgnoreCase("admin@hurr.com.br") &&
+					!email.equalsIgnoreCase("renata.mendes@example.com")) {
+				user.setPhotoValidated(Boolean.TRUE);
+			}
 
 			user = userRepository.save(user);
 
@@ -83,13 +107,8 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
 	}
 
 	@Transactional
-	private Role createRoleIfNotFound(final String roleName) {
-		return roleRepository.findByRoleName(roleName).orElseGet(() -> {
-			Role role = new Role();
-			role.setRoleName(roleName);
-			role.setCreatedDate(Instant.now());
-			role.setEnabled(true);
-			return roleRepository.save(role);
-		});
+	private Role getRoleIfFound(final String roleName) {
+		return roleRepository.findByRoleName(roleName)
+				.orElseThrow(() -> new RuntimeException("Role not found: " + roleName));
 	}
 }

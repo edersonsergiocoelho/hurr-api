@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.Instant;
 import java.util.UUID;
 
 @Data
@@ -15,4 +16,7 @@ public class FileDTO {
     private String contentType;
     private String originalFileName;
     private byte[] dataAsByteArray;
+    private Instant createdDate;
+    private Instant modifiedDate;
+    private Boolean enabled;
 }

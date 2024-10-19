@@ -15,7 +15,6 @@ import java.util.UUID;
 public class CustomerVehicleAddressDTO {
 
     private UUID customerVehicleAddressId;
-    private CustomerVehicleDTO customerVehicle;
     private AddressDTO address;
     private Instant createdDate;
     private Instant modifiedDate;

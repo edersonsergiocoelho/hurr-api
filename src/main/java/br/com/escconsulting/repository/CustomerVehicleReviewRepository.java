@@ -20,10 +20,10 @@ public interface CustomerVehicleReviewRepository extends JpaRepository<CustomerV
     @Query("SELECT cvr FROM CustomerVehicleReview cvr " +
             "JOIN FETCH cvr.customer c " +
             "JOIN FETCH cvr.customerVehicleBooking cvb " +
-            "WHERE cvb.customerVehicle.customerVehicleId = :customerVehicleId " +
+            "WHERE cvb.customerVehicleBookingId = :customerVehicleBookingId " +
             "AND c.customerId = :customerId")
-    Optional<CustomerVehicleReview> findByCustomerVehicleIdAndCustomerId(@Param("customerVehicleId") UUID customerVehicleId,
-                                                                         @Param("customerId") UUID customerId);
+    Optional<CustomerVehicleReview> findByCustomerVehicleBookingIdAndCustomerId(@Param("customerVehicleBookingId") UUID customerVehicleBookingId,
+                                                                                @Param("customerId") UUID customerId);
 
     @Query("SELECT cvr FROM CustomerVehicleReview cvr " +
            "JOIN FETCH cvr.customer c " +

@@ -119,6 +119,13 @@
 			<version>2.1.17</version>
 		</dependency>
 		<dependency>
+			<groupId>inter</groupId>
+			<artifactId>inter-sdk-java</artifactId>
+			<version>1.0.0</version>
+			<scope>system</scope>
+			<systemPath>${pom.basedir}/inter-sdk-java-1.0.2.jar</systemPath>
+		</dependency>
+		<dependency>
 			<groupId>org.mapstruct</groupId>
 			<artifactId>mapstruct</artifactId>
 			<version>1.5.5.Final</version>
