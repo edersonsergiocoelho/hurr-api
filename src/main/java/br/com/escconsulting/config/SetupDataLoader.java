@@ -7,6 +7,7 @@ import br.com.escconsulting.entity.UserRoleId;
 import br.com.escconsulting.repository.RoleRepository;
 import br.com.escconsulting.repository.UserNewRepository;
 import br.com.escconsulting.repository.UserRoleRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationListener;
@@ -19,6 +20,7 @@ import java.time.Instant;
 import java.util.Set;
 
 @Component
+@Slf4j
 public class SetupDataLoader implements ApplicationListener<ContextRefreshedEvent> {
 
 	@Value("${scripts.test.enabled}")
