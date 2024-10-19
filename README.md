@@ -123,7 +123,7 @@ Para executar o projeto "Hurr - Sistema de Aluguel de Carros", siga os passos ab
 ## 3. Executando o Projeto
 
 1. **Executar o Servidor:**
-  - Localize a classe principal do projeto, que geralmente está na pasta `src/main/java/com/seu_pacote/HurrApplication.java`.
+  - Localize a classe principal do projeto, que geralmente está na pasta `src/main/java/br/com/escconsulting/HurrApplication.java`.
   - Clique com o botão direito na classe e selecione **Run 'HurrApplication'**. Isso iniciará o servidor Spring Boot.
 
 2. **Testar a API:**
