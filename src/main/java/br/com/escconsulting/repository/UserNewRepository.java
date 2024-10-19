@@ -12,12 +12,14 @@ import java.util.UUID;
 public interface UserNewRepository extends JpaRepository<User, UUID> {
 
     @EntityGraph(attributePaths = {
+        "file",
         "roles"
     })
     Optional<User> findById(UUID userId);
 
     @EntityGraph(attributePaths = {
-            "roles"
+        "file",
+        "roles"
     })
     Optional<User> findByEmail(String email);
 }

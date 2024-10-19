@@ -35,7 +35,7 @@ public class UserNewController {
     @GetMapping("/{userId}")
     public ResponseEntity<?> findById(@PathVariable("userId") UUID userId) {
         return userNewService.findById(userId)
-                .map(UserMapper.INSTANCE::toDTO)
+                .map(UserMapper.INSTANCE::toNoRoleDTO)
                 .map(ResponseEntity::ok)
                 .orElseGet(ResponseEntity.notFound()::build);
     }
@@ -58,7 +58,6 @@ public class UserNewController {
     }
 
     @GetMapping("/me")
-    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     public ResponseEntity<?> getCurrentUser(@CurrentUser LocalUser user) {
         return ResponseEntity.ok(GeneralUtils.buildUserInfo(user));
     }
@@ -110,6 +109,7 @@ public class UserNewController {
     public ResponseEntity<?> update(@PathVariable("userId") UUID userId,
                                     @RequestBody User user) {
         return userNewService.update(userId, user)
+                .map(UserMapper.INSTANCE::toNoRoleDTO)
                 .map(updatedUser -> ResponseEntity.ok(updatedUser))
                 .orElseThrow(() -> new IllegalStateException("Failed to update user"));
     }

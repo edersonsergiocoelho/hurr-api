@@ -33,6 +33,11 @@ ON CONFLICT (name) DO NOTHING; -- Ignora a inserção em caso de conflito pelo n
 
 INSERT INTO menu (name, description, icon, url, menu_order)
 VALUES
+('Torne-Se Um Parceiro', 'Torne-Se Um Parceiro', 'pi pi-shop', 'user-role/edit/role', 2)
+ON CONFLICT (name) DO NOTHING; -- Ignora a inserção em caso de conflito pelo nome
+
+INSERT INTO menu (name, description, icon, url, menu_order)
+VALUES
 ('Fotos', 'Editar Fotos Do Carro', 'pi pi-images', 'customer-vehicle/edit/photos/', 1)
 ON CONFLICT (name) DO NOTHING; -- Ignora a inserção em caso de conflito pelo nome
 
@@ -107,4 +112,10 @@ ON CONFLICT (name) DO NOTHING; -- Ignora a inserção em caso de conflito pelo n
 INSERT INTO menu (name, description, icon, url, menu_order)
 VALUES
 ('Status De Pagamento', 'Status De Pagamento De Retirada De Dinheiro Do Dono Do Carro', 'pi pi-check', 'payment-status', 3)
+ON CONFLICT (name) DO NOTHING; -- Ignora a inserção em caso de conflito pelo nome
+
+-- Configurações - Profile
+INSERT INTO menu (name, description, icon, url, menu_order)
+VALUES
+('Profile', 'Perfil Do Usuário', 'pi pi-user', 'settings/profile', 1)
 ON CONFLICT (name) DO NOTHING; -- Ignora a inserção em caso de conflito pelo nome

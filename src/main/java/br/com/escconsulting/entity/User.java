@@ -6,6 +6,7 @@ import lombok.*;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.time.Instant;
 import java.util.Set;
 import java.util.UUID;
 
@@ -51,7 +52,7 @@ public class User extends AbstractEntity implements Serializable {
 	@Column(name = "provider", length = 50, nullable = false)
 	private String provider;
 
-	@Column(name = "photo_file_id")
+	@Column(name = "photo_file_id", insertable = false, updatable = false)
 	private UUID photoFileId;
 
 	@Column(name = "photo_validated", nullable = false)
@@ -59,6 +60,10 @@ public class User extends AbstractEntity implements Serializable {
 
 	@Column(name = "image_url", columnDefinition = "TEXT")
 	private String imageURL;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "photo_file_id")
+	private File file;
 
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "user_role",
@@ -68,6 +73,14 @@ public class User extends AbstractEntity implements Serializable {
 
 	@PrePersist
 	protected void prePersist() {
+		if (this.getCreatedDate() == null) {
+			this.setCreatedDate(Instant.now());
+		}
+
+		if (this.getEnabled() == null) {
+			this.setEnabled(Boolean.TRUE);
+		}
+
 		if (this.photoValidated == null) {
 			this.photoValidated = false;
 		}

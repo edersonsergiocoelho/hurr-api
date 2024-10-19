@@ -21,6 +21,11 @@ INSERT INTO type_menu (type_menu_name, description)
 VALUES ('MENU_SIDE', 'Menu Lateral De Operações')
 ON CONFLICT (type_menu_name) DO NOTHING; -- Ignora a inserção em caso de conflito pelo nome
 
+-- Inserir 'MENU_SIDE_SETTINGS' com ON CONFLICT
+INSERT INTO type_menu (type_menu_name, description)
+VALUES ('MENU_SIDE_SETTINGS', 'Menu Lateral De Configurações')
+ON CONFLICT (type_menu_name) DO NOTHING; -- Ignora a inserção em caso de conflito pelo nome
+
 -- Inserir 'MENU_SIDE_CUSTOMER_VEHICLE_EDIT' com ON CONFLICT
 INSERT INTO type_menu (type_menu_name, description)
 VALUES ('MENU_SIDE_CUSTOMER_VEHICLE_EDIT', 'Menu Lateral Para Edição De Veículos De Clientes')

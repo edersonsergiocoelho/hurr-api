@@ -37,6 +37,8 @@ public class InterConfig {
                     certPassword
             );
 
+            interSdk.setAmbiente("sandbox");
+            interSdk.setDebug(true);
             interSdk.setContaCorrente("3559391-1");
 
         } catch (Exception e) {

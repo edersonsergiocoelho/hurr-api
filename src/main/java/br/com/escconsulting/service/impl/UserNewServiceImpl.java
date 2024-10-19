@@ -7,13 +7,15 @@ import br.com.escconsulting.dto.user.UserPasswordVerificationCodeDTO;
 import br.com.escconsulting.dto.user.UserSearchDTO;
 import br.com.escconsulting.entity.File;
 import br.com.escconsulting.entity.FileApproved;
+import br.com.escconsulting.entity.Role;
 import br.com.escconsulting.entity.User;
 import br.com.escconsulting.entity.enumeration.FileTable;
 import br.com.escconsulting.entity.enumeration.FileType;
 import br.com.escconsulting.exception.user.UserEmailNotFoundException;
 import br.com.escconsulting.exception.user.UserForgotPasswordValidatedException;
-import br.com.escconsulting.repository.custom.UserNewCustomRepository;
+import br.com.escconsulting.mapper.UserMapper;
 import br.com.escconsulting.repository.UserNewRepository;
+import br.com.escconsulting.repository.custom.UserNewCustomRepository;
 import br.com.escconsulting.service.EmailService;
 import br.com.escconsulting.service.FileApprovedService;
 import br.com.escconsulting.service.FileService;
@@ -30,10 +32,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.Instant;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class UserNewServiceImpl implements UserNewService {
@@ -136,11 +135,21 @@ public class UserNewServiceImpl implements UserNewService {
         return findById(userId)
                 .map(existingUser -> {
 
-                    existingUser.setEnabled(user.getEnabled());
-                    existingUser.setModifiedDate(Instant.now());
+                    if (user.getFile().getFileId() == null) {
 
-                    existingUser.setPhotoValidated(user.getPhotoValidated());
-                    existingUser.setPhotoFileId(user.getPhotoFileId());
+                        if (existingUser.getFile() != null) {
+                            fileService.delete(existingUser.getFile().getFileId());
+                        }
+
+                        fileService.save(user.getFile());
+
+                    } else {
+                        fileService.update(user.getFile().getFileId(), user.getFile());
+                    }
+
+                    UserMapper.INSTANCE.update(user, existingUser);
+
+                    existingUser.setModifiedDate(Instant.now());
 
                     return userRepository.save(existingUser);
                 });
