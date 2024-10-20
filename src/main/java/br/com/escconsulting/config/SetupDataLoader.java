@@ -42,7 +42,7 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
 	@Transactional
 	public void onApplicationEvent(final ContextRefreshedEvent event) {
 
-		if (scriptsTestEnabled) {
+		if (!scriptsTestEnabled) {
 			return;
 		}
 
