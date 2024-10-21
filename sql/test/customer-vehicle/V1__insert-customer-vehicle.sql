@@ -312,7 +312,7 @@ INSERT INTO customer_vehicle (
 )
 VALUES (
     uuid_generate_v4(), -- customer_vehicle_id
-    (SELECT customer_id FROM customer WHERE email = 'maria.oliveira@example.com'), -- customer_id
+    (SELECT customer_id FROM customer WHERE email = 'ana.costa@example.com'), -- customer_id
     (SELECT vehicle_id FROM vehicle WHERE vehicle_name = 'ONIX'), -- vehicle_id
     (SELECT vehicle_model_id FROM vehicle_model WHERE vehicle_model_name = '1.0 TURBO FLEX PLUS PREMIER'), -- vehicle_model_id
     (SELECT vehicle_color_id FROM vehicle_color WHERE vehicle_color_name = 'Branco'), -- vehicle_color_id
@@ -381,7 +381,7 @@ INSERT INTO customer_vehicle (
 )
 VALUES (
     uuid_generate_v4(), -- customer_vehicle_id
-    (SELECT customer_id FROM customer WHERE email = 'maria.oliveira@example.com'), -- customer_id
+    (SELECT customer_id FROM customer WHERE email = 'ana.costa@example.com'), -- customer_id
     (SELECT vehicle_id FROM vehicle WHERE vehicle_name = 'JETTA'), -- vehicle_id
     (SELECT vehicle_model_id FROM vehicle_model WHERE vehicle_model_name = '1.4 250 TSI TOTAL FLEX R-LINE TIPTRONIC'), -- vehicle_model_id
     (SELECT vehicle_color_id FROM vehicle_color WHERE vehicle_color_name = 'Vermelho'), -- vehicle_color_id
