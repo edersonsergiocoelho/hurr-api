@@ -47,7 +47,7 @@ public class BankCustomRepositoryImpl extends SimpleJpaRepository<Bank, UUID> im
 
             // Adiciona condição de filtro para o campo searchValue em todos os campos desejados
             if (bankSearchDTO.getGlobalFilter() != null && !bankSearchDTO.getGlobalFilter().isEmpty()) {
-                String likePattern = "%" + bankSearchDTO.getGlobalFilter().toLowerCase() + "%";
+                String likePattern = "%" + bankSearchDTO.getGlobalFilter().toUpperCase() + "%";
 
                 Predicate namePredicate = cb.like(cb.upper(root.get("bankName")), likePattern);
                 // Adicione outros campos aqui da mesma forma
@@ -60,7 +60,7 @@ public class BankCustomRepositoryImpl extends SimpleJpaRepository<Bank, UUID> im
             // Verifica se o campo 'paymentStatusName' está presente e adiciona a condição com like '%...%'
             if (bankSearchDTO.getBankName() != null && !bankSearchDTO.getBankName().isEmpty()) {
                 String likePattern = "%" + bankSearchDTO.getBankName() + "%";
-                spec = cb.and(spec, cb.like(cb.upper(root.get("bankName")), likePattern.toLowerCase()));
+                spec = cb.and(spec, cb.like(cb.upper(root.get("bankName")), likePattern.toUpperCase()));
             }
 
             // Verifica se o campo 'enabled' não é nulo e adiciona a condição
@@ -109,7 +109,7 @@ public class BankCustomRepositoryImpl extends SimpleJpaRepository<Bank, UUID> im
 
             // Adiciona condição de filtro para o campo searchValue em todos os campos desejados
             if (bankSearchDTO.getGlobalFilter() != null && !bankSearchDTO.getGlobalFilter().isEmpty()) {
-                String likePattern = "%" + bankSearchDTO.getGlobalFilter().toLowerCase() + "%";
+                String likePattern = "%" + bankSearchDTO.getGlobalFilter().toUpperCase() + "%";
 
                 Predicate namePredicate = cb.like(cb.upper(root.get("bankName")), likePattern);
                 // Adicione outros campos aqui da mesma forma
@@ -122,7 +122,7 @@ public class BankCustomRepositoryImpl extends SimpleJpaRepository<Bank, UUID> im
             // Verifica se o campo 'paymentStatusName' está presente e adiciona a condição com like '%...%'
             if (bankSearchDTO.getBankName() != null && !bankSearchDTO.getBankName().isEmpty()) {
                 String likePattern = "%" + bankSearchDTO.getBankName() + "%";
-                spec = cb.and(spec, cb.like(cb.upper(root.get("bankName")), likePattern.toLowerCase()));
+                spec = cb.and(spec, cb.like(cb.upper(root.get("bankName")), likePattern.toUpperCase()));
             }
 
             // Verifica se o campo 'enabled' não é nulo e adiciona a condição

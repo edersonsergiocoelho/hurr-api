@@ -1,6 +1,7 @@
 package br.com.escconsulting.controller;
 
 import br.com.escconsulting.entity.VehicleModel;
+import br.com.escconsulting.mapper.VehicleModelMapper;
 import br.com.escconsulting.service.VehicleModelService;
 import jakarta.annotation.security.PermitAll;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/vehicle-model")
@@ -37,13 +39,12 @@ public class VehicleModelController {
 
     @GetMapping("/vehicle/{vehicleId}")
     @PermitAll
-    public ResponseEntity<List<VehicleModel>> getVehicleModelByVehicleId(@PathVariable UUID vehicleId) {
-        List<VehicleModel> vehicleModelList = vehicleModelService.findByVehicleVehicleId(vehicleId);
-        if (! vehicleModelList.isEmpty()) {
-            return ResponseEntity.ok(vehicleModelList);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity<?> getVehicleModelByVehicleId(@PathVariable UUID vehicleId) {
+        return ResponseEntity.ok(
+                vehicleModelService.findByVehicleVehicleId(vehicleId).stream()
+                        .map(VehicleModelMapper.INSTANCE::toDTONoFile)
+                        .collect(Collectors.toList())
+        );
     }
 
     @PostMapping

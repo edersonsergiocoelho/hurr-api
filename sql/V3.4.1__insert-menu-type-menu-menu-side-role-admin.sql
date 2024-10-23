@@ -24,3 +24,9 @@ INSERT INTO menu (name, description, icon, url, menu_order)
 VALUES
 ('Status De Pagamento', 'Status De Pagamento De Retirada De Dinheiro Do Dono Do Carro', 'pi pi-check', 'payment-status', 3)
 ON CONFLICT (name) DO NOTHING; -- Ignora a inserção em caso de conflito pelo nome
+
+-- Operações Administrador - VehicleBrand
+INSERT INTO menu (name, description, icon, url, menu_order)
+VALUES
+('Marca De Veículo', 'Cadastro De Marca De Veículo', 'pi pi-car', 'vehicle-brand', 4)
+ON CONFLICT (name) DO NOTHING; -- Ignora a inserção em caso de conflito pelo nome

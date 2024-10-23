@@ -1,54 +1,83 @@
 package br.com.escconsulting.controller;
 
+import br.com.escconsulting.dto.vehicle.brand.VehicleBrandDTO;
+import br.com.escconsulting.dto.vehicle.brand.VehicleBrandSearchDTO;
 import br.com.escconsulting.entity.VehicleBrand;
+import br.com.escconsulting.mapper.VehicleBrandMapper;
 import br.com.escconsulting.service.VehicleBrandService;
-import jakarta.annotation.security.PermitAll;
-import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/vehicle-brand")
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class VehicleBrandController {
 
-	private final VehicleBrandService vehicleBrandService;
+    private final VehicleBrandService vehicleBrandService;
 
-	public VehicleBrandController(VehicleBrandService vehicleBrandService) {
-		this.vehicleBrandService = vehicleBrandService;
-	}
+    @GetMapping("/{vehicleBrandId}")
+    public ResponseEntity<VehicleBrandDTO> findById(@PathVariable("vehicleBrandId") UUID vehicleBrandId) {
+        return vehicleBrandService.findById(vehicleBrandId)
+                .map(VehicleBrandMapper.INSTANCE::toDTO)
+                .map(ResponseEntity::ok)
+                .orElseGet(ResponseEntity.noContent()::build);
+    }
 
-	@GetMapping
-	@PermitAll
-	public ResponseEntity<List<VehicleBrand>> getAllBrands() {
-		List<VehicleBrand> brands = vehicleBrandService.getAllBrands();
-		return ResponseEntity.ok(brands);
-	}
+    @GetMapping
+    public ResponseEntity<List<VehicleBrandDTO>> findAll() {
+        return ResponseEntity.ok(
+                vehicleBrandService.findAll().stream()
+                        .map(VehicleBrandMapper.INSTANCE::toDTO)
+                        .collect(Collectors.toList())
+        );
+    }
 
-	@GetMapping("/{vehicleBrandId}")
-	public ResponseEntity<VehicleBrand> getBrandById(@PathVariable UUID vehicleBrandId) {
-		VehicleBrand brand = vehicleBrandService.getVehicleBrandById(vehicleBrandId);
-		return ResponseEntity.ok(brand);
-	}
+    @PostMapping("/search/page")
+    public ResponseEntity<?> search(
+            @RequestBody VehicleBrandSearchDTO vehicleBrandSearchDTO,
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "10") int size,
+            @RequestParam(value = "sortDir", defaultValue = "DESC") String sortDir,
+            @RequestParam(value = "sortBy", defaultValue = "createdDate") String sortBy) {
 
-	@PostMapping
-	public ResponseEntity<VehicleBrand> createBrand(@RequestBody @Valid VehicleBrand vehicleBrand) {
-		VehicleBrand vehicleBrandCreated = vehicleBrandService.createVehicleBrand(vehicleBrand);
-		return ResponseEntity.status(HttpStatus.CREATED).body(vehicleBrandCreated);
-	}
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(sortDir), sortBy));
 
-	@PutMapping("/{vehicleBrandId}")
-	public ResponseEntity<VehicleBrand> updateBrand(@PathVariable UUID vehicleBrandId, @RequestBody @Valid VehicleBrand vehicleBrand) {
-		VehicleBrand updatedBrand = vehicleBrandService.updateVehicleBrand(vehicleBrandId, vehicleBrand);
-		return ResponseEntity.ok(updatedBrand);
-	}
+        Page<VehicleBrandDTO> vehicleBrands = vehicleBrandService.searchPage(vehicleBrandSearchDTO, pageable);
 
-	@DeleteMapping("/{vehicleBrandId}")
-	public ResponseEntity<Void> deleteBrand(@PathVariable UUID vehicleBrandId) {
-		vehicleBrandService.deleteVehicleBrand(vehicleBrandId);
-		return ResponseEntity.noContent().build();
-	}
+        return ResponseEntity.ok(vehicleBrands);
+    }
+
+    @PostMapping
+    public ResponseEntity<?> save(@RequestBody VehicleBrand vehicleBrand) {
+        return vehicleBrandService.save(vehicleBrand)
+                .map(VehicleBrandMapper.INSTANCE::toDTO)
+                .map(dto -> ResponseEntity.status(HttpStatus.CREATED).body(dto))
+                .orElseThrow(() -> new IllegalStateException("Failed to save payment method."));
+    }
+
+    @PutMapping("/{vehicleBrandId}")
+    public ResponseEntity<?> update(@PathVariable("vehicleBrandId") UUID vehicleBrandId,
+                                    @RequestBody VehicleBrand vehicleBrand) {
+        return vehicleBrandService.update(vehicleBrandId, vehicleBrand)
+                .map(VehicleBrandMapper.INSTANCE::toDTO)
+                .map(updatedVehicleBrand -> ResponseEntity.ok(updatedVehicleBrand))
+                .orElseThrow(() -> new IllegalStateException("Failed to update payment method."));
+    }
+
+    @DeleteMapping("/{vehicleBrandId}")
+    public ResponseEntity<?> delete(@PathVariable("vehicleBrandId") UUID vehicleBrandId) {
+        vehicleBrandService.delete(vehicleBrandId);
+        return ResponseEntity.noContent().build();
+    }
 }

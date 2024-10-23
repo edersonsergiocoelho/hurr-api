@@ -40,7 +40,10 @@ public class CustomerVehicleCustomRepositoryImpl extends SimpleJpaRepository<Cus
         Root<CustomerVehicle> root = cq.from(CustomerVehicle.class);
 
         Fetch<CustomerVehicle, Vehicle> vehicleFetch = root.fetch("vehicle", JoinType.LEFT);
-        vehicleFetch.fetch("vehicleBrand", JoinType.LEFT);
+
+        Fetch<Vehicle, VehicleBrand> vehicleBrandFetch = vehicleFetch.fetch("vehicleBrand", JoinType.LEFT);
+        vehicleBrandFetch.fetch("file", JoinType.LEFT);
+
         root.fetch("vehicleModel", JoinType.LEFT);
         root.fetch("vehicleColor", JoinType.LEFT);
         root.fetch("vehicleFuelType", JoinType.LEFT);

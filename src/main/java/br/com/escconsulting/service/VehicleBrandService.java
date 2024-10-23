@@ -1,39 +1,30 @@
 package br.com.escconsulting.service;
 
+import br.com.escconsulting.dto.vehicle.brand.VehicleBrandDTO;
+import br.com.escconsulting.dto.vehicle.brand.VehicleBrandSearchDTO;
 import br.com.escconsulting.entity.VehicleBrand;
-import br.com.escconsulting.repository.VehicleBrandRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
-@Service
-public class VehicleBrandService {
+public interface VehicleBrandService {
 
-    @Autowired
-    private VehicleBrandRepository vehicleBrandRepository;
+    Optional<VehicleBrand> findById(UUID vehicleBrandId);
 
-    public List<VehicleBrand> getAllBrands() {
-        return vehicleBrandRepository.findAll();
-    }
+    Optional<VehicleBrand> findByVehicleBrandName(String vehicleBrandName);
 
-    public VehicleBrand getVehicleBrandById(UUID vehicleBrandId) {
-        return vehicleBrandRepository.findById(vehicleBrandId).orElseThrow();
-    }
+    List<VehicleBrand> findAll();
 
-    public VehicleBrand createVehicleBrand(VehicleBrand brand) {
-        return vehicleBrandRepository.save(brand);
-    }
+    Page<VehicleBrandDTO> searchPage(VehicleBrandSearchDTO vehicleBrandSearchDTO, Pageable pageable);
 
-    public VehicleBrand updateVehicleBrand(UUID vehicleBrandId, VehicleBrand vehicleBrand) {
-        VehicleBrand existingBrand = vehicleBrandRepository.findById(vehicleBrandId).orElseThrow();
-        existingBrand.setVehicleBrandName(vehicleBrand.getVehicleBrandName());
-        existingBrand.setEnabled(vehicleBrand.getEnabled());
-        return vehicleBrandRepository.save(existingBrand);
-    }
+    Optional<VehicleBrand> save(VehicleBrand vehicleBrand);
 
-    public void deleteVehicleBrand(UUID vehicleBrandId) {
-        vehicleBrandRepository.deleteById(vehicleBrandId);
-    }
+    Optional<VehicleBrand> update(UUID vehicleBrandId, VehicleBrand vehicleBrand);
+
+    void delete(UUID vehicleBrandId);
+
+    void deleteAll(List<UUID> vehicleBrandIds);
 }

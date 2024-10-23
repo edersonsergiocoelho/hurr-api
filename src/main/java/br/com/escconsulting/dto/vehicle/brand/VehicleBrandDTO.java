@@ -1,5 +1,6 @@
 package br.com.escconsulting.dto.vehicle.brand;
 
+import br.com.escconsulting.dto.file.FileDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,7 +15,7 @@ public class VehicleBrandDTO {
 
     private UUID vehicleBrandId;
     private String vehicleBrandName;
-    private UUID fileId;
+    private FileDTO file;
     private Instant createdDate;
     private Instant modifiedDate;
     private Boolean enabled;

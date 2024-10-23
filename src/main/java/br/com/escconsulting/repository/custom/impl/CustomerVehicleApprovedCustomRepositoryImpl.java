@@ -114,11 +114,11 @@ public class CustomerVehicleApprovedCustomRepositoryImpl extends SimpleJpaReposi
             }
 
             if (searchDTO.getFirstName() != null && !searchDTO.getFirstName().isEmpty()) {
-                spec = cb.and(spec, cb.like(cb.lower(root.get("customerVehicle").get("customer").get("firstName")), "%" + searchDTO.getFirstName().toLowerCase() + "%"));
+                spec = cb.and(spec, cb.like(cb.upper(root.get("customerVehicle").get("customer").get("firstName")), "%" + searchDTO.getFirstName().toUpperCase() + "%"));
             }
 
             if (searchDTO.getLastName() != null && !searchDTO.getLastName().isEmpty()) {
-                spec = cb.and(spec, cb.like(cb.lower(root.get("customerVehicle").get("customer").get("lastName")), "%" + searchDTO.getLastName().toLowerCase() + "%"));
+                spec = cb.and(spec, cb.like(cb.upper(root.get("customerVehicle").get("customer").get("lastName")), "%" + searchDTO.getLastName().toUpperCase() + "%"));
             }
 
             if (searchDTO.getCpf() != null && ! searchDTO.getCpf().isEmpty()) {
