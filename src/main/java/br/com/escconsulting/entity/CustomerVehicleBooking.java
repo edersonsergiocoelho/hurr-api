@@ -5,7 +5,10 @@ import br.com.escconsulting.entity.enumeration.BookingStatus;
 import br.com.escconsulting.entity.generic.AbstractEntity;
 import br.com.escconsulting.repository.converter.MPPaymentDTOConverter;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnTransformer;
 
 import java.io.Serial;
@@ -17,24 +20,23 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 /**
- * Entidade que representa uma reserva de veículo do cliente.
- * Esta entidade mapeia para a tabela "customer_vehicle_booking".
- *
- * @autor Ederson Sergio Monteiro Coelho
+ * Classe que representa a reserva de um veículo do cliente.
+ * <p>
+ * Esta classe mapeia a tabela "customer_vehicle_booking" no banco de dados.
+ * </p>
+ * <p>
+ * Autor: Ederson Sergio Monteiro Coelho
+ * </p>
  */
-
-@Entity
-@Table(name = "customer_vehicle_booking")
-@Getter
-@Setter
-@AllArgsConstructor
+@Data
+@EqualsAndHashCode(callSuper = true, of = "customerVehicleBookingId")
 @NoArgsConstructor
-@EqualsAndHashCode(of = "customerVehicleBookingId", callSuper = false)
-@ToString
+@AllArgsConstructor
+@Entity
 public class CustomerVehicleBooking extends AbstractEntity implements Serializable {
 
     /**
-     * Identificador único para serialização.
+     * Serial version UID para serialização.
      */
     @Serial
     private static final long serialVersionUID = -4187382216307699223L;
@@ -245,6 +247,9 @@ public class CustomerVehicleBooking extends AbstractEntity implements Serializab
     @Convert(converter = MPPaymentDTOConverter.class)
     private MPPaymentDTO mpPaymentAdditional;
 
+    /**
+     * Método de callback executado antes da persistência da entidade.
+     */
     @PrePersist
     protected void prePersist() {
         // Verifica se a data de criação está nula; se estiver, define a data atual.

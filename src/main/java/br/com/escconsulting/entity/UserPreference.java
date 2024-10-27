@@ -2,25 +2,38 @@ package br.com.escconsulting.entity;
 
 import br.com.escconsulting.entity.generic.AbstractEntity;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.Instant;
 import java.util.UUID;
 
-@Getter
-@Setter
+/**
+ * Classe que representa a preferência do usuário.
+ * <p>
+ * Esta classe mapeia a tabela "user_preference" no banco de dados.
+ * </p>
+ * <p>
+ * Autor: Ederson Sergio Monteiro Coelho
+ * </p>
+ */
+@Data
+@EqualsAndHashCode(callSuper = true, of = "userPreferenceId")
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
-@EqualsAndHashCode(callSuper = false)
 @Entity
 @Table(name = "user_preference")
 public class UserPreference extends AbstractEntity implements Serializable {
 
+    /**
+     * Serial version UID para serialização.
+     */
     @Serial
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 79162517564258355L;
 
     /**
      * Identificador único da preferência do usuário.
@@ -49,12 +62,14 @@ public class UserPreference extends AbstractEntity implements Serializable {
     @Column(name = "theme", length = 50)
     private String theme;
 
+    /**
+     * Método de callback executado antes da persistência da entidade.
+     */
     @PrePersist
     protected void prePersist() {
         if (this.getCreatedDate() == null) {
             this.setCreatedDate(Instant.now());
         }
-
         if (this.getEnabled() == null) {
             this.setEnabled(Boolean.TRUE);
         }

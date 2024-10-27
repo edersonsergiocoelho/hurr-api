@@ -2,7 +2,10 @@ package br.com.escconsulting.entity;
 
 import br.com.escconsulting.entity.generic.AbstractEntity;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -10,22 +13,25 @@ import java.time.Instant;
 import java.util.UUID;
 
 /**
- * Entidade que representa uma conta bancária do cliente.
- * Esta entidade mapeia para a tabela "customer_bank_account".
- *
- * @autor Ederson Sergio Monteiro Coelho
+ * Classe que representa a conta bancária de um veículo do cliente.
+ * <p>
+ * Esta classe mapeia a tabela "customer_vehicle_bank_account" no banco de dados.
+ * </p>
+ * <p>
+ * Autor: Ederson Sergio Monteiro Coelho
+ * </p>
  */
-
+@Data
+@EqualsAndHashCode(callSuper = true, of = "customerVehicleBankAccountId")
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "customer_vehicle_bank_account")
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
-@EqualsAndHashCode(of = "customerVehicleBankAccountId", callSuper = false)
-@ToString
 public class CustomerVehicleBankAccount extends AbstractEntity implements Serializable {
 
+    /**
+     * Serial version UID para serialização.
+     */
     @Serial
     private static final long serialVersionUID = -5223744745154642982L;
 
@@ -63,12 +69,14 @@ public class CustomerVehicleBankAccount extends AbstractEntity implements Serial
     @Column(name = "pix_key", length = 100)
     private String pixKey;
 
+    /**
+     * Método de callback executado antes da persistência da entidade.
+     */
     @PrePersist
     protected void prePersist() {
         if (this.getCreatedDate() == null) {
             this.setCreatedDate(Instant.now());
         }
-
         if (this.getEnabled() == null) {
             this.setEnabled(Boolean.TRUE);
         }

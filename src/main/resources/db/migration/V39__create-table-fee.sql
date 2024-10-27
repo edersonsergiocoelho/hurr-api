@@ -7,6 +7,10 @@ CREATE TABLE IF NOT EXISTS fee (
 
     amount NUMERIC(13,2) NOT NULL, -- Valor da taxa
 
+    start_date TIMESTAMP WITHOUT TIME ZONE NOT NULL, -- Data de início da taxa
+
+    end_date TIMESTAMP WITHOUT TIME ZONE NOT NULL, -- Data de término da taxa
+
     created_date TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT current_timestamp, -- Data de criação do registro
 
     modified_date TIMESTAMP WITHOUT TIME ZONE, -- Data de modificação do registro
@@ -23,6 +27,8 @@ COMMENT ON TABLE fee IS 'Tabela para armazenar as taxas aplicáveis no site.';
 COMMENT ON COLUMN fee.fee_id IS 'Identificador único da taxa.';
 COMMENT ON COLUMN fee.fee_type IS 'Tipo de taxa (ex: "commission", "service fee").';
 COMMENT ON COLUMN fee.amount IS 'Valor monetário associado a esta taxa.';
+COMMENT ON COLUMN fee.start_date IS 'Data de início de vigência da taxa.';
+COMMENT ON COLUMN fee.end_date IS 'Data de término de vigência da taxa, se aplicável.';
 COMMENT ON COLUMN fee.created_date IS 'Data de criação da taxa.';
 COMMENT ON COLUMN fee.modified_date IS 'Data da última modificação da taxa.';
 COMMENT ON COLUMN fee.enabled IS 'Indicador se a taxa está ativa (true) ou desativada (false).';

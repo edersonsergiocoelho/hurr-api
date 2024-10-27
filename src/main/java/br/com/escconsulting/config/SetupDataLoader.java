@@ -91,7 +91,7 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
 
 			for (Role role : roles) {
 				UserRole userRole = new UserRole();
-				userRole.setUserRoleId(new UserRoleId(user.getUserId(), role.getRoleId()));
+				userRole.setId(new UserRoleId(user.getUserId(), role.getRoleId()));
 				userRole.setUser(user);
 				userRole.setRole(role);
 				userRole.setCreatedDate(Instant.now());

@@ -9,58 +9,64 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.UUID;
 
 /**
- * Classe que representa uma cidade.
+ * Classe que representa uma taxa.
  * <p>
- * Esta classe mapeia a tabela "city" no banco de dados.
+ * Esta classe mapeia a tabela "fee" no banco de dados.
  * </p>
  * <p>
  * Autor: Ederson Sergio Monteiro Coelho
  * </p>
  */
 @Data
-@EqualsAndHashCode(callSuper = true, of = "cityId")
+@EqualsAndHashCode(callSuper = true, of = "feeId")
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "city")
-public class City extends AbstractEntity implements Serializable {
+@Table(name = "fee")
+public class Fee extends AbstractEntity implements Serializable {
 
     /**
      * Serial version UID para serialização.
      */
     @Serial
-    private static final long serialVersionUID = -3373295098868142075L;
+    private static final long serialVersionUID = -7154041710038789812L;
 
     /**
-     * Identificador único da cidade.
+     * Identificador único da taxa.
      */
     @Id
     @GeneratedValue(generator = "UUID")
-    @Column(name = "city_id", updatable = false, nullable = false)
-    private UUID cityId;
+    @Column(name = "fee_id", updatable = false, nullable = false)
+    private UUID feeId;
 
     /**
-     * Nome da cidade.
+     * Tipo de taxa (ex: 'commission', 'service fee').
      */
-    @Column(name = "city_name", length = 100, nullable = false, unique = true)
-    private String cityName;
+    @Column(name = "fee_type", length = 50, nullable = false)
+    private String feeType;
 
     /**
-     * Estado ao qual a cidade pertence.
+     * Valor da taxa.
      */
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "state_id", nullable = false)
-    private State state;
+    @Column(name = "amount", precision = 13, scale = 2, nullable = false)
+    private BigDecimal amount;
 
     /**
-     * Indica se o serviço está disponível na cidade.
+     * Data de início de vigência da taxa.
      */
-    @Column(name = "service_available", nullable = false)
-    private Boolean serviceAvailable;
+    @Column(name = "start_date", nullable = false)
+    private Instant startDate;
+
+    /**
+     * Data de término de vigência da taxa.
+     */
+    @Column(name = "end_date", nullable = false)
+    private Instant endDate;
 
     /**
      * Método de callback executado antes da persistência da entidade.

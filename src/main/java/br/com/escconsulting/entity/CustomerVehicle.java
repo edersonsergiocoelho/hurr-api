@@ -3,7 +3,10 @@ package br.com.escconsulting.entity;
 import br.com.escconsulting.entity.enumeration.AdvertisementStatus;
 import br.com.escconsulting.entity.generic.AbstractEntity;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -12,13 +15,20 @@ import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 
-@Entity
-@Getter
-@Setter
-@AllArgsConstructor
+/**
+ * Classe que representa o veículo de um cliente.
+ * <p>
+ * Esta classe mapeia a tabela "customer_vehicle" no banco de dados.
+ * </p>
+ * <p>
+ * Autor: Ederson Sergio Monteiro Coelho
+ * </p>
+ */
+@Data
+@EqualsAndHashCode(callSuper = true, of = "customerVehicleId")
 @NoArgsConstructor
-@EqualsAndHashCode(callSuper = false)
-@ToString
+@AllArgsConstructor
+@Entity
 @Table(name = "customer_vehicle")
 public class CustomerVehicle extends AbstractEntity implements Serializable {
 
@@ -215,7 +225,7 @@ public class CustomerVehicle extends AbstractEntity implements Serializable {
      * Status do anúncio do veículo.
      */
     @Enumerated(EnumType.STRING)
-    @Column(name = "advertisement_status", nullable = false,  length = 20)
+    @Column(name = "advertisement_status", nullable = false, length = 20)
     private AdvertisementStatus advertisementStatus;
 
     /**
@@ -228,47 +238,38 @@ public class CustomerVehicle extends AbstractEntity implements Serializable {
         if (this.getDailyRate() == null) {
             this.setDailyRate(new BigDecimal(50));
         }
-
         // Define a taxa de limpeza padrão se não for especificada
         if (this.getCleaningFee() == null) {
             this.setCleaningFee(new BigDecimal(30));
         }
-
         // Define a quilometragem ilimitada como verdadeira se não for especificada
         if (this.getUnlimitedMileage() == null) {
             this.setUnlimitedMileage(Boolean.TRUE);
         }
-
         // Define a quilometragem limitada como falsa se não for especificada
         if (this.getLimitedMileage() == null) {
             this.setLimitedMileage(Boolean.FALSE);
         }
-
         // Define a entrega no endereço do cliente como falsa se não for especificada
         if (this.getDeliverToAddress() == null) {
             this.setDeliverToAddress(Boolean.FALSE);
         }
-
         // Define a retirada no endereço do cliente como falsa se não for especificada
         if (this.getPickUpAtAddress() == null) {
             this.setPickUpAtAddress(Boolean.FALSE);
         }
-
         // Define o campo de validação do veículo do cliente como falso se não for especificado
         if (this.getCustomerVehicleValidated() == null) {
             this.setCustomerVehicleValidated(Boolean.FALSE);
         }
-
         // Define o status do anúncio como rascunho se não for especificado
         if (this.getAdvertisementStatus() == null) {
             this.setAdvertisementStatus(AdvertisementStatus.DRAFT);
         }
-
         // Define a data de criação se não for especificada
         if (this.getCreatedDate() == null) {
             this.setCreatedDate(Instant.now());
         }
-
         // Define a entidade como habilitada se não for especificada
         if (this.getEnabled() == null) {
             this.setEnabled(Boolean.TRUE);
