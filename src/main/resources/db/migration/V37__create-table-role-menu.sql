@@ -1,3 +1,6 @@
+-- Define o search_path para o schema 'hurr'
+SET search_path TO hurr;
+
 -- Cria a tabela "role_menu" se ainda não existir
 CREATE TABLE IF NOT EXISTS role_menu (
     -- Identificador único da função (obrigatório)

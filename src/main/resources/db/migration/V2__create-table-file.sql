@@ -1,3 +1,6 @@
+-- Define o search_path para o schema 'hurr'
+SET search_path TO hurr;
+
 -- Criação da tabela 'file' com comentários em cada campo
 CREATE TABLE IF NOT EXISTS file
 (

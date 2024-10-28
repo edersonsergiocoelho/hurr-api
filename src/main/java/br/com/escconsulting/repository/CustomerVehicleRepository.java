@@ -13,6 +13,7 @@ public interface CustomerVehicleRepository extends JpaRepository<CustomerVehicle
             "customer",
             "vehicle",
             "vehicle.vehicleBrand",
+            "vehicle.vehicleBrand.file",
             "vehicleModel",
             "vehicleModel.vehicleCategory",
             "vehicleColor",

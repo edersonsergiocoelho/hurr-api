@@ -1,3 +1,6 @@
+-- Define o search_path para o schema 'hurr'
+SET search_path TO hurr;
+
 -- Cria a tabela "role" se ela ainda não existir
 CREATE TABLE IF NOT EXISTS role
 (
