@@ -6,7 +6,7 @@ services:
       context: .
       dockerfile: Dockerfile
     environment:
-      - JAVA_OPTS=-Dspring.datasource.url=jdbc:postgresql://db:5432/hurr
+      - JAVA_OPTS=-Dspring.datasource.url=jdbc:postgresql://db:5432/hurr?currentSchema=hurr
       - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_DATASOURCE_PASSWORD=postgres
     ports:
