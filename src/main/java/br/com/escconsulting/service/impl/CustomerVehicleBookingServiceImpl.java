@@ -3,10 +3,12 @@ package br.com.escconsulting.service.impl;
 import br.com.escconsulting.dto.LocalUser;
 import br.com.escconsulting.dto.customer.vehicle.booking.CustomerVehicleBookingDTO;
 import br.com.escconsulting.dto.customer.vehicle.booking.CustomerVehicleBookingSearchDTO;
+import br.com.escconsulting.dto.mercado.pago.MPPaymentRefundDTO;
 import br.com.escconsulting.entity.Customer;
 import br.com.escconsulting.entity.CustomerVehicleBooking;
 import br.com.escconsulting.entity.enumeration.BookingStatus;
 import br.com.escconsulting.mapper.CustomerVehicleBookingMapper;
+import br.com.escconsulting.mapper.mercado.pago.MPPaymentRefundMapper;
 import br.com.escconsulting.repository.CustomerVehicleBookingRepository;
 import br.com.escconsulting.repository.custom.CustomerVehicleBookingCustomRepository;
 import br.com.escconsulting.service.CustomerService;
@@ -268,13 +270,19 @@ public class CustomerVehicleBookingServiceImpl implements CustomerVehicleBooking
                             if (!refund.isPresent()) {
                                 throw new IllegalStateException("customer.vehicle.booking.refund.failed");
                             }
+
+                            MPPaymentRefundDTO mpPaymentRefundDTO = new MPPaymentRefundDTO();
+
+                            MPPaymentRefundMapper.INSTANCE.update(refund.get(), mpPaymentRefundDTO);
+                            updatedCustomerVehicleBooking.setMpPaymentRefund(mpPaymentRefundDTO);
                         }
 
                     } catch (MPException | MPApiException e) {
                         throw new RuntimeException("customer.vehicle.booking.refund.error", e);
                     }
 
-                    return updatedCustomerVehicleBooking; // Retorna a reserva cancelada após o processamento do reembolso
+                    // Salva a reserva atualizada
+                    return customerVehicleBookingRepository.save(updatedCustomerVehicleBooking); // Retorna a reserva cancelada após o processamento do reembolso
                 });
     }
 

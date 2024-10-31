@@ -52,8 +52,9 @@ public class VehicleCategory extends AbstractEntity implements Serializable {
     /**
      * Identificador do arquivo associado à categoria de veículo.
      */
-    @Column(name = "file_id")
-    private UUID fileId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "file_id")
+    private File file;
 
     /**
      * Método de callback executado antes da persistência da entidade.

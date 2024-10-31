@@ -47,10 +47,11 @@ public class VehicleTransmission extends AbstractEntity implements Serializable 
     private String vehicleTransmissionName;
 
     /**
-     * Identificador do arquivo associado à transmissão do veículo.
+     * Identificador do arquivo associado à transmissão de veículo.
      */
-    @Column(name = "file_id")
-    private UUID fileId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "file_id")
+    private File file;
 
     /**
      * Método de callback executado antes da persistência da entidade.

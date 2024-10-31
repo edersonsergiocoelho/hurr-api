@@ -31,7 +31,7 @@ public class CustomerVehicleBookingController {
     @GetMapping("/{customerVehicleBookingId}")
     public ResponseEntity<CustomerVehicleBookingDTO> findById(@PathVariable("customerVehicleBookingId") UUID customerVehicleBookingId) {
         return customerVehicleBookingService.findById(customerVehicleBookingId)
-                .map(CustomerVehicleBookingMapper.INSTANCE::toDTO)
+                .map(CustomerVehicleBookingMapper.INSTANCE::toDTONoFile)
                 .map(ResponseEntity::ok)
                 .orElseGet(ResponseEntity.noContent()::build);
     }
@@ -39,7 +39,7 @@ public class CustomerVehicleBookingController {
     @GetMapping("/mp/payment/{paymentId}")
     public ResponseEntity<CustomerVehicleBookingDTO> findByPaymentId(@PathVariable("paymentId") Long paymentId) {
         return customerVehicleBookingService.findByPaymentId(paymentId)
-                .map(CustomerVehicleBookingMapper.INSTANCE::toDTO)
+                .map(CustomerVehicleBookingMapper.INSTANCE::toDTONoFile)
                 .map(ResponseEntity::ok)
                 .orElseGet(ResponseEntity.noContent()::build);
     }

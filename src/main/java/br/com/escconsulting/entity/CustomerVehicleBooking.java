@@ -1,9 +1,11 @@
 package br.com.escconsulting.entity;
 
 import br.com.escconsulting.dto.mercado.pago.MPPaymentDTO;
+import br.com.escconsulting.dto.mercado.pago.MPPaymentRefundDTO;
 import br.com.escconsulting.entity.enumeration.BookingStatus;
 import br.com.escconsulting.entity.generic.AbstractEntity;
 import br.com.escconsulting.repository.converter.MPPaymentDTOConverter;
+import br.com.escconsulting.repository.converter.MPPaymentRefundDTOConverter;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -230,8 +232,8 @@ public class CustomerVehicleBooking extends AbstractEntity implements Serializab
      */
     @ColumnTransformer(write = "?::jsonb")
     @Column(name = "mp_payment_refund", columnDefinition = "jsonb")
-    @Convert(converter = MPPaymentDTOConverter.class)
-    private MPPaymentDTO mpPaymentRefund;
+    @Convert(converter = MPPaymentRefundDTOConverter.class)
+    private MPPaymentRefundDTO mpPaymentRefund;
 
     /**
      * O identificador do pagamento do gateway de pagamento.

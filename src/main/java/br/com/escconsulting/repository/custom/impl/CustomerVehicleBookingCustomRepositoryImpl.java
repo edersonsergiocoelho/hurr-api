@@ -46,14 +46,20 @@ public class CustomerVehicleBookingCustomRepositoryImpl extends SimpleJpaReposit
 
         customerVehicleFetch.fetch("customer", JoinType.LEFT);
         customerVehicleFetch.fetch("vehicle", JoinType.LEFT)
-                .fetch("vehicleBrand", JoinType.LEFT);
+                            .fetch("vehicleBrand", JoinType.LEFT)
+                            .fetch("file", JoinType.LEFT);
 
         customerVehicleFetch.fetch("vehicleModel", JoinType.LEFT)
-                .fetch("vehicleCategory", JoinType.LEFT);
+                            .fetch("vehicleCategory", JoinType.LEFT)
+                            .fetch("file", JoinType.LEFT);
 
         customerVehicleFetch.fetch("vehicleColor", JoinType.LEFT);
-        customerVehicleFetch.fetch("vehicleFuelType", JoinType.LEFT);
-        customerVehicleFetch.fetch("vehicleTransmission", JoinType.LEFT);
+
+        customerVehicleFetch.fetch("vehicleFuelType", JoinType.LEFT)
+                            .fetch("file", JoinType.LEFT);
+
+        customerVehicleFetch.fetch("vehicleTransmission", JoinType.LEFT)
+                            .fetch("file", JoinType.LEFT);
 
         // Fetch de endereços e detalhes associados
         Fetch<CustomerVehicle, CustomerVehicleAddress> addressesFetch = customerVehicleFetch.fetch("addresses", JoinType.LEFT);
@@ -106,14 +112,14 @@ public class CustomerVehicleBookingCustomRepositoryImpl extends SimpleJpaReposit
 
         customerVehicleFetch.fetch("customer", JoinType.LEFT);
         customerVehicleFetch.fetch("vehicle", JoinType.LEFT)
-                .fetch("vehicleBrand", JoinType.LEFT);
+                .fetch("vehicleBrand", JoinType.LEFT).fetch("file");
 
         customerVehicleFetch.fetch("vehicleModel", JoinType.LEFT)
-                .fetch("vehicleCategory", JoinType.LEFT);
+                .fetch("vehicleCategory", JoinType.LEFT).fetch("file");
 
         customerVehicleFetch.fetch("vehicleColor", JoinType.LEFT);
-        customerVehicleFetch.fetch("vehicleFuelType", JoinType.LEFT);
-        customerVehicleFetch.fetch("vehicleTransmission", JoinType.LEFT);
+        customerVehicleFetch.fetch("vehicleFuelType", JoinType.LEFT).fetch("file");
+        customerVehicleFetch.fetch("vehicleTransmission", JoinType.LEFT).fetch("file");
 
         // Fetch de endereços e detalhes associados
         Fetch<CustomerVehicle, CustomerVehicleAddress> addressesFetch = customerVehicleFetch.fetch("addresses", JoinType.LEFT);
@@ -166,14 +172,14 @@ public class CustomerVehicleBookingCustomRepositoryImpl extends SimpleJpaReposit
 
         customerVehicleFetch.fetch("customer", JoinType.LEFT);
         customerVehicleFetch.fetch("vehicle", JoinType.LEFT)
-                .fetch("vehicleBrand", JoinType.LEFT);
+                .fetch("vehicleBrand", JoinType.LEFT).fetch("file");
 
         customerVehicleFetch.fetch("vehicleModel", JoinType.LEFT)
-                .fetch("vehicleCategory", JoinType.LEFT);
+                .fetch("vehicleCategory", JoinType.LEFT).fetch("file");
 
         customerVehicleFetch.fetch("vehicleColor", JoinType.LEFT);
-        customerVehicleFetch.fetch("vehicleFuelType", JoinType.LEFT);
-        customerVehicleFetch.fetch("vehicleTransmission", JoinType.LEFT);
+        customerVehicleFetch.fetch("vehicleFuelType", JoinType.LEFT).fetch("file");
+        customerVehicleFetch.fetch("vehicleTransmission", JoinType.LEFT).fetch("file");
 
         // Fetch de endereços e detalhes associados
         Fetch<CustomerVehicle, CustomerVehicleAddress> addressesFetch = customerVehicleFetch.fetch("addresses", JoinType.LEFT);

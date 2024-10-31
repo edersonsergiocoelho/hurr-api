@@ -14,6 +14,7 @@ public interface VehicleModelMapper {
 
     VehicleModelDTO toDTO(Vehicle vehicle);
 
-    @Mapping(source = "vehicleModel.vehicle.vehicleBrand.file", target = "vehicle.vehicleBrand.file", ignore = true)
+    @Mapping(source = "vehicle.vehicleBrand.file", target = "vehicle.vehicleBrand.file", ignore = true)
+    @Mapping(source = "vehicleCategory.file", target = "vehicleCategory.file", ignore = true)
     VehicleModelDTO toDTONoFile(VehicleModel vehicleModel);
 }

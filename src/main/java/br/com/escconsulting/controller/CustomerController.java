@@ -25,14 +25,14 @@ public class CustomerController {
     public ResponseEntity<?> findById(@PathVariable("id") UUID id) {
         return customerService.findById(id)
                 .map(ResponseEntity::ok)
-                .orElseGet(ResponseEntity.notFound()::build);
+                .orElseGet(ResponseEntity.noContent()::build);
     }
 
     @GetMapping("/by/email/{email}")
     public ResponseEntity<?> findByEmail(@PathVariable("email") String email) {
         return customerService.findByEmail(email)
                 .map(ResponseEntity::ok)
-                .orElseGet(ResponseEntity.notFound()::build);
+                .orElseGet(ResponseEntity.noContent()::build);
     }
 
     @GetMapping
