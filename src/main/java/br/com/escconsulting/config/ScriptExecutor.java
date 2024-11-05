@@ -41,6 +41,7 @@ public class ScriptExecutor implements ApplicationListener<ContextRefreshedEvent
     @Override
     @Transactional
     public void onApplicationEvent(final ContextRefreshedEvent event) {
+
         if (!scriptsGenericEnabled) {
             return;
         }
@@ -49,8 +50,17 @@ public class ScriptExecutor implements ApplicationListener<ContextRefreshedEvent
         List<String> scripts = new ArrayList<>(Arrays.asList(
                 "V1__insert-role.sql",
                 "V2__insert-type_menu.sql",
-                "V3__insert-menu.sql",
-                "V4__insert-role-menu.sql",
+                "V3.1__insert-menu-type-menu-menu-header.sql",
+                "V3.2__insert-menu-type-menu-menu-header-icon.sql",
+                "V3.3__insert-menu-type-menu-menu-header-dropdown.sql",
+                "V3.4.1__insert-menu-type-menu-menu-side-role-admin.sql",
+                "V3.4.2__insert-menu-type-menu-menu-side-role-moderator.sql",
+                "V3.5__insert-menu-type-menu-menu-side-settings.sql",
+                "V3.6__insert-menu-type-menu-menu-side-customer-vehicle-edit.sql",
+                "V4.1__insert-role-menu-role-admin.sql",
+                "V4.2__insert-role-menu-role-customer-vehicle.sql",
+                "V4.3__insert-role-menu-role-moderator.sql",
+                "V4.4__insert-role-menu-role-user.sql",
                 "V5__insert-vehicle-brand.sql",
                 "V6__insert-vehicle-category.sql",
                 "V7__insert-vehicle-color.sql",

@@ -3,25 +3,38 @@ package br.com.escconsulting.entity;
 import br.com.escconsulting.entity.generic.AbstractEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-@Getter
-@Setter
+/**
+ * Classe que representa um pedido de retirada de um veículo do cliente.
+ * <p>
+ * Esta classe mapeia a tabela "customer_vehicle_withdrawal_request" no banco de dados.
+ * </p>
+ * <p>
+ * Autor: Ederson Sergio Monteiro Coelho
+ * </p>
+ */
+@Data
+@EqualsAndHashCode(callSuper = true, of = "customerVehicleWithdrawalRequestId")
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
 @Table(name = "customer_vehicle_withdrawal_request")
 public class CustomerVehicleWithdrawalRequest extends AbstractEntity implements Serializable {
 
+    /**
+     * Serial version UID para serialização.
+     */
     @Serial
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 7748061361311179779L;
 
     /**
      * Identificador único do pedido de retirada.
@@ -71,4 +84,17 @@ public class CustomerVehicleWithdrawalRequest extends AbstractEntity implements 
      */
     @Column(name = "withdrawal_date")
     private LocalDateTime withdrawalDate;
+
+    /**
+     * Método de callback executado antes da persistência da entidade.
+     */
+    @PrePersist
+    protected void prePersist() {
+        if (this.getCreatedDate() == null) {
+            this.setCreatedDate(Instant.now());
+        }
+        if (this.getEnabled() == null) {
+            this.setEnabled(Boolean.TRUE);
+        }
+    }
 }

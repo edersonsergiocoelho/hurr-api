@@ -76,7 +76,7 @@ public class UserRoleServiceImpl implements UserRoleService {
                     existingUserRole.setEnabled(userRole.getEnabled());
                     existingUserRole.setModifiedDate(Instant.now());
 
-                    if (!existingUserRole.getUserRoleId().getRoleId().equals(userRole.getUserRoleId().getRoleId())) {
+                    if (!existingUserRole.getId().getRoleId().equals(userRole.getId().getRoleId())) {
 
                         userRoleRepository.delete(existingUserRole);
 
@@ -100,7 +100,7 @@ public class UserRoleServiceImpl implements UserRoleService {
 
                     // Criar um novo UserRole com a role ROLE_CUSTOMER_VEHICLE
                     UserRole userRoleNew = new UserRole();
-                    userRoleNew.setUserRoleId(new UserRoleId(existingUserRole.getUser().getUserId(), roleCustomerVehicle.get().getRoleId())); // Supondo que o RoleId seja um UUID
+                    userRoleNew.setId(new UserRoleId(existingUserRole.getUser().getUserId(), roleCustomerVehicle.get().getRoleId())); // Supondo que o RoleId seja um UUID
 
                     userRoleNew.setUser(existingUserRole.getUser());
                     userRoleNew.setRole(roleCustomerVehicle.get());

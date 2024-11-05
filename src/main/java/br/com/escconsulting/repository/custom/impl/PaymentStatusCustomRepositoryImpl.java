@@ -44,7 +44,7 @@ public class PaymentStatusCustomRepositoryImpl extends SimpleJpaRepository<Payme
 
             // Adiciona condição de filtro para o campo searchValue em todos os campos desejados
             if (paymentStatusSearchDTO.getGlobalFilter() != null && !paymentStatusSearchDTO.getGlobalFilter().isEmpty()) {
-                String likePattern = "%" + paymentStatusSearchDTO.getGlobalFilter().toLowerCase() + "%";
+                String likePattern = "%" + paymentStatusSearchDTO.getGlobalFilter().toUpperCase() + "%";
 
                 Predicate namePredicate = cb.like(cb.upper(root.get("paymentStatusName")), likePattern);
                 // Adicione outros campos aqui da mesma forma
@@ -57,7 +57,7 @@ public class PaymentStatusCustomRepositoryImpl extends SimpleJpaRepository<Payme
             // Verifica se o campo 'paymentStatusName' está presente e adiciona a condição com like '%...%'
             if (paymentStatusSearchDTO.getPaymentStatusName() != null && !paymentStatusSearchDTO.getPaymentStatusName().isEmpty()) {
                 String likePattern = "%" + paymentStatusSearchDTO.getPaymentStatusName() + "%";
-                spec = cb.and(spec, cb.like(cb.upper(root.get("paymentStatusName")), likePattern.toLowerCase()));
+                spec = cb.and(spec, cb.like(cb.upper(root.get("paymentStatusName")), likePattern.toUpperCase()));
             }
 
             // Verifica se o campo 'enabled' não é nulo e adiciona a condição

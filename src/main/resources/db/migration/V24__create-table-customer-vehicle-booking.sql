@@ -1,3 +1,6 @@
+-- Define o search_path para o schema 'hurr'
+SET search_path TO hurr;
+
 -- Cria a tabela "customer_vehicle_booking" se ela ainda não existir
 CREATE TABLE IF NOT EXISTS customer_vehicle_booking
 (
@@ -39,6 +42,12 @@ CREATE TABLE IF NOT EXISTS customer_vehicle_booking
 
     -- Hora de término da reserva (obrigatório)
     reservation_end_time CHARACTER VARYING(5) NOT NULL,
+
+    -- Número de dias da reserva
+    days_reservation INTEGER NOT NULL,
+
+    -- Taxa diária do veículo
+    daily_rate NUMERIC(13,2) NOT NULL,
 
     -- Quilometragem de início da reserva
     booking_start_km NUMERIC,
@@ -156,6 +165,8 @@ COMMENT ON COLUMN customer_vehicle_booking.reservation_start_date IS 'Data de in
 COMMENT ON COLUMN customer_vehicle_booking.reservation_start_time IS 'Hora de início da reserva.';
 COMMENT ON COLUMN customer_vehicle_booking.reservation_end_date IS 'Data de término da reserva.';
 COMMENT ON COLUMN customer_vehicle_booking.reservation_end_time IS 'Hora de término da reserva.';
+COMMENT ON COLUMN customer_vehicle_booking.days_reservation IS 'Número total de dias da reserva.';
+COMMENT ON COLUMN customer_vehicle_booking.daily_rate IS 'Taxa diária do veículo.';
 COMMENT ON COLUMN customer_vehicle_booking.booking_start_km IS 'Quilometragem de início da reserva.';
 COMMENT ON COLUMN customer_vehicle_booking.booking_end_km IS 'Quilometragem de término da reserva.';
 COMMENT ON COLUMN customer_vehicle_booking.booking_start_date IS 'Data de início da reserva.';

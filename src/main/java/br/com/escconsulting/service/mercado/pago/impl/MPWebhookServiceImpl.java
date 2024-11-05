@@ -135,6 +135,12 @@ public class MPWebhookServiceImpl implements MPWebhookService {
 
         String reservationEndTime = (String) payment.getMetadata().get("reservation_end_time");
 
+        Double daysReservationDouble = (Double) payment.getMetadata().get("days_reservation");
+        BigDecimal daysReservation = BigDecimal.valueOf(daysReservationDouble);
+
+        Double dailyRateDouble = (Double) payment.getMetadata().get("daily_rate");
+        BigDecimal dailyRateValue = BigDecimal.valueOf(dailyRateDouble);
+
         Double totalBookingValueDouble = (Double) payment.getMetadata().get("total_booking_value");
         BigDecimal totalBookingValue = BigDecimal.valueOf(totalBookingValueDouble);
 
@@ -168,15 +174,17 @@ public class MPWebhookServiceImpl implements MPWebhookService {
         customerVehicleBooking.setReservationStartTime(reservationStartTime);
         customerVehicleBooking.setReservationEndDate(reservationEndDate.toLocalDate());
         customerVehicleBooking.setReservationEndTime(reservationEndTime);
+        customerVehicleBooking.setDaysReservation(daysReservation.intValue());
+        customerVehicleBooking.setDailyRate(dailyRateValue);
         customerVehicleBooking.setWithdrawableBookingValue(totalBookingValue.subtract(new BigDecimal(15)));
         customerVehicleBooking.setTotalBookingValue(totalBookingValue);
         customerVehicleBooking.setTotalFinalBookingValue(totalBookingValue);
         customerVehicleBooking.setMpPaymentId(payment.getId());
 
-        MPPaymentDTO MPPaymentDTOData = new MPPaymentDTO();
+        MPPaymentDTO mpPaymentDTOData = new MPPaymentDTO();
 
-        MPPaymentMapper.INSTANCE.update(payment, MPPaymentDTOData);
-        customerVehicleBooking.setMpPayment(MPPaymentDTOData);
+        MPPaymentMapper.INSTANCE.update(payment, mpPaymentDTOData);
+        customerVehicleBooking.setMpPayment(mpPaymentDTOData);
 
         Optional<CustomerVehicleBooking> optionalCustomerVehicleBookingSaved = customerVehicleBookingService.save(customerVehicleBooking);
 

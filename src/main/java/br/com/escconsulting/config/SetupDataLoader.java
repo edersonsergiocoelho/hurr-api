@@ -7,6 +7,7 @@ import br.com.escconsulting.entity.UserRoleId;
 import br.com.escconsulting.repository.RoleRepository;
 import br.com.escconsulting.repository.UserNewRepository;
 import br.com.escconsulting.repository.UserRoleRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationListener;
@@ -16,13 +17,11 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
-import java.util.HashSet;
 import java.util.Set;
 
 @Component
+@Slf4j
 public class SetupDataLoader implements ApplicationListener<ContextRefreshedEvent> {
-
-	private boolean alreadySetup = false;
 
 	@Value("${scripts.test.enabled}")
 	private boolean scriptsTestEnabled;
@@ -43,7 +42,7 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
 	@Transactional
 	public void onApplicationEvent(final ContextRefreshedEvent event) {
 
-		if (alreadySetup) {
+		if (!scriptsTestEnabled) {
 			return;
 		}
 
@@ -68,8 +67,6 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
 			createUserIfNotFound("pedro.almeida@example.com", "Pedro Almeida", "1234", Set.of(userRole));
 			createUserIfNotFound("renata.mendes@example.com", "Renata Mendes", "1234", Set.of(userRole));
 		}
-
-		alreadySetup = true;
 	}
 
 	@Transactional
@@ -94,7 +91,7 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
 
 			for (Role role : roles) {
 				UserRole userRole = new UserRole();
-				userRole.setUserRoleId(new UserRoleId(user.getUserId(), role.getRoleId()));
+				userRole.setId(new UserRoleId(user.getUserId(), role.getRoleId()));
 				userRole.setUser(user);
 				userRole.setRole(role);
 				userRole.setCreatedDate(Instant.now());

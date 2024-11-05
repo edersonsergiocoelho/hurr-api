@@ -1,7 +1,6 @@
 package br.com.escconsulting.exception.handler;
 
 import br.com.escconsulting.dto.ErrorRespondeDTO;
-import br.com.escconsulting.exception.BadRequestException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -44,10 +43,31 @@ public class ResponseEntityExceptionHandlerImpl extends ResponseEntityExceptionH
 		return handleExceptionInternal(ex, new ErrorRespondeDTO(error), new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
 	}
 
-	@ExceptionHandler(BadRequestException.class)
-	public ResponseEntity<?> handleBadRequestException(BadRequestException ex, WebRequest request) {
-		Locale locale = request.getLocale(); // Pega o Locale da requisição
-		String errorMessage = messageSource.getMessage(ex.getMessageKey(), null, locale);
-		return new ResponseEntity<>(new ErrorRespondeDTO(errorMessage), HttpStatus.BAD_REQUEST);
+	@ExceptionHandler(Exception.class)
+	public ResponseEntity<?> handleAllExceptions(Exception ex, WebRequest request) {
+		Locale locale = request.getLocale(); // Obter o Locale da requisição
+		String errorMessage;
+
+		if (ex instanceof MethodArgumentNotValidException) {
+			// Tratar o caso específico de validação de argumento
+			errorMessage = ((MethodArgumentNotValidException) ex).getBindingResult()
+					.getAllErrors().stream()
+					.map(e -> {
+						String message = messageSource.getMessage(e, locale); // Traduz a mensagem de erro
+						if (e instanceof FieldError) {
+							return ((FieldError) e).getField() + ": " + message;
+						} else {
+							return e.getObjectName() + ": " + message;
+						}
+					}).collect(Collectors.joining(", "));
+		} else if (ex instanceof RuntimeException) {
+			// Tratamento genérico para RuntimeException com chave personalizada
+			errorMessage = messageSource.getMessage(ex.getMessage(), null, locale);
+		} else {
+			// Tratamento para exceções não mapeadas
+			errorMessage = "Erro inesperado. Tente novamente mais tarde.";
+		}
+
+		return new ResponseEntity<>(new ErrorRespondeDTO(errorMessage), HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 }

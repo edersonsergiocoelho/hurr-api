@@ -1,11 +1,9 @@
 package br.com.escconsulting.controller.inter;
 
-import br.com.escconsulting.config.InterConfig;
 import br.com.escconsulting.dto.inter.InterIncluirPIXDTO;
 import br.com.escconsulting.service.inter.InterPIXService;
 import com.mercadopago.exceptions.MPApiException;
 import com.mercadopago.exceptions.MPException;
-import inter.banking.model.RespostaIncluirPix;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,8 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/inter/pix")
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class InterPIXController {
-
-    private InterConfig interConfig;
 
     private final InterPIXService interPIXService;
 

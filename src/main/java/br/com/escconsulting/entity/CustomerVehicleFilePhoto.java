@@ -2,19 +2,30 @@ package br.com.escconsulting.entity;
 
 import br.com.escconsulting.entity.generic.AbstractEntity;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.time.Instant;
 import java.util.UUID;
 
-@Entity
-@Getter
-@Setter
-@AllArgsConstructor
+/**
+ * Classe que representa a foto do veículo do cliente.
+ * <p>
+ * Esta classe mapeia a tabela "customer_vehicle_file_photo" no banco de dados.
+ * </p>
+ * <p>
+ * Autor: Ederson Sergio Monteiro Coelho
+ * </p>
+ */
+@Data
+@EqualsAndHashCode(callSuper = true, of = "customerVehicleFilePhotoId")
 @NoArgsConstructor
-@EqualsAndHashCode(callSuper = false)
-@ToString
+@AllArgsConstructor
+@Entity
 @Table(name = "customer_vehicle_file_photo")
 public class CustomerVehicleFilePhoto extends AbstractEntity implements Serializable {
 
@@ -62,4 +73,17 @@ public class CustomerVehicleFilePhoto extends AbstractEntity implements Serializ
      */
     @Column(name = "cover_photo", nullable = false)
     private Boolean coverPhoto;
+
+    /**
+     * Método de callback executado antes da persistência da entidade.
+     */
+    @PrePersist
+    protected void prePersist() {
+        if (this.getCreatedDate() == null) {
+            this.setCreatedDate(Instant.now());
+        }
+        if (this.getEnabled() == null) {
+            this.setEnabled(Boolean.TRUE);
+        }
+    }
 }

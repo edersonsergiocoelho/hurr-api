@@ -33,6 +33,8 @@ public class CustomerVehicleBookingDTO {
     private LocalDate reservationEndDate;
     private String reservationStartTime;
     private String reservationEndTime;
+    private Integer daysReservation;
+    private BigDecimal dailyRate;
     private Long bookingStartKM;
     private Long bookingEndKM;
     private LocalDateTime bookingStartDate;

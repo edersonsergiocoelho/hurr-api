@@ -40,11 +40,22 @@ public class CustomerVehicleCustomRepositoryImpl extends SimpleJpaRepository<Cus
         Root<CustomerVehicle> root = cq.from(CustomerVehicle.class);
 
         Fetch<CustomerVehicle, Vehicle> vehicleFetch = root.fetch("vehicle", JoinType.LEFT);
-        vehicleFetch.fetch("vehicleBrand", JoinType.LEFT);
-        root.fetch("vehicleModel", JoinType.LEFT);
+
+        Fetch<Vehicle, VehicleBrand> vehicleBrandFetch = vehicleFetch.fetch("vehicleBrand", JoinType.LEFT);
+        vehicleBrandFetch.fetch("file", JoinType.LEFT);
+
+        root.fetch("vehicleModel", JoinType.LEFT)
+                .fetch("vehicleCategory")
+                .fetch("file");
+
         root.fetch("vehicleColor", JoinType.LEFT);
-        root.fetch("vehicleFuelType", JoinType.LEFT);
-        root.fetch("vehicleTransmission", JoinType.LEFT);
+
+        root.fetch("vehicleFuelType", JoinType.LEFT)
+                .fetch("file", JoinType.LEFT);
+
+        root.fetch("vehicleTransmission", JoinType.LEFT)
+                .fetch("file", JoinType.LEFT);
+
         root.fetch("renavamState", JoinType.LEFT);
 
         Fetch<CustomerVehicle, CustomerVehicleAddress> customerVehicleAddressFetch = root.fetch("addresses", JoinType.LEFT);
@@ -104,6 +115,32 @@ public class CustomerVehicleCustomRepositoryImpl extends SimpleJpaRepository<Cus
                 spec = cb.and(spec, cb.equal(root.get("addresses").get("address").get("addressTypes").get("addressType").get("addressTypeName"), customerVehicleSearchDTO.getAddressTypeName()));
             }
         }
+
+        // Subquery para verificar reservas
+        Subquery<Long> bookingSubquery = cq.subquery(Long.class);
+        Root<CustomerVehicleBooking> bookingRoot = bookingSubquery.from(CustomerVehicleBooking.class);
+        bookingSubquery.select(bookingRoot.get("customerVehicle").get("customerVehicleId"));
+
+        Predicate bookingConflict = cb.and(
+                cb.equal(bookingRoot.get("customerVehicle"), root),
+                cb.or(
+                        cb.and(
+                                cb.lessThanOrEqualTo(bookingRoot.get("reservationStartDate"), customerVehicleSearchDTO.getReservationEndDate()),
+                                cb.greaterThanOrEqualTo(bookingRoot.get("reservationEndDate"), customerVehicleSearchDTO.getReservationStartDate())
+                        ),
+                        cb.and(
+                                cb.equal(bookingRoot.get("reservationStartDate"), customerVehicleSearchDTO.getReservationEndDate()),
+                                cb.lessThanOrEqualTo(bookingRoot.get("reservationStartTime"), customerVehicleSearchDTO.getReservationEndTime())
+                        ),
+                        cb.and(
+                                cb.equal(bookingRoot.get("reservationEndDate"), customerVehicleSearchDTO.getReservationStartDate()),
+                                cb.greaterThanOrEqualTo(bookingRoot.get("reservationEndTime"), customerVehicleSearchDTO.getReservationStartTime())
+                        )
+                )
+        );
+
+        bookingSubquery.where(bookingConflict);
+        spec = cb.and(spec, cb.not(cb.exists(bookingSubquery)));
 
         cq.where(spec);
 
