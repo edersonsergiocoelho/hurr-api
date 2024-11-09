@@ -14,7 +14,6 @@ import java.time.Instant;
  *
  * @autor Ederson Sergio Monteiro Coelho
  */
-
 @Getter
 @Setter
 @NoArgsConstructor

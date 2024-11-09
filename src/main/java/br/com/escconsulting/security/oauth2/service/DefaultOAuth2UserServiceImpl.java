@@ -1,8 +1,10 @@
-package br.com.escconsulting.security.oauth2;
+package br.com.escconsulting.security.oauth2.service;
 
 import br.com.escconsulting.dto.SocialProvider;
 import br.com.escconsulting.exception.OAuth2AuthenticationProcessingException;
 import br.com.escconsulting.service.UserService;
+import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpEntity;
@@ -22,16 +24,21 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ *
+ * @author Ederson Sergio Monteiro Coelho
+ *
+ */
 @Service
-public class CustomOAuth2UserService extends DefaultOAuth2UserService {
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
+public class DefaultOAuth2UserServiceImpl extends DefaultOAuth2UserService {
 
-	@Autowired
-	private UserService userService;
+	private final UserService userService;
 
-	@Autowired
-	private Environment env;
+	private final Environment env;
 
 	@Override
+	@Transactional
 	public OAuth2User loadUser(OAuth2UserRequest oAuth2UserRequest) throws OAuth2AuthenticationException {
 		OAuth2User oAuth2User = super.loadUser(oAuth2UserRequest);
 		try {

@@ -1,7 +1,12 @@
-package br.com.escconsulting.security.oauth2.user;
+package br.com.escconsulting.security.oauth2.model;
 
 import java.util.Map;
 
+/**
+ *
+ * @author Ederson Sergio Monteiro Coelho
+ *
+ */
 public class GoogleOAuth2UserInfo extends OAuth2UserInfo {
 
 	public GoogleOAuth2UserInfo(Map<String, Object> attributes) {
