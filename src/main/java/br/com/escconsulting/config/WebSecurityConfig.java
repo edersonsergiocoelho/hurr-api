@@ -7,7 +7,7 @@ import br.com.escconsulting.security.jwt.TokenProvider;
 import br.com.escconsulting.security.oauth2.component.SimpleUrlAuthenticationFailureHandlerImpl;
 import br.com.escconsulting.security.oauth2.component.SimpleUrlAuthenticationSuccessHandlerImpl;
 import br.com.escconsulting.security.oauth2.repository.HttpCookieOAuth2AuthorizationRequestRepository;
-import br.com.escconsulting.service.UserDetailsServiceImpl;
+import br.com.escconsulting.security.oauth2.service.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

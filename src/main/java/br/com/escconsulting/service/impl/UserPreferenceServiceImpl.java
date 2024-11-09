@@ -8,7 +8,7 @@ import br.com.escconsulting.entity.UserPreference;
 import br.com.escconsulting.mapper.UserPreferenceMapper;
 import br.com.escconsulting.repository.UserPreferenceRepository;
 import br.com.escconsulting.repository.custom.UserPreferenceCustomRepository;
-import br.com.escconsulting.service.UserNewService;
+import br.com.escconsulting.service.UserService;
 import br.com.escconsulting.service.UserPreferenceService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +18,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -27,7 +26,7 @@ import java.util.UUID;
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class UserPreferenceServiceImpl implements UserPreferenceService {
 
-    private final UserNewService userNewService;
+    private final UserService userService;
 
     private final UserPreferenceRepository userPreferenceRepository;
 
@@ -61,7 +60,7 @@ public class UserPreferenceServiceImpl implements UserPreferenceService {
     @Override
     public Optional<UserPreference> save(LocalUser localUser, UserPreference userPreference) {
 
-        Optional<User> optionalUser = userNewService.findByEmail(localUser.getUsername());
+        Optional<User> optionalUser = userService.findByEmail(localUser.getUsername());
 
         return optionalUser.map(existingUser -> {
             userPreference.setUser(existingUser);

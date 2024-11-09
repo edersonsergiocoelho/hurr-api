@@ -1,12 +1,12 @@
-package br.com.escconsulting.service;
+package br.com.escconsulting.security.oauth2.service;
 
 import br.com.escconsulting.dto.LocalUser;
 import br.com.escconsulting.entity.User;
 import br.com.escconsulting.exception.ResourceNotFoundException;
+import br.com.escconsulting.service.UserService;
 import br.com.escconsulting.util.GeneralUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -28,7 +28,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 	@Override
 	@Transactional
 	public LocalUser loadUserByUsername(final String email) throws UsernameNotFoundException {
-		User user = userService.findUserByEmail(email);
+		User user = userService.findByEmail(email).get();
 		if (user == null) {
 			throw new UsernameNotFoundException("User " + email + " was not found in the database");
 		}
@@ -38,7 +38,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
 	@Transactional
 	public LocalUser loadUserById(UUID id) {
-		User user = userService.findUserById(id).orElseThrow(() -> new ResourceNotFoundException("User", "id", id));
+		User user = userService.findById(id).orElseThrow(() -> new ResourceNotFoundException("User", "id", id));
 
 		return createLocalUser(user);
 	}

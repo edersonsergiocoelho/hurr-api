@@ -3,18 +3,13 @@ package br.com.escconsulting.service.impl;
 import br.com.escconsulting.dto.LocalUser;
 import br.com.escconsulting.dto.menu.MenuDTO;
 import br.com.escconsulting.dto.menu.MenuSearchDTO;
-import br.com.escconsulting.dto.type.menu.TypeMenuDTO;
 import br.com.escconsulting.entity.Menu;
 import br.com.escconsulting.entity.Role;
-import br.com.escconsulting.entity.RoleMenu;
 import br.com.escconsulting.entity.User;
-import br.com.escconsulting.mapper.MenuMapper;
-import br.com.escconsulting.mapper.TypeMenuMapper;
 import br.com.escconsulting.repository.MenuRepository;
 import br.com.escconsulting.repository.custom.MenuCustomRepository;
 import br.com.escconsulting.service.MenuService;
-import br.com.escconsulting.service.UserNewService;
-import com.google.common.collect.Lists;
+import br.com.escconsulting.service.UserService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +27,7 @@ import java.util.stream.Collectors;
 public class MenuServiceImpl implements MenuService {
 
     // Service's
-    private final UserNewService userNewService;
+    private final UserService userService;
 
     // Repository's
     private final MenuRepository menuRepository;
@@ -57,7 +52,7 @@ public class MenuServiceImpl implements MenuService {
     @Override
     public List<MenuDTO> findByTypeMenuMeAll(LocalUser localUser, String typeMenuName) {
 
-        User user = userNewService.findById(localUser.getUser().getUserId())
+        User user = userService.findById(localUser.getUser().getUserId())
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
         Set<Role> roles = user.getRoles();

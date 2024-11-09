@@ -2,8 +2,8 @@ package br.com.escconsulting.repository.custom.impl;
 
 import br.com.escconsulting.dto.user.UserSearchDTO;
 import br.com.escconsulting.entity.User;
-import br.com.escconsulting.repository.custom.UserNewCustomRepository;
 import br.com.escconsulting.repository.UserRepository;
+import br.com.escconsulting.repository.custom.UserCustomRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.*;
@@ -18,13 +18,13 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Repository
-public class UserNewCustomRepositoryImpl extends SimpleJpaRepository<User, UUID> implements UserNewCustomRepository {
+public class UserCustomRepositoryImpl extends SimpleJpaRepository<User, UUID> implements UserCustomRepository {
 
     private final EntityManager entityManager;
 
     private final UserRepository userRepository;
 
-    public UserNewCustomRepositoryImpl(EntityManager entityManager, UserRepository userRepository) {
+    public UserCustomRepositoryImpl(EntityManager entityManager, UserRepository userRepository) {
         super(User.class, entityManager);
         this.entityManager = entityManager;
         this.userRepository = userRepository;

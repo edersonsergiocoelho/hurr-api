@@ -1,13 +1,10 @@
 package br.com.escconsulting.controller;
 
-import br.com.escconsulting.dto.APIResponse;
-import br.com.escconsulting.dto.ErrorResponse;
 import br.com.escconsulting.dto.*;
 import br.com.escconsulting.entity.User;
 import br.com.escconsulting.exception.BadRequestException;
 import br.com.escconsulting.exception.UserAlreadyExistAuthenticationException;
 import br.com.escconsulting.security.jwt.TokenProvider;
-import br.com.escconsulting.service.UserNewService;
 import br.com.escconsulting.service.UserService;
 import br.com.escconsulting.util.GeneralUtils;
 import jakarta.validation.Valid;
@@ -40,8 +37,6 @@ public class AuthController {
 
 	private final TokenProvider tokenProvider;
 
-	private final UserNewService userNewService;
-
 	private final UserService userService;
 
 	private final ErrorResponseFactory errorResponseFactory;
@@ -50,7 +45,7 @@ public class AuthController {
 	public ResponseEntity<?> signIn(@Valid @RequestBody LoginRequest loginRequest) {
 
 		// Verifica se o e-mail existe no banco de dados
-		Optional<User> userOptional = userNewService.findByEmail(loginRequest.getEmail());
+		Optional<User> userOptional = userService.findByEmail(loginRequest.getEmail());
 		if (!userOptional.isPresent()) {
 			// Agora você pode passar apenas o código da mensagem
 			throw new BadRequestException("auth.error.invalid.email");

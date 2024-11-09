@@ -11,7 +11,7 @@ import br.com.escconsulting.repository.FileApprovedRepository;
 import br.com.escconsulting.service.CustomerService;
 import br.com.escconsulting.service.EmailService;
 import br.com.escconsulting.service.FileApprovedService;
-import br.com.escconsulting.service.UserNewService;
+import br.com.escconsulting.service.UserService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -31,17 +31,17 @@ public class FileApprovedServiceImpl implements FileApprovedService {
 
     private final EmailService emailService;
 
-    private final UserNewService userNewService;
+    private final UserService userService;
 
     private final FileApprovedRepository fileApprovedRepository;
 
     private final FileApprovedCustomRepository fileApprovedCustomRepository;
 
     @Autowired
-    public FileApprovedServiceImpl(@Lazy CustomerService customerService, @Lazy EmailService emailService, @Lazy UserNewService userNewService, @Lazy FileApprovedRepository fileApprovedRepository, @Lazy FileApprovedCustomRepository fileApprovedCustomRepository) {
+    public FileApprovedServiceImpl(@Lazy CustomerService customerService, @Lazy EmailService emailService, @Lazy UserService userService, @Lazy FileApprovedRepository fileApprovedRepository, @Lazy FileApprovedCustomRepository fileApprovedCustomRepository) {
         this.customerService = customerService;
         this.emailService = emailService;
-        this.userNewService = userNewService;
+        this.userService = userService;
         this.fileApprovedRepository = fileApprovedRepository;
         this.fileApprovedCustomRepository = fileApprovedCustomRepository;
     }
@@ -138,7 +138,7 @@ public class FileApprovedServiceImpl implements FileApprovedService {
                     if (fileApproved.getFileTable().equals(FileTable.USER)) {
                         if (fileApproved.getFileType().equals(FileType.PROFILE_PICTURE)) {
 
-                            Optional<User> optionalUser = userNewService.findById(fileApproved.getUserId());
+                            Optional<User> optionalUser = userService.findById(fileApproved.getUserId());
 
                             if (optionalUser.isPresent()) {
 

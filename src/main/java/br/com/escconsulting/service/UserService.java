@@ -2,9 +2,15 @@ package br.com.escconsulting.service;
 
 import br.com.escconsulting.dto.LocalUser;
 import br.com.escconsulting.dto.SignUpRequest;
+import br.com.escconsulting.dto.user.UserForgotPasswordDTO;
+import br.com.escconsulting.dto.user.UserPasswordValidateCodeDTO;
+import br.com.escconsulting.dto.user.UserPasswordVerificationCodeDTO;
+import br.com.escconsulting.dto.user.UserSearchDTO;
 import br.com.escconsulting.entity.FileApproved;
 import br.com.escconsulting.entity.User;
 import br.com.escconsulting.exception.UserAlreadyExistAuthenticationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.oauth2.core.oidc.OidcIdToken;
 import org.springframework.security.oauth2.core.oidc.OidcUserInfo;
 import org.springframework.web.multipart.MultipartFile;
@@ -17,15 +23,29 @@ import java.util.UUID;
 
 public interface UserService {
 
-	List<User> findAll();
+    Optional<User> findById(UUID userId);
 
-	public User registerNewUser(SignUpRequest signUpRequest) throws UserAlreadyExistAuthenticationException;
+    List<User> findAll();
 
-	User findUserByEmail(String email);
+    Optional<User> findByEmail(String email);
 
-	Optional<User> findUserById(UUID id);
+    Page<User> searchPage(UserSearchDTO userSearchDTO, Pageable pageable);
 
-	LocalUser processUserRegistration(String registrationId, Map<String, Object> attributes, OidcIdToken idToken, OidcUserInfo userInfo);
+    Optional<FileApproved> upload(LocalUser localUser, MultipartFile[] files) throws IOException;
 
-	Optional<FileApproved> uploadHandler(LocalUser localUser, MultipartFile[] files) throws IOException;
+    Optional<User> save(User user);
+
+    Optional<User> forgotPasswordVerificationCode(UserPasswordVerificationCodeDTO userPasswordVerificationCodeDTO);
+
+    Optional<User> forgotPasswordValidated(UserPasswordValidateCodeDTO userPasswordValidateCodeDTO);
+
+    Optional<User> update(UUID userId, User user);
+
+    Optional<User> forgotPassword(UserForgotPasswordDTO userForgotPasswordDTO);
+
+    void delete(UUID userId);
+
+    public User registerNewUser(SignUpRequest signUpRequest) throws UserAlreadyExistAuthenticationException;
+
+    LocalUser processUserRegistration(String registrationId, Map<String, Object> attributes, OidcIdToken idToken, OidcUserInfo userInfo);
 }

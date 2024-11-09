@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 import java.util.UUID;
 
 @Repository
-public interface UserNewCustomRepository extends JpaRepository<User, UUID> {
+public interface UserCustomRepository extends JpaRepository<User, UUID> {
 
     Page<User> searchPage(UserSearchDTO userSearchDTO, Pageable pageable);
 

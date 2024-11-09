@@ -5,7 +5,7 @@ import br.com.escconsulting.entity.User;
 import br.com.escconsulting.entity.UserRole;
 import br.com.escconsulting.entity.UserRoleId;
 import br.com.escconsulting.repository.RoleRepository;
-import br.com.escconsulting.repository.UserNewRepository;
+import br.com.escconsulting.repository.UserRepository;
 import br.com.escconsulting.repository.UserRoleRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +27,7 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
 	private boolean scriptsTestEnabled;
 
 	@Autowired
-	private UserNewRepository userRepository;
+	private UserRepository userRepository;
 
 	@Autowired
 	private RoleRepository roleRepository;
