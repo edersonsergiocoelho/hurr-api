@@ -6,8 +6,10 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
@@ -16,15 +18,12 @@ import java.util.Date;
 import java.util.UUID;
 
 @Service
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class TokenProvider {
 
 	private static final Logger logger = LoggerFactory.getLogger(TokenProvider.class);
 
-	private AppProperties appProperties;
-
-	public TokenProvider(AppProperties appProperties) {
-		this.appProperties = appProperties;
-	}
+	private final AppProperties appProperties;
 
 	/*
 	public String createToken(Authentication authentication) {

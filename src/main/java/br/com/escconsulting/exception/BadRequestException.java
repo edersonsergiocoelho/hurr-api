@@ -1,15 +1,19 @@
 package br.com.escconsulting.exception;
 
+import lombok.Getter;
+
+/**
+ *
+ * @author Ederson Sergio Monteiro Coelho
+ *
+ */
+@Getter
 public class BadRequestException extends RuntimeException {
 
-	private String messageKey;
+	private final String messageKey;
 
 	public BadRequestException(String messageKey) {
 		super(messageKey);
 		this.messageKey = messageKey;
-	}
-
-	public String getMessageKey() {
-		return messageKey;
 	}
 }

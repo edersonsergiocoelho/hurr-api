@@ -1,8 +1,9 @@
-package br.com.escconsulting.security.oauth2;
+package br.com.escconsulting.security.oauth2.component;
 
 import br.com.escconsulting.config.AppProperties;
 import br.com.escconsulting.exception.BadRequestException;
 import br.com.escconsulting.security.jwt.TokenProvider;
+import br.com.escconsulting.security.oauth2.repository.HttpCookieOAuth2AuthorizationRequestRepository;
 import br.com.escconsulting.util.CookieUtils;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
@@ -18,10 +19,15 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.Optional;
 
-import static br.com.escconsulting.security.oauth2.HttpCookieOAuth2AuthorizationRequestRepository.REDIRECT_URI_PARAM_COOKIE_NAME;
+import static br.com.escconsulting.security.oauth2.repository.HttpCookieOAuth2AuthorizationRequestRepository.REDIRECT_URI_PARAM_COOKIE_NAME;
 
+/**
+ *
+ * @author Ederson Sergio Monteiro Coelho
+ *
+ */
 @Component
-public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
+public class SimpleUrlAuthenticationSuccessHandlerImpl extends SimpleUrlAuthenticationSuccessHandler {
 
 	private TokenProvider tokenProvider;
 
@@ -30,8 +36,8 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 	private HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository;
 
 	@Autowired
-	OAuth2AuthenticationSuccessHandler(TokenProvider tokenProvider, AppProperties appProperties,
-									   HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository) {
+	SimpleUrlAuthenticationSuccessHandlerImpl(TokenProvider tokenProvider, AppProperties appProperties,
+											  HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository) {
 		this.tokenProvider = tokenProvider;
 		this.appProperties = appProperties;
 		this.httpCookieOAuth2AuthorizationRequestRepository = httpCookieOAuth2AuthorizationRequestRepository;

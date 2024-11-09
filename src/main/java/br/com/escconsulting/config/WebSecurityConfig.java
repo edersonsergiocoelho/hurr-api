@@ -3,10 +3,15 @@ package br.com.escconsulting.config;
 import br.com.escconsulting.dto.OAuth2AccessTokenErrorResponse;
 import br.com.escconsulting.exception.AccessTokenRequiredException;
 import br.com.escconsulting.security.jwt.OncePerRequestFilterImpl;
-import br.com.escconsulting.security.oauth2.*;
+import br.com.escconsulting.security.jwt.TokenProvider;
+import br.com.escconsulting.security.oauth2.component.SimpleUrlAuthenticationFailureHandlerImpl;
+import br.com.escconsulting.security.oauth2.component.SimpleUrlAuthenticationSuccessHandlerImpl;
+import br.com.escconsulting.security.oauth2.repository.HttpCookieOAuth2AuthorizationRequestRepository;
+import br.com.escconsulting.service.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.http.converter.FormHttpMessageConverter;
@@ -18,13 +23,14 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.client.endpoint.DefaultAuthorizationCodeTokenResponseClient;
 import org.springframework.security.oauth2.client.endpoint.OAuth2AccessTokenResponseClient;
 import org.springframework.security.oauth2.client.endpoint.OAuth2AuthorizationCodeGrantRequest;
 import org.springframework.security.oauth2.client.http.OAuth2ErrorResponseErrorHandler;
+import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserService;
+import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.core.http.converter.OAuth2AccessTokenResponseHttpMessageConverter;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -41,24 +47,35 @@ import java.util.Arrays;
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true, jsr250Enabled = true)
 public class WebSecurityConfig {
 
-	@Autowired
-	private UserDetailsService userDetailsService;
+	private UserDetailsServiceImpl UserDetailsServiceImpl;
+
+	private DefaultOAuth2UserService defaultOAuth2UserService;
+
+	private OidcUserService oidcUserService;
+
+	private SimpleUrlAuthenticationSuccessHandlerImpl simpleUrlAuthenticationSuccessHandlerImpl;
+
+	private SimpleUrlAuthenticationFailureHandlerImpl simpleUrlAuthenticationFailureHandlerImpl;
+
+	private TokenProvider tokenProvider;
 
 	@Autowired
-	private CustomOAuth2UserService customOAuth2UserService;
+	public WebSecurityConfig(@Lazy UserDetailsServiceImpl UserDetailsServiceImpl,
+							 @Lazy DefaultOAuth2UserService defaultOAuth2UserService,
+							 @Lazy OidcUserService oidcUserService,
+							 SimpleUrlAuthenticationSuccessHandlerImpl simpleUrlAuthenticationSuccessHandlerImpl,
+							 SimpleUrlAuthenticationFailureHandlerImpl simpleUrlAuthenticationFailureHandlerImpl,
+							 TokenProvider tokenProvider) {
+		this.UserDetailsServiceImpl = UserDetailsServiceImpl;
+		this.defaultOAuth2UserService = defaultOAuth2UserService;
+		this.oidcUserService = oidcUserService;
+		this.simpleUrlAuthenticationSuccessHandlerImpl = simpleUrlAuthenticationSuccessHandlerImpl;
+		this.simpleUrlAuthenticationFailureHandlerImpl = simpleUrlAuthenticationFailureHandlerImpl;
+		this.tokenProvider = tokenProvider;
+	}
 
-	@Autowired
-	private CustomOidcUserService customOidcUserService;
-
-	@Autowired
-	private OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
-
-	@Autowired
-	private OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler;
-
-	@Autowired
 	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-		auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
+		auth.userDetailsService(UserDetailsServiceImpl).passwordEncoder(passwordEncoder());
 	}
 
 	@Bean
@@ -79,12 +96,12 @@ public class WebSecurityConfig {
 								.authorizationEndpoint(authorizationEndpoint -> authorizationEndpoint.authorizationRequestRepository(cookieAuthorizationRequestRepository()))
 								.redirectionEndpoint(redirectionEndpoint -> {})
 								.userInfoEndpoint(userInfoEndpoint -> {
-									userInfoEndpoint.oidcUserService(customOidcUserService);
-									userInfoEndpoint.userService(customOAuth2UserService);
+									userInfoEndpoint.oidcUserService(oidcUserService);
+									userInfoEndpoint.userService(defaultOAuth2UserService);
 								})
 								.tokenEndpoint(tokenEndpoint -> tokenEndpoint.accessTokenResponseClient(authorizationCodeTokenResponseClient()))
-								.successHandler(oAuth2AuthenticationSuccessHandler)
-								.failureHandler(oAuth2AuthenticationFailureHandler)
+								.successHandler(simpleUrlAuthenticationSuccessHandlerImpl)
+								.failureHandler(simpleUrlAuthenticationFailureHandlerImpl)
 				);
 
 		// Adicione nosso filtro de autenticação baseado em token personalizado
@@ -123,7 +140,7 @@ public class WebSecurityConfig {
 
 	@Bean
 	public OncePerRequestFilterImpl oncePerRequestFilterImpl() {
-		return new OncePerRequestFilterImpl();
+		return new OncePerRequestFilterImpl(tokenProvider, UserDetailsServiceImpl);
 	}
 
 	/*

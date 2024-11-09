@@ -3,16 +3,21 @@ package br.com.escconsulting.service.impl;
 import br.com.escconsulting.dto.LocalUser;
 import br.com.escconsulting.dto.SignUpRequest;
 import br.com.escconsulting.dto.SocialProvider;
-import br.com.escconsulting.entity.*;
+import br.com.escconsulting.entity.File;
+import br.com.escconsulting.entity.FileApproved;
+import br.com.escconsulting.entity.Role;
+import br.com.escconsulting.entity.User;
 import br.com.escconsulting.entity.enumeration.FileTable;
 import br.com.escconsulting.entity.enumeration.FileType;
 import br.com.escconsulting.exception.OAuth2AuthenticationProcessingException;
 import br.com.escconsulting.exception.UserAlreadyExistAuthenticationException;
-import br.com.escconsulting.repository.RoleRepository;
 import br.com.escconsulting.repository.UserRepository;
-import br.com.escconsulting.security.oauth2.user.OAuth2UserInfo;
-import br.com.escconsulting.security.oauth2.user.OAuth2UserInfoFactory;
-import br.com.escconsulting.service.*;
+import br.com.escconsulting.security.oauth2.model.OAuth2UserInfo;
+import br.com.escconsulting.security.oauth2.model.OAuth2UserInfoFactory;
+import br.com.escconsulting.service.FileApprovedService;
+import br.com.escconsulting.service.FileService;
+import br.com.escconsulting.service.RoleService;
+import br.com.escconsulting.service.UserService;
 import br.com.escconsulting.util.GeneralUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +32,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.time.Instant;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
@@ -36,8 +40,6 @@ public class UserServiceImpl implements UserService {
 	private final UserRepository userRepository;
 
 	private final RoleService roleService;
-
-	private final UserRoleService userRoleService;
 
 	private final FileService fileService;
 

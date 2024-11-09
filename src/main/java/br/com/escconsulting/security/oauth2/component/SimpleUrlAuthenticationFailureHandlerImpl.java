@@ -1,5 +1,6 @@
-package br.com.escconsulting.security.oauth2;
+package br.com.escconsulting.security.oauth2.component;
 
+import br.com.escconsulting.security.oauth2.repository.HttpCookieOAuth2AuthorizationRequestRepository;
 import br.com.escconsulting.util.CookieUtils;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
@@ -13,10 +14,15 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.IOException;
 
-import static br.com.escconsulting.security.oauth2.HttpCookieOAuth2AuthorizationRequestRepository.REDIRECT_URI_PARAM_COOKIE_NAME;
+import static br.com.escconsulting.security.oauth2.repository.HttpCookieOAuth2AuthorizationRequestRepository.REDIRECT_URI_PARAM_COOKIE_NAME;
 
+/**
+ *
+ * @author Ederson Sergio Monteiro Coelho
+ *
+ */
 @Component
-public class OAuth2AuthenticationFailureHandler extends SimpleUrlAuthenticationFailureHandler {
+public class SimpleUrlAuthenticationFailureHandlerImpl extends SimpleUrlAuthenticationFailureHandler {
 
 	@Autowired
 	HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository;

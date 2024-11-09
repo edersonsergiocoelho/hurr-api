@@ -12,9 +12,6 @@ scripts:
   path: sql  # Caminho onde os scripts SQL estão localizados
 
 spring:
-  # Permite referências circulares entre beans
-  main:
-    allow-circular-references: true
 
   # Configurações do DataSource (Banco de Dados)
   datasource:
