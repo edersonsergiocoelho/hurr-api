@@ -15,9 +15,9 @@ spring:
 
   # Configurações do DataSource (Banco de Dados)
   datasource:
-    url: jdbc:postgresql://localhost:5432/hurr?currentSchema=hurr  # URL do banco de dados PostgreSQL
-    username: postgres  # Nome de usuário do banco de dados
-    password: postgres  # Senha do banco de dados
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/hurr?currentSchema=hurr}  # URL do banco de dados PostgreSQL
+    username: ${DB_USERNAME:postgres}  # Nome de usuário do banco de dados
+    password: ${DB_PASSWORD:postgres}  # Senha do banco de dados
     driver-class-name: org.postgresql.Driver  # Driver do banco de dados
 
   # Configurações do JPA (Java Persistence API)
@@ -34,8 +34,8 @@ spring:
       client:
         registration:
           google:
-            clientId: 58495673570-raok2adfrlt76dfjivrb53rc3j9l4928.apps.googleusercontent.com  # ID do cliente do Google
-            clientSecret: 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  # Segredo do cliente do Google
+            clientId: ${GOOGLE_CLIENT_ID}  # ID do cliente do Google
+            clientSecret: ${GOOGLE_CLIENT_SECRET}  # Segredo do cliente do Google
 
   # Configurações do Servlet
   servlet:
@@ -47,8 +47,8 @@ spring:
   mail:
     host: smtp.gmail.com  # Host do servidor de email
     port: 587  # Porta do servidor de email
-    username: edersonsergiocoelho@gmail.com  # Nome de usuário para autenticação
-    password: jyfbeilm hwvv snmr  # Senha para autenticação
+    username: ${MAIL_USERNAME}  # Nome de usuário para autenticação
+    password: ${MAIL_PASSWORD}  # Senha para autenticação
     properties:
       mail:
         smtp:
@@ -71,42 +71,42 @@ logging:
 
 # Configurações para integração com Mercado Pago
 mercado.pago:
-  access.token: TEST-2684799542969721-121823-a68944e3c00bde61be46c2cee16899d2-70202035
+  access.token: ${MERCADO_PAGO_TOKEN}
 
 # Configurações para integração com o Inter (banco)
 inter:
   client:
-    id: f9ee4a46-2b1a-4c9a-b66d-918a99c94af3  # ID do cliente do Inter
-    secret: bdd0db05-0829-4044-b5ff-12326d84628e  # Segredo do cliente do Inter
+    id: ${INTER_CLIENT_ID}  # ID do cliente do Inter
+    secret: ${INTER_CLIENT_SECRET}  # Segredo do cliente do Inter
   cert:
-    path: ./Sandbox_InterAPI_PFX.pfx  # Caminho para o certificado PFX
-    password: r35gt-ralphaomega16  # Senha do certificado PFX
+    path: ${INTER_CERT_PATH}  # Caminho para o certificado PFX
+    password: ${INTER_CERT_PASSWORD}  # Senha do certificado PFX
 
 # Configurações para integração com Telegram
 telegram:
   bot:
-    token: 6763877962:AAElA1aQ8FlaOvZjeStegxm41PQUbKRxJ6  # Token do bot do Telegram
+    token: ${TELEGRAM_BOT_TOKEN}  # Token do bot do Telegram
 
 # Configurações para Twilio (serviço de mensagens)
 twilio:
   account:
-    sid: ACb5e993772f05ca517d681c993a7969cb  # SID da conta Twilio
+    sid: ${TWILIO_ACCOUNT_SID}  # SID da conta Twilio
   auth:
-    token: e45a50438c256c1d2cd05e4308bee3e9  # Token de autenticação Twilio
+    token: ${TWILIO_AUTH_TOKEN}  # Token de autenticação Twilio
   phone:
-    number: "+18329242707"  # Número de telefone Twilio
-    whatsapp: "+14155238886"  # Número de WhatsApp Twilio
+    number: ${TWILIO_PHONE_NUMBER}  # Número de telefone Twilio
+    whatsapp: ${TWILIO_WHATSAPP_NUMBER}  # Número de WhatsApp Twilio
 
 # Configurações para WhatsApp
 whatsapp:
-  access.token: EAAak18SW4KoBOyHh15Gl4iiz73QX7f7Ldi64bXy06SIZA4axZA4ae1qNxLGYzYvfIjBBz2g9cetNlCGCVA8FMQdKzK4CvhHwaPjURuiZABU89iyah2TZAYOUbE1SHz44BZCwVzdu4Coa9Iq1znzLnkt0dfSSxkDkPqUR4yFhdZA2qZASNmIrGuQJ06ZAFxIZCc2waVWlPQtW412ujeZBw4  # Token de acesso para WhatsApp
-  from.phone.number.id: 223267017528976  # ID do número de telefone WhatsApp
+  access.token: ${WHATSAPP_ACCESS_TOKEN}  # Token de acesso para WhatsApp
+  from.phone.number.id: ${WHATSAPP_PHONE_NUMBER_ID}  # ID do número de telefone WhatsApp
 
 # Configurações da aplicação
 app:
   auth:
-    tokenSecret: 926D96C90030DD58429D2751AC1BDBBC  # Segredo para assinar tokens de autenticação
-    tokenExpirationMsec: 864000000  # Expiração do token em milissegundos (10 dias)
+    tokenSecret: ${AUTH_TOKEN_SECRET}  # Segredo para assinar tokens de autenticação
+    tokenExpirationMsec: ${AUTH_TOKEN_EXPIRATION_MS:864000000}  # Expiração do token em milissegundos (10 dias)
 
   oauth2:
     authorizedRedirectUris:  # URIs para redirecionamento após autenticação
