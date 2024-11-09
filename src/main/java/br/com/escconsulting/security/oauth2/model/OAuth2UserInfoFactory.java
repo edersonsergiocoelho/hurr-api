@@ -1,10 +1,15 @@
-package br.com.escconsulting.security.oauth2.user;
+package br.com.escconsulting.security.oauth2.model;
 
 import br.com.escconsulting.dto.SocialProvider;
 import br.com.escconsulting.exception.OAuth2AuthenticationProcessingException;
 
 import java.util.Map;
 
+/**
+ *
+ * @author Ederson Sergio Monteiro Coelho
+ *
+ */
 public class OAuth2UserInfoFactory {
 	public static OAuth2UserInfo getOAuth2UserInfo(String registrationId, Map<String, Object> attributes) {
 		if (registrationId.equalsIgnoreCase(SocialProvider.GOOGLE.getProviderType())) {

@@ -2,10 +2,19 @@ package br.com.escconsulting.exception;
 
 import org.springframework.security.core.AuthenticationException;
 
+import java.io.Serial;
+
+/**
+ *
+ * @author Ederson Sergio Monteiro Coelho
+ *
+ */
 public class OAuth2AuthenticationProcessingException extends AuthenticationException {
+
 	/**
 	 * 
 	 */
+	@Serial
 	private static final long serialVersionUID = 3392450042101522832L;
 
 	public OAuth2AuthenticationProcessingException(String msg, Throwable t) {
