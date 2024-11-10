@@ -12,8 +12,11 @@ public interface VehicleBrandMapper {
     
     VehicleBrandMapper INSTANCE = Mappers.getMapper( VehicleBrandMapper.class );
 
-    @Mapping(source = "vehicleBrand.file", target = "file")
+    @Mapping(source = "file", target = "file")
     VehicleBrandDTO toDTO(VehicleBrand vehicleBrand);
+
+    @Mapping(target = "file", ignore = true)
+    VehicleBrandDTO toDTOSimple(VehicleBrand vehicleBrand);
 
     void update(VehicleBrand source, @MappingTarget VehicleBrand target);
 }

@@ -12,16 +12,16 @@ public interface UserMapper {
     
     UserMapper INSTANCE = Mappers.getMapper( UserMapper.class );
 
-    @Mapping(source = "user.file", target = "file")
-    @Mapping(source = "user.roles", target = "roles")
+    @Mapping(source = "file", target = "file")
+    @Mapping(source = "roles", target = "roles")
     UserDTO toDTO(User user);
 
-    @Mapping(source = "user.file", target = "file")
-    @Mapping(source = "user.roles", target = "roles", ignore = true)
-    UserDTO toNoRoleDTO(User user);
+    @Mapping(source = "file", target = "file")
+    @Mapping(source = "roles", target = "roles", ignore = true)
+    UserDTO toDTONoRole(User user);
 
-    @Mapping(source = "user.file", target = "file", ignore = true)
-    @Mapping(source = "user.roles", target = "roles", ignore = true)
+    @Mapping(target = "file", ignore = true)
+    @Mapping(target = "roles", ignore = true)
     UserDTO toSimpleDTO(User user);
 
     @Mapping(target = "roles", ignore = true)

@@ -12,9 +12,11 @@ public interface UserPreferenceMapper {
     
     UserPreferenceMapper INSTANCE = Mappers.getMapper( UserPreferenceMapper.class );
 
-    @Mapping(source = "userPreference.user", target = "user", ignore = true)
+    @Mapping(source = "user", target = "user")
     UserPreferenceDTO toDTO(UserPreference userPreference);
 
     @Mapping(target = "user", ignore = true)
+    UserPreferenceDTO toDTOSimple(UserPreference userPreference);
+
     void update(UserPreference source, @MappingTarget UserPreference target);
 }

@@ -15,5 +15,8 @@ public interface CustomerVehicleApprovedMapper {
     @Mapping(source = "customerVehicleApproved.customerVehicle", target = "customerVehicle")
     CustomerVehicleApprovedDTO toDTO(CustomerVehicleApproved customerVehicleApproved);
 
+    @Mapping(target = "customerVehicle", ignore = true)
+    CustomerVehicleApprovedDTO toDTOSimple(CustomerVehicleApproved customerVehicleApproved);
+
     void update(CustomerVehicleApproved source, @MappingTarget CustomerVehicleApproved target);
 }

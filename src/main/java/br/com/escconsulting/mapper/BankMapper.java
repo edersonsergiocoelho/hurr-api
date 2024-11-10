@@ -10,10 +10,13 @@ import org.mapstruct.factory.Mappers;
 @Mapper
 public interface BankMapper {
 
-    BankMapper INSTANCE = Mappers.getMapper( BankMapper.class );
+    BankMapper INSTANCE = Mappers.getMapper(BankMapper.class);
 
-    @Mapping(source = "bank.file", target = "file")
+    @Mapping(source = "file", target = "file")  // Isso mapeia o campo 'file' para o DTO correspondente.
     BankDTO toDTO(Bank bank);
+
+    @Mapping(target = "file", ignore = true)  // Ignora o campo 'file' no mapeamento.
+    BankDTO toDTOSimple(Bank bank);
 
     void update(Bank source, @MappingTarget Bank target);
 }

@@ -27,7 +27,7 @@ public class CustomerVehicleReviewController {
     @GetMapping("/{customerVehicleReviewId}")
     public ResponseEntity<CustomerVehicleReviewDTO> findById(@PathVariable("customerVehicleReviewId") UUID customerVehicleReviewId) {
         return customerVehicleReviewService.findById(customerVehicleReviewId)
-                .map(CustomerVehicleReviewMapper.INSTANCE::toDTO)
+                .map(CustomerVehicleReviewMapper.INSTANCE::toDTONoCustomerVehicleBooking)
                 .map(ResponseEntity::ok)
                 .orElseGet(ResponseEntity.noContent()::build);
     }
@@ -37,7 +37,7 @@ public class CustomerVehicleReviewController {
                                                                                                 @PathVariable("customerId") UUID customerId) {
 
         return customerVehicleReviewService.findByCustomerVehicleBookingIdAndCustomerId(customerVehicleBookingId, customerId)
-                .map(CustomerVehicleReviewMapper.INSTANCE::toDTO)
+                .map(CustomerVehicleReviewMapper.INSTANCE::toDTONoCustomerVehicleBooking)
                 .map(ResponseEntity::ok)
                 .orElseGet(ResponseEntity.noContent()::build);
     }
@@ -47,7 +47,7 @@ public class CustomerVehicleReviewController {
         return ResponseEntity.ok(
                 customerVehicleReviewService.findAll()
                         .stream()
-                        .map(CustomerVehicleReviewMapper.INSTANCE::toDTO)
+                        .map(CustomerVehicleReviewMapper.INSTANCE::toDTONoCustomerVehicleBooking)
                         .collect(Collectors.toList())
         );
     }
@@ -57,7 +57,7 @@ public class CustomerVehicleReviewController {
         return ResponseEntity.ok(
                 customerVehicleReviewService.findAllByCustomerVehicleId(customerVehicleId)
                         .stream()
-                        .map(CustomerVehicleReviewMapper.INSTANCE::toDTO)
+                        .map(CustomerVehicleReviewMapper.INSTANCE::toDTONoCustomerVehicleBooking)
                         .collect(Collectors.toList())
         );
     }
@@ -66,14 +66,14 @@ public class CustomerVehicleReviewController {
     public ResponseEntity<CustomerVehicleReviewDTO> save(@RequestBody CustomerVehicleReview customerVehicleReview) {
         return customerVehicleReviewService.save(customerVehicleReview)
                 .map(savedReview -> ResponseEntity.status(HttpStatus.CREATED)
-                        .body(CustomerVehicleReviewMapper.INSTANCE.toDTO(savedReview)))
+                        .body(CustomerVehicleReviewMapper.INSTANCE.toDTONoCustomerVehicleBooking(savedReview)))
                 .orElse(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build());
     }
 
     @PutMapping("/{customerVehicleReviewId}")
     public ResponseEntity<CustomerVehicleReviewDTO> update(@PathVariable("customerVehicleReviewId") UUID customerVehicleReviewId, @RequestBody CustomerVehicleReview customerVehicleReview) {
         return customerVehicleReviewService.update(customerVehicleReviewId, customerVehicleReview)
-                .map(updatedReview -> ResponseEntity.ok(CustomerVehicleReviewMapper.INSTANCE.toDTO(updatedReview)))
+                .map(updatedReview -> ResponseEntity.ok(CustomerVehicleReviewMapper.INSTANCE.toDTONoCustomerVehicleBooking(updatedReview)))
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 

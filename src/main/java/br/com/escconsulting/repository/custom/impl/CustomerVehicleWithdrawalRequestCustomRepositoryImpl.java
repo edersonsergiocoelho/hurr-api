@@ -78,7 +78,7 @@ public class CustomerVehicleWithdrawalRequestCustomRepositoryImpl extends Simple
         List<CustomerVehicleWithdrawalRequest> resultList = query.getResultList();
 
         List<CustomerVehicleWithdrawalRequestDTO> dtoList = resultList.stream()
-                .map(CustomerVehicleWithdrawalRequestMapper.INSTANCE::toDTO)
+                .map(CustomerVehicleWithdrawalRequestMapper.INSTANCE::toDTOCustomerVehicleBookingNoFK)
                 .collect(Collectors.toList());
 
         return new PageImpl<>(dtoList, pageable, this.countSearchPage(customerVehicleWithdrawalRequestSearchDTO));

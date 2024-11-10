@@ -1,5 +1,6 @@
 package br.com.escconsulting.dto.payment.status;
 
+import br.com.escconsulting.dto.file.FileDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,6 +15,7 @@ public class PaymentStatusDTO {
 
     private UUID paymentStatusId;
     private String paymentStatusName;
+    private FileDTO file;
     private Instant createdDate;
     private Instant modifiedDate;
     private Boolean enabled;

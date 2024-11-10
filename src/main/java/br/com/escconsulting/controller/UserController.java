@@ -33,7 +33,7 @@ public class UserController {
     @GetMapping("/{userId}")
     public ResponseEntity<?> findById(@PathVariable("userId") UUID userId) {
         return userService.findById(userId)
-                .map(UserMapper.INSTANCE::toNoRoleDTO)
+                .map(UserMapper.INSTANCE::toDTONoRole)
                 .map(ResponseEntity::ok)
                 .orElseGet(ResponseEntity.notFound()::build);
     }
@@ -107,7 +107,7 @@ public class UserController {
     public ResponseEntity<?> update(@PathVariable("userId") UUID userId,
                                     @RequestBody User user) {
         return userService.update(userId, user)
-                .map(UserMapper.INSTANCE::toNoRoleDTO)
+                .map(UserMapper.INSTANCE::toDTONoRole)
                 .map(updatedUser -> ResponseEntity.ok(updatedUser))
                 .orElseThrow(() -> new IllegalStateException("Failed to update user"));
     }

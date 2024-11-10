@@ -1,9 +1,6 @@
 package br.com.escconsulting.mapper;
 
-import br.com.escconsulting.dto.menu.MenuDTO;
 import br.com.escconsulting.dto.type.menu.TypeMenuDTO;
-import br.com.escconsulting.entity.CustomerVehicleApproved;
-import br.com.escconsulting.entity.Menu;
 import br.com.escconsulting.entity.TypeMenu;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
@@ -16,5 +13,5 @@ public interface TypeMenuMapper {
 
     TypeMenuDTO toDTO(TypeMenu typeMenu);
 
-    void update(CustomerVehicleApproved source, @MappingTarget CustomerVehicleApproved target);
+    void update(TypeMenu source, @MappingTarget TypeMenu target);
 }

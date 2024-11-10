@@ -15,5 +15,8 @@ public interface PaymentMethodMapper {
     @Mapping(source = "paymentMethod.file", target = "file")
     PaymentMethodDTO toDTO(PaymentMethod paymentMethod);
 
+    @Mapping(target = "file", ignore = true)
+    PaymentMethodDTO toDTOSimple(PaymentMethod paymentMethod);
+
     void update(PaymentMethod source, @MappingTarget PaymentMethod target);
 }

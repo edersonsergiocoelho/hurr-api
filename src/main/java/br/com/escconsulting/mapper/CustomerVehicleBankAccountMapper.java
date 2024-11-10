@@ -16,5 +16,9 @@ public interface CustomerVehicleBankAccountMapper {
     @Mapping(source = "customerVehicleBankAccount.bank", target = "bank")
     CustomerVehicleBankAccountDTO toDTO(CustomerVehicleBankAccount customerVehicleBankAccount);
 
+    @Mapping(target = "customer", ignore = true)
+    @Mapping(target = "bank", ignore = true)
+    CustomerVehicleBankAccountDTO toDTOSimple(CustomerVehicleBankAccount customerVehicleBankAccount);
+
     void update(CustomerVehicleBankAccount source, @MappingTarget CustomerVehicleBankAccount target);
 }
